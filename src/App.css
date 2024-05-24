@@ -1,17 +1,25 @@
 .App {
   text-align: center;
+  background-color: var(--transparent-blue);
 }
 
-.App-logo {
+.app-logo {
   height: 40vmin;
   pointer-events: none;
+
+  border-radius: 50%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+.app-logo:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+/* @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
+} */
 
 .App-header {
   background-color: #282c34;
@@ -26,6 +34,15 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.btn {
+  background: linear-gradient(90deg,#3b66f5,#163bcd);
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
 }
 
 @keyframes App-logo-spin {
