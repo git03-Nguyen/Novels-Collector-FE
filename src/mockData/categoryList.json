@@ -1,0 +1,72 @@
+[
+    {
+        "id": "0",
+        "name": "Tiên hiệp",
+        "fulDescription": "Truyện tiên hiệp",
+        "numOfNovels": 100,
+        "rating": 8.9
+    },
+    {
+        "id": "1",
+        "name": "Thế giới mở",
+        "fulDescription": "Tiểu thuyết thế giới mở",
+        "numOfNovels": 57,
+        "rating": 8.5
+    },
+    {
+        "id": "2",
+        "name": "Ngôn tình",
+        "fulDescription": "Tiểu thuyết ngôn tình",
+        "numOfNovels": 303,
+        "rating": 8.1
+    },
+    {
+        "id": "3",
+        "name": "Trường học",
+        "fulDescription": "Tiểu thuyết trường học",
+        "numOfNovels": 78,
+        "rating": 7.0
+    },
+    {
+        "id": "4",
+        "name": "Phiêu lưu",
+        "fulDescription": "Truyện phiêu lưu",
+        "numOfNovels": 135,
+        "rating": 8.4
+    },
+    {
+        "id": "5",
+        "name": "Xuyên không",
+        "fulDescription": "Tiểu thuyết xuyên không",
+        "numOfNovels": 169,
+        "rating": 7.8
+    },
+    {
+        "id": "6",
+        "name": "Hài hước",
+        "fulDescription": "Truyện hài hước",
+        "numOfNovels": 200,
+        "rating": 8.0
+    },
+    {
+        "id": "7",
+        "name": "Kinh dị",
+        "fulDescription": "Truyện kinh dị",
+        "numOfNovels": 113,
+        "rating": 7.6
+    },
+    {
+        "id": "8",
+        "name": "Kiếm hiệp",
+        "fulDescription": "Truyện kiếm hiệp",
+        "numOfNovels": 49,
+        "rating": 7.4
+    },
+    {
+        "id": "9",
+        "name": "H+",
+        "fulDescription": "Truyện H+",
+        "numOfNovels": 126,
+        "rating": 7.1
+    }
+]

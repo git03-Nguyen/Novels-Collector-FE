@@ -1,9 +1,35 @@
-import React from 'react';
+import { React, useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom'
 import './Header.css'
 
+import CategoryService from '../../service/category.s';
 
 function Header(props) {
+    const [categories, setCategories] = useState([]);
+    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(6);
+
+
+    const fetchCategories = async () => {
+        try {
+            let response = await CategoryService.fetchCategories();
+            if (response && response.data && response.statusCode === 200) {
+                let newCategories = response.data.slice(0, categoryDisplayQuantity);
+                setCategories(newCategories);
+            } else {
+                console.log("Error fetching categories: " + response.message);
+            }
+        } catch (error) {
+            console.error("Error fetching categories: " + error.message);
+        }
+    }
+
+
+
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
     return (
         <header className='app-header'>
             <Link to='/'>
@@ -12,12 +38,9 @@ function Header(props) {
             <div className='search-engine'>
                 <div className='category-container'>
                     <div className='category-list'>
-                        <button className='btn btn-primary category-tag'>Tiên hiệp</button>
-                        <button className='btn btn-primary category-tag'>Thế giới mở</button>
-                        <button className='btn btn-primary category-tag'>Phiêu lưu</button>
-                        <button className='btn btn-primary category-tag'>Ngôn tình</button>
-                        <button className='btn btn-primary category-tag'>Hài hước</button>
-                        <button className='btn btn-primary category-tag'>Xuyên không</button>
+                        {categories && categories.map(category => {
+                            return <button key={`category-tag-${category.id}`} className='btn btn-primary category-tag'>{category.name}</button>
+                        })}
                     </div>
 
                     <Link >
