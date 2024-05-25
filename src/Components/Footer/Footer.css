@@ -27,7 +27,8 @@
     color: white;
 }
 
-.footer-navbar-link:hover {
+.footer-navbar-link:hover,
+.footer-contact > a:hover {
     opacity: 0.7;
 }
 

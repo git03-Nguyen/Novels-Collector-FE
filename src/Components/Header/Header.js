@@ -2,7 +2,7 @@ import { React, useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom'
 import './Header.css'
 
-import CategoryService from '../../service/category.s';
+import CategoryService from '../../services/category.s';
 
 function Header(props) {
     const [categories, setCategories] = useState([]);

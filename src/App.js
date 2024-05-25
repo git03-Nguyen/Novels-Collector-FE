@@ -1,6 +1,7 @@
 import './App.css';
 import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
+import IndexRoute from './routes/IndexRoute';
 
 function App() {
   return (
@@ -8,7 +9,7 @@ function App() {
       <Header />
 
       <div className='app-container'>
-        <h1>Hello world !</h1>
+        <IndexRoute />
       </div>
 
       <Footer />
