@@ -33,7 +33,7 @@ function Header(props) {
     return (
         <header className='app-header'>
             <Link to='/'>
-                <img src='./logo.png' className='app-logo' alt='logo' />
+                <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
             <div className='search-engine'>
                 <div className='category-container'>
@@ -57,13 +57,17 @@ function Header(props) {
                 </div>
             </div>
 
-            <button className='btn btn-primary'>
+            <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
                 <i className='fa-solid fa-gear'></i>
                 Cài đặt
             </button>
-            <button className='btn btn-primary'>
-                <Link to='/admin'>Admin</Link>
-            </button>
+            <ul className="dropdown-menu">
+                <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
+                <li><a className="dropdown-item" href="#">Tài khoản</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a className="dropdown-item" href="#">Câu hỏi thường gặp</a></li>
+                <li><a className="dropdown-item" href="#">Liên hệ</a></li>
+            </ul>
         </header>
     );
 }

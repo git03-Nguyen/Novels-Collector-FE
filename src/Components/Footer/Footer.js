@@ -7,7 +7,7 @@ function Footer(props) {
     return (
         <footer className='app-footer'>
             <Link to='/'>
-                <img src='./logo.png' className='app-logo' alt='logo' />
+                <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
 
             <div className='footer-description'>
