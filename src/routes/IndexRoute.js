@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import HomePage from '../pages/HomePage/HomePage';
-
+import ListNovelPage from '../pages/ListNovelPage/ListNovelPage';
 function IndexRoute(props) {
     return (
         <div>
@@ -10,7 +10,7 @@ function IndexRoute(props) {
             <Routes>
                 {/* Public */}
                 <Route path='/' element={<HomePage />} />
-                <Route path='/novel-list' element="Novel list page. TODO: add NovelList Page" />
+                <Route path='/novel-list' element={<ListNovelPage />} />
                 <Route path='/novel' element="Novel page. TODO: add Novel Detail Page" />
                 <Route path='/novel/:chapterID' element={<HomePage />} />
 
