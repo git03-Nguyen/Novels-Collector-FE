@@ -7,7 +7,7 @@ function Footer(props) {
     return (
         <footer className='app-footer'>
             <Link to='/'>
-                <img src='./logo.png' className='app-logo' alt='logo' />
+                <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
 
             <div className='footer-description'>
@@ -20,7 +20,7 @@ function Footer(props) {
                 <strong>Điều hướng</strong>
                 <Link to='/' className='footer-navbar-link'>Trang chủ</Link>
                 {/* TODO: add navigation to this */}
-                <Link to='#' className='footer-navbar-link'>Danh mục truyện</Link>
+                <Link to='/novel-list' className='footer-navbar-link'>Danh mục truyện</Link>
                 <Link to='#' className='footer-navbar-link'>Bảng xếp hạng</Link>
                 <Link to='#' className='footer-navbar-link'>Truyện nổi bật</Link>
             </div>

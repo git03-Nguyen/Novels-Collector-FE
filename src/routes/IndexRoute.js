@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import HomePage from '../pages/HomePage/HomePage';
-
+import ListNovelPage from '../pages/ListNovelPage/ListNovelPage';
+import AdminPage from '../pages/AdminPage/AdminPage';
 function IndexRoute(props) {
     return (
         <div>
@@ -10,13 +11,13 @@ function IndexRoute(props) {
             <Routes>
                 {/* Public */}
                 <Route path='/' element={<HomePage />} />
-                <Route path='/novel-list' element="Novel list page. TODO: add NovelList Page" />
+                <Route path='/novel-list' element={<ListNovelPage />} />
                 <Route path='/novel' element="Novel page. TODO: add Novel Detail Page" />
                 <Route path='/novel/:chapterID' element={<HomePage />} />
 
                 {/* Private */}
-                <Route path='/admin' element="Admin page. TODO: add admin Page" />
-
+                <Route path='/admin' element={<AdminPage/>} />
+                
 
                 {/* Not Found */}
                 {/* TODO: Add NotFoundPage */}

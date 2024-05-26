@@ -6,7 +6,7 @@ import CategoryService from '../../services/category.s';
 
 function Header(props) {
     const [categories, setCategories] = useState([]);
-    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(6);
+    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(7);
 
 
     const fetchCategories = async () => {
@@ -33,7 +33,7 @@ function Header(props) {
     return (
         <header className='app-header'>
             <Link to='/'>
-                <img src='./logo.png' className='app-logo' alt='logo' />
+                <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
             <div className='search-engine'>
                 <div className='category-container'>
@@ -49,15 +49,25 @@ function Header(props) {
                 </div>
 
                 <div className='search-bar'>
+                    <button className='btn btn-primary'>
+                        <Link to='/novel-list'>Danh sách truyện</Link>
+                    </button>
                     <input type='text' className='form-control' placeholder='Tìm kiếm tiểu thuyết theo tên, thể loại, tác giả, ...' />
                     <button className='btn btn-primary'>Tìm kiếm</button>
                 </div>
             </div>
 
-            <button className='btn btn-primary'>
+            <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
                 <i className='fa-solid fa-gear'></i>
                 Cài đặt
             </button>
+            <ul className="dropdown-menu">
+                <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
+                <li><a className="dropdown-item" href="#">Tài khoản</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a className="dropdown-item" href="#">Câu hỏi thường gặp</a></li>
+                <li><a className="dropdown-item" href="#">Liên hệ</a></li>
+            </ul>
         </header>
     );
 }
