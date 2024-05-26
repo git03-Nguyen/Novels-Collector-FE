@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import HomePage from '../pages/HomePage/HomePage';
 import ListNovelPage from '../pages/ListNovelPage/ListNovelPage';
+import AdminPage from '../pages/AdminPage/AdminPage';
 function IndexRoute(props) {
     return (
         <div>
@@ -15,8 +16,8 @@ function IndexRoute(props) {
                 <Route path='/novel/:chapterID' element={<HomePage />} />
 
                 {/* Private */}
-                <Route path='/admin' element="Admin page. TODO: add admin Page" />
-
+                <Route path='/admin' element={<AdminPage/>} />
+                
 
                 {/* Not Found */}
                 {/* TODO: Add NotFoundPage */}

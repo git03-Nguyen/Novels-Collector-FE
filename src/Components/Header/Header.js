@@ -61,6 +61,9 @@ function Header(props) {
                 <i className='fa-solid fa-gear'></i>
                 Cài đặt
             </button>
+            <button className='btn btn-primary'>
+                <Link to='/admin'>Admin</Link>
+            </button>
         </header>
     );
 }
