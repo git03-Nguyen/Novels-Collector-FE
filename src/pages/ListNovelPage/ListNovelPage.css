@@ -1,0 +1,34 @@
+.header-title {
+    text-align: left;
+}
+
+.novel-item {
+    width: 100%;
+
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.novel-thumbnail {
+    width: 100%;
+}
+
+.trending-novel-container {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+}
+
+.novel-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 0.5fr);
+    gap: 2rem;
+    margin: 1rem;
+}
+
+.my-pagination {
+    display: flex;
+    justify-content: center;
+}
