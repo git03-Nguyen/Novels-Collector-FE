@@ -45,6 +45,11 @@
     max-width: 60%;
 }
 
+.search-bar  a {
+    color: white;
+    text-decoration: none;
+}
+
 .category-tag {
     background: linear-gradient(90deg,var(--dark-blue),black) !important;
     box-shadow: 1.5px 1px var(--light-blue);
