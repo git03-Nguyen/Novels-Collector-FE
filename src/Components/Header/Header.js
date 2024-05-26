@@ -6,7 +6,7 @@ import CategoryService from '../../services/category.s';
 
 function Header(props) {
     const [categories, setCategories] = useState([]);
-    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(6);
+    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(7);
 
 
     const fetchCategories = async () => {
@@ -49,6 +49,9 @@ function Header(props) {
                 </div>
 
                 <div className='search-bar'>
+                    <button className='btn btn-primary'>
+                        <Link to='/novel-list'>Danh sách truyện</Link>
+                    </button>
                     <input type='text' className='form-control' placeholder='Tìm kiếm tiểu thuyết theo tên, thể loại, tác giả, ...' />
                     <button className='btn btn-primary'>Tìm kiếm</button>
                 </div>
