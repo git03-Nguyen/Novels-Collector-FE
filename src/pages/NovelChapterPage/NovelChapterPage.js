@@ -58,7 +58,7 @@ function NovelChapterPage(props) {
                 </button>
                 <button className='btn btn-secondary home-btn'>
                     <i className="fa-solid fa-house-user"></i>
-                    <span>Trang chủ</span>
+                    <span className='ps-3'>Trang chủ</span>
                 </button>
                 <button className='btn btn-secondary next-chapter-btn'>
                     <span className='pe-3'>Sau</span>

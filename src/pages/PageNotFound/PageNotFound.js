@@ -4,14 +4,12 @@ import './PageNotFound.css'
 
 function PageNotFound(props) {
     return (
-        <>
         <div className="page-not-found">
-        <div className="error-content">
-            <p className="error-message">Oops! The page you're looking for doesn't exist</p>
-            <a href="/" className="home-link">Go back to Home</a>
+            <div className="error-content">
+                <p className="error-message">Oops! Trang bạn đang tìm kiếm không tồn tại ...</p>
+                <Link to="/" className="home-link">Về trang chủ thôi nào</Link>
+            </div>
         </div>
-        </div>
-        </>
     );
 }
 
