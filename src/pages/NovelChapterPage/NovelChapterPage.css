@@ -27,6 +27,7 @@
 .novel-chapter-footer-navigator > button {
     background: linear-gradient(90deg,var(--dark-blue),black) !important;
     box-shadow: 1.5px 1px var(--light-blue);
+    font-size: 20px;
 }
 
 .previous-chapter-btn {
@@ -41,6 +42,7 @@
 
 .novel-chapter-footer-navigator > button:hover {
     background: linear-gradient(90deg,#3b66f5,#163bcd) !important;
+    color: greenyellow;
 }
 
 .novel-chapter-comment-section {
