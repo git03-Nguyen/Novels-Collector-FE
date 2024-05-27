@@ -5,7 +5,7 @@ import './AdminPage.css'
 function AdminPage(props) {
     return (
         <>
-            <h1>AdminPage</h1>
+            <h1>Admin</h1>
             <div id="menu" >
                 <div class="container text-center ">
                     <ul class="row align-items-start ul-admin ">

@@ -1,0 +1,31 @@
+.page-not-found {
+    background-image: url('/public/404.gif'); 
+    background-size: cover; 
+    background-position: center;
+    width: auto; 
+    height: 100vh; 
+    display: flex;
+    justify-content: right; 
+    align-items: center; 
+    color: #fff; 
+    text-align: right; 
+}
+
+.error-content {
+    background-color: rgba(0, 0, 0, 0.5); 
+    padding: 20px; 
+    margin-right: 50px;
+    text-align: center; 
+}
+
+.error-message {
+    font-size: 2em;
+}
+
+.home-link {
+    font-size: 1.5em; 
+    color: #066886; 
+    background-color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
