@@ -4,24 +4,25 @@ import HomePage from '../pages/HomePage/HomePage';
 import ListNovelPage from '../pages/ListNovelPage/ListNovelPage';
 import AdminPage from '../pages/AdminPage/AdminPage';
 import PageNotFound from '../pages/PageNotFound/PageNotFound';
+import NovelPage from '../pages/NovelPage/NovelPage';
+import NovelChapterPage from '../pages/NovelChapterPage/NovelChapterPage';
+
 function IndexRoute(props) {
     return (
-        <div>
-            <Routes>
-                {/* Public */}
-                <Route path='/' element={<HomePage />} />
-                <Route path='/novel-list' element={<ListNovelPage />} />
-                <Route path='/novel' element="Novel page. TODO: add Novel Detail Page" />
-                <Route path='/novel/:chapterID' element={<HomePage />} />
+        <Routes>
+            {/* Public */}
+            <Route path='/' element={<HomePage />} />
+            <Route path='/novel-list' element={<ListNovelPage />} />
+            {/* <Route path='/novel' element={<NovelPage />} /> */}
+            <Route path='/novel/:novelID' element={<NovelPage />} />
+            <Route path='/novel/:novelID/chapter/:chapterID' element={<NovelChapterPage />} />
 
-                {/* Private */}
-                <Route path='/admin' element={<AdminPage/>} />
-                
-                {/* Not Found */}
-                {/* TODO: Add NotFoundPage "Có vẻ bạn đã bị lạc? Hãy trở về trang chủ của chúng tôi" */}
-                <Route path='*' element={<PageNotFound/>}/>
-            </Routes>
-        </div>
+            {/* Private */}
+            <Route path='/admin' element={<AdminPage />} />
+
+            {/* Not Found */}
+            <Route path='*' element={<PageNotFound/>}/>
+        </Routes>
     );
 }
 

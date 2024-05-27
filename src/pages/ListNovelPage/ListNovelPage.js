@@ -2,6 +2,7 @@
 import './ListNovelPage.css'
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import { Link } from 'react-router-dom';
 
 function ListNovelPage(props) {
     const [totalPage, setTotalPage] = useState(3);
@@ -92,7 +93,11 @@ function ListNovelPage(props) {
                                 <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/bc3f1f1f32bf7b31ee15d34d7877e18c3fc55a9b636e1485e1e3353a00f8db4e?" className="shrink-0 w-5 aspect-[1.05] fill-black" />
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
-                            <button type="button" className="btn btn-primary">Đọc ngay</button>
+                            <button type="button" className="btn btn-primary">
+                                <Link to={`/novel/1`}>
+                                    Xem chi tiết
+                                </Link>
+                            </button>
                             <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
                                 <div className="flex gap-1.5 justify-center">
                                     <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/887cb135afc58e6b9a91786b9c574bc29b0d2777c3cee22055172f7bbd1d6f69?" className="shrink-0 w-9 aspect-[1.12]" />
@@ -112,8 +117,11 @@ function ListNovelPage(props) {
                                 <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/bc3f1f1f32bf7b31ee15d34d7877e18c3fc55a9b636e1485e1e3353a00f8db4e?" className="shrink-0 w-5 aspect-[1.05] fill-black" />
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
-                            <button type="button" className="btn btn-primary">Đọc ngay</button>
-                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
+                            <button type="button" className="btn btn-primary">
+                                <Link to={`/novel/1`}>
+                                    Xem chi tiết
+                                </Link>
+                            </button>                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
                                 <div className="flex gap-1.5 justify-center">
                                     <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/887cb135afc58e6b9a91786b9c574bc29b0d2777c3cee22055172f7bbd1d6f69?" className="shrink-0 w-9 aspect-[1.12]" />
                                     <div>124 lượt đọc</div>
@@ -132,8 +140,11 @@ function ListNovelPage(props) {
                                 <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/bc3f1f1f32bf7b31ee15d34d7877e18c3fc55a9b636e1485e1e3353a00f8db4e?" className="shrink-0 w-5 aspect-[1.05] fill-black" />
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
-                            <button type="button" className="btn btn-primary">Đọc ngay</button>
-                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
+                            <button type="button" className="btn btn-primary">
+                                <Link to={`/novel/1`}>
+                                    Xem chi tiết
+                                </Link>
+                            </button>                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
                                 <div className="flex gap-1.5 justify-center">
                                     <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/887cb135afc58e6b9a91786b9c574bc29b0d2777c3cee22055172f7bbd1d6f69?" className="shrink-0 w-9 aspect-[1.12]" />
                                     <div>124 lượt đọc</div>
@@ -152,8 +163,11 @@ function ListNovelPage(props) {
                                 <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/bc3f1f1f32bf7b31ee15d34d7877e18c3fc55a9b636e1485e1e3353a00f8db4e?" className="shrink-0 w-5 aspect-[1.05] fill-black" />
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
-                            <button type="button" className="btn btn-primary">Đọc ngay</button>
-                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
+                            <button type="button" className="btn btn-primary">
+                                <Link to={`/novel/1`}>
+                                    Xem chi tiết
+                                </Link>
+                            </button>                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
                                 <div className="flex gap-1.5 justify-center">
                                     <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/887cb135afc58e6b9a91786b9c574bc29b0d2777c3cee22055172f7bbd1d6f69?" className="shrink-0 w-9 aspect-[1.12]" />
                                     <div>124 lượt đọc</div>

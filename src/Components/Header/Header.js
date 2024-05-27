@@ -64,7 +64,7 @@ function Header(props) {
             <ul className="dropdown-menu">
                 <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
                 <li><a className="dropdown-item" href="#">Tài khoản</a></li>
-                <li><hr class="dropdown-divider" /></li>
+                <li><hr className="dropdown-divider" /></li>
                 <li><a className="dropdown-item" href="#">Câu hỏi thường gặp</a></li>
                 <li><a className="dropdown-item" href="#">Liên hệ</a></li>
             </ul>
