@@ -1,13 +1,15 @@
-import { React, useState, useEffect, Fragment } from 'react';
+import { React, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import './Header.css'
 
 import CategoryService from '../../services/category.s';
+import { toast } from 'react-toastify';
 
 function Header(props) {
-    const [categories, setCategories] = useState([]);
-    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(7);
+    const defaultCategoryDisplayQuantity = parseInt(window.innerWidth * 0.6 / 110 - 1);
 
+    const [categories, setCategories] = useState([]);
+    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(defaultCategoryDisplayQuantity);
 
     const fetchCategories = async () => {
         try {
@@ -16,14 +18,12 @@ function Header(props) {
                 let newCategories = response.data.slice(0, categoryDisplayQuantity);
                 setCategories(newCategories);
             } else {
-                console.log("Error fetching categories: " + response.message);
+                console.log("Error fetching categories: " + response?.message);
             }
         } catch (error) {
             console.error("Error fetching categories: " + error.message);
         }
     }
-
-
 
 
     useEffect(() => {
@@ -59,14 +59,15 @@ function Header(props) {
 
             <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
                 <i className='fa-solid fa-gear'></i>
-                Cài đặt
+                <span className='ps-2'>Cài đặt</span>
             </button>
             <ul className="dropdown-menu">
                 <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
-                <li><a className="dropdown-item" href="#">Tài khoản</a></li>
+                <li><Link className='dropdown-item' to='#'>Tài khoản</Link></li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="#">Câu hỏi thường gặp</a></li>
-                <li><a className="dropdown-item" href="#">Liên hệ</a></li>
+                <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
+                <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
+
             </ul>
         </header>
     );
