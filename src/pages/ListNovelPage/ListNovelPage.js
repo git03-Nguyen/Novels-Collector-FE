@@ -19,56 +19,56 @@ function ListNovelPage(props) {
                         Tên
                     </button>
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Tăng dần</a></li>
-                        <li><a className="dropdown-item" href="#">Giảm dần</a></li>
+                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
+                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
                     </ul>
                     <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
                         Thể loại
                     </button>
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Tiên hiệp</a></li>
-                        <li><a className="dropdown-item" href="#">Thế giới mở</a></li>
-                        <li><a className="dropdown-item" href="#">Phiêu lưu</a></li>
-                        <li><a className="dropdown-item" href="#">Ngôn tình</a></li>
-                        <li><a className="dropdown-item" href="#">Hài hước</a></li>
-                        <li><a className="dropdown-item" href="#">Xuyên không</a></li>
+                        <li><Link className="dropdown-item" to="#">Tiên hiệp</Link></li>
+                        <li><Link className="dropdown-item" to="#">Thế giới mở</Link></li>
+                        <li><Link className="dropdown-item" to="#">Phiêu lưu</Link></li>
+                        <li><Link className="dropdown-item" to="#">Ngôn tình</Link></li>
+                        <li><Link className="dropdown-item" to="#">Hài hước</Link></li>
+                        <li><Link className="dropdown-item" to="#">Xuyên không</Link></li>
 
                     </ul>
                     <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
                         Năm phát hành
                     </button>
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Mới nhất</a></li>
-                        <li><a className="dropdown-item" href="#">Cũ nhất</a></li>
+                        <li><Link className="dropdown-item" to="#">Mới nhất</Link></li>
+                        <li><Link className="dropdown-item" to="#">Cũ nhất</Link></li>
                     </ul>
                     <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
                         Số lượt đọc
                     </button>
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Tăng dần</a></li>
-                        <li><a className="dropdown-item" href="#">Giảm dần</a></li>
+                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
+                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
                     </ul>
                     <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
                         Tình trạng
                     </button>
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Đang tiến hành</a></li>
-                        <li><a className="dropdown-item" href="#">Tạm ngưng</a></li>
-                        <li><a className="dropdown-item" href="#">Đã hoàn thành</a></li>
+                        <li><Link className="dropdown-item" to="#">Đang tiến hành</Link></li>
+                        <li><Link className="dropdown-item" to="#">Tạm ngưng</Link></li>
+                        <li><Link className="dropdown-item" to="#">Đã hoàn thành</Link></li>
                     </ul>
                     <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
                         Điểm đánh giá
                     </button>
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Tăng dần</a></li>
-                        <li><a className="dropdown-item" href="#">Giảm dần</a></li>
+                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
+                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
                     </ul>
                     <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
                         Nguồn cung cấp
                     </button>
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Truyen Full</a></li>
-                        <li><a className="dropdown-item" href="#">Net Truyen</a></li>
+                        <li><Link className="dropdown-item" to="#">Truyen Full</Link></li>
+                        <li><Link className="dropdown-item" to="#">Net Truyen</Link></li>
                     </ul>
 
 
@@ -199,15 +199,6 @@ function ListNovelPage(props) {
                 nextLinkClassName='page-link'
                 renderOnZeroPageCount={null}
             />
-            {/* <nav aria-label="trending-pagination">
-                <ul className="pagination my-pagination">
-                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
-                </ul>
-            </nav> */}
         </>
 
     );

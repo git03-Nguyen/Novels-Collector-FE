@@ -20,7 +20,7 @@ function NovelChapterPage(props) {
         // TODO: replace this with calling API from server
         try {
             const response = await ChapterService.fetchChapterContent();
-            if (response && response.data && response.status === 200) {
+            if (response && response.data && response.statusCode === 200) {
                 setChapterContent(response.data);
                 toast.success(response.message);
             } else {

@@ -27,8 +27,8 @@ function Footer(props) {
 
             <div className='footer-credit'>
                 <strong>Đơn vị hỗ trợ</strong>
-                <img src='https://www.nettruyenmck.com/images/logo-nettruyen.png' />
-                <img src='https://docln.net/img/logo-9.png' />
+                <img alt='sponsor-img' src='https://www.nettruyenmck.com/images/logo-nettruyen.png' />
+                <img alt='sponsor-img' src='https://docln.net/img/logo-9.png' />
             </div>
 
             <div className='footer-contact'>
