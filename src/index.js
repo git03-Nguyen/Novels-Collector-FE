@@ -9,12 +9,18 @@ import { BrowserRouter } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 //Font Awesome
 import 'font-awesome/css/font-awesome.min.css';
+import { SearchProvider } from './context/SearchContext';
+import { UserProvider } from './context/UserContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
-    <App />
+    <SearchProvider>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </SearchProvider>
   </BrowserRouter>
   // </React.StrictMode>
 );

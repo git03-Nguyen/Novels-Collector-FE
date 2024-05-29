@@ -20,7 +20,7 @@ function NovelChapterPage(props) {
         // TODO: replace this with calling API from server
         try {
             const response = await ChapterService.fetchChapterContent();
-            if (response && response.data && response.statusCode === 200) {
+            if (response && response.data && parseInt(response.statusCode) === 200) {
                 setChapterContent(response.data);
                 toast.success(response.message);
             } else {
@@ -65,13 +65,6 @@ function NovelChapterPage(props) {
                     <i className="fa-solid fa-arrow-right-long"></i>
                 </button>
             </div>
-
-
-            <div className='novel-chapter-comment-section'>
-                Mục bình luận - Đang được phát triển
-            </div>
-
-
         </div >
     );
 }

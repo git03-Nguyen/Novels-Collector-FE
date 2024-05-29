@@ -26,9 +26,9 @@ function Footer(props) {
             </div>
 
             <div className='footer-credit'>
-                <strong>Đơn vị hỗ trợ</strong>
+                <strong>Nguồn truyện</strong>
+                <img alt='sponsor-img' src='https://static.8cache.com/favicon.ico' />
                 <img alt='sponsor-img' src='https://www.nettruyenmck.com/images/logo-nettruyen.png' />
-                <img alt='sponsor-img' src='https://docln.net/img/logo-9.png' />
             </div>
 
             <div className='footer-contact'>

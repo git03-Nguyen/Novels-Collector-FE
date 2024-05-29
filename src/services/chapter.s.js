@@ -300,7 +300,7 @@ const fetchChapterContent = async () => {
     })
 
     return {
-        status: 200,
+        statusCode: 200,
         message: 'Fetch all chapter content successfully',
         data: chapterData,
     }
