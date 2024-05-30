@@ -1,0 +1,62 @@
+.novel-chapter-page-container {
+    width: 80%;
+    margin: 0 auto;
+/*     
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: start;
+    align-items: start; */
+}
+
+.novel-chapter-content-container {
+    padding: 8px 0 16px 10vw;
+    border-top: 1px solid var(--light-blue);    
+
+    text-align: start;
+}
+
+.novel-chapter-footer-navigator {
+    width: 80%;
+    margin: 0 auto 20px;
+    height: 6vh;
+
+    display: grid;
+    grid-template-columns: 33.3% auto 33.3%;
+}
+
+.novel-chapter-footer-navigator > button {
+    background: linear-gradient(90deg,var(--dark-blue),black) !important;
+    box-shadow: 1.5px 1px var(--light-blue);
+    font-size: 20px;
+}
+
+.previous-chapter-btn {
+    border-top-left-radius: 75% !important;
+    border-bottom-left-radius: 75% !important;
+}
+
+.next-chapter-btn {
+    border-top-right-radius: 75% !important;
+    border-bottom-right-radius: 75% !important;
+}
+
+.novel-chapter-footer-navigator > button:hover {
+    background: linear-gradient(90deg,#3b66f5,#163bcd) !important;
+    color: greenyellow;
+}
+
+.novel-chapter-comment-section {
+    width: 80%;
+    margin: 0 auto;
+    min-height: 20vh;
+
+    background-color: var(--brackish-blue);
+    border: 1px solid var(--light-blue);
+    color: greenyellow;
+    font-size: 32px;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+}

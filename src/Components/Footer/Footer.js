@@ -7,7 +7,7 @@ function Footer(props) {
     return (
         <footer className='app-footer'>
             <Link to='/'>
-                <img src='./logo.png' className='app-logo' alt='logo' />
+                <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
 
             <div className='footer-description'>
@@ -26,9 +26,9 @@ function Footer(props) {
             </div>
 
             <div className='footer-credit'>
-                <strong>Đơn vị hỗ trợ</strong>
-                <img src='https://www.nettruyenmck.com/images/logo-nettruyen.png' />
-                <img src='https://docln.net/img/logo-9.png' />
+                <strong>Nguồn truyện</strong>
+                <img alt='sponsor-img' src='https://static.8cache.com/favicon.ico' />
+                <img alt='sponsor-img' src='https://www.nettruyenmck.com/images/logo-nettruyen.png' />
             </div>
 
             <div className='footer-contact'>

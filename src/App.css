@@ -35,14 +35,18 @@
 
 .app-container {
   color: white;
-  margin: 20px 0;
+  margin: 4px 0;
   min-height: 50vh;
+
 }
 
 .app-breadcrumb {
+  margin-top: 20px;
+  margin-left: 20%;
   max-width: 60%;
-  padding-left: 20%;
+  padding-left: 20px;
   text-align: start;
+  border-bottom: 1px solid white;
 
 }
 
@@ -64,6 +68,11 @@
 .btn {
   background: linear-gradient(90deg,#3b66f5,#163bcd);
   color: white;
+}
+
+.btn > a {
+  color: white;
+  text-decoration: none;
 }
 
 .btn:hover {
