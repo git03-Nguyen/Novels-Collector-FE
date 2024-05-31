@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
+import NovelService from '../../services/detailnovel.s';
 function NovelPage(props) {
 
     const defaultNovel = {
@@ -12,24 +12,69 @@ function NovelPage(props) {
         updatedAt: Date.now(),
         categories: ['Phiêu lưu', 'Thế giới mở', 'Hành động', 'Giả tưởng', 'Xuyên không'],
     }
+    const [novel, setNovel] = useState();
+    const getNovelInfo = async (source, slug) => {
+        const content = await NovelService.fetchDetailNovel(source, slug);
+        const data = content.data;
+        setNovel(data);
+    }
 
-    const [novel, setNovel] = useState(defaultNovel);
+    useEffect(() => {
+        getNovelInfo('PluginCrawlTruyenFull', 'phong-luu-diem-hiep-truyen-ky');
+    }, []);
+
+    console.log(novel);
 
     return (
         <div className='novel-page-container'>
-            {/* TODO: Minh Huy làm trang này */}
             {novel &&
                 <>
-                    <img width={300} src={novel.imageURL} alt={`${novel.title} thumbnail`} />
-                    <h4>{novel.title}</h4>
+                    <div className="row">
+                        <div className="col-md-4 mt-2">
+                            <img width={300} src={novel.cover} alt={`${novel.title} thumbnail`} />
+                        </div>
+                        <div className="col-md-8 text-start">
+                            <h4>{novel.title}</h4>
 
-                    <button className='btn btn-primary'>
-                        <Link to='/novel/1/chapter/10'>Đọc ngay</Link>
-                    </button>
+                            <span className="fw-bold">Tác giả: </span>
+                            {novel.authors.map((author, index) => (
+                                <span key={index}>{author.name}{index < novel.authors.length - 1 ? ', ' : ''}</span>
+                            ))}
+                            <br></br>
+                            <span className="fw-bold">Thể loại: </span>
+                            {novel.categories.map((categorie, index) => (
+                                <span key={index}>{categorie.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
+                            ))}
+                            <br></br>
+                            <h5>Điểm đánh giá: {novel.rating}</h5>
+                            <p>{novel.description}</p>
+                            <button className='btn btn-primary'>
+                                <Link to='/novel/1/chapter/10'>Đọc ngay</Link>
+                            </button>
+                        </div>
+                    </div>
+
+                    <h5>Danh sách chương</h5>
+                    <table className="table table-bordered border-secondary table-hover table-striped chapter-table">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nội dung</th>
+                            </tr>
+                        </thead>
+                        <tbody className="table-striped">
+                            {novel.chapters.map((chapter, index) => (
+                                <tr >
+                                    <th scope="row"><a href="/detailactor/">{chapter.slug}</a></th>
+                                    <td>{chapter.title}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
+
                 </>
-
             }
-
         </div>
     );
 }

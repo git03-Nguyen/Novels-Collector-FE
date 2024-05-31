@@ -1,14 +1,13 @@
 
 import './ListNovelPage.css'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-
 function ListNovelPage(props) {
     const [totalPage, setTotalPage] = useState(3);
 
     const handlePageClick = async () => {
-        //TODO: replace this with calling API from server
+
     }
 
     return (
