@@ -86,7 +86,11 @@
     cursor: pointer;
 }
 
-.novel-card > img {
+.novel-card:hover {
+    opacity: 0.7;
+}
+
+.novel-card img {
     width: 10vw;
     height: 30vh;
 
@@ -94,6 +98,10 @@
     padding-bottom: 4px;
 }
 
-.novel-card > h6 {
+.novel-card h6,
+.novel-card a {
+    color: white !important;
+    text-decoration: none !important;
+    line-height: 1;
     margin: 2px 0;
 }

@@ -4,6 +4,7 @@
     color: white;
     display: grid;
     grid-template-columns: 15% 30% 15% 15% auto;
+    grid-template-rows: 25% 75%;
     justify-content: space-evenly;
 }
 
