@@ -1,29 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import NovelService from '../../services/detailnovel.s';
+import { Link, useParams } from 'react-router-dom';
+import NovelService from '../../services/detailNovel.s';
+import { toast } from 'react-toastify';
+import ReactPaginate from 'react-paginate';
 function NovelPage(props) {
 
+    const { novelID } = useParams();
     const defaultNovel = {
         title: `Mushoku Tensei - Old Dragon's Tale`,
-        imageURL: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/311151454_441803738051212_5345550456087243642_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcq4yB9NvQ5r0ZeDkS8a4zKw6RxbcPf9MrDpHFtw9_0_6QJkJDdbsRmH2GnS0a0SWzzOOn1nKRiJ2UEr_cgHZ0&_nc_ohc=fmkLaF8s1-UQ7kNvgFfhqXR&_nc_ht=scontent.fsgn4-1.fna&oh=00_AYDv9FvVwJIMDxxAwNMsYxyMKqQgdZTnAb9c6y5uzCW7Ew&oe=6659FA4D',
-        rating: 0.0,
-        ratingNum: 0,
-        view: 100,
+        cover: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/311151454_441803738051212_5345550456087243642_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcq4yB9NvQ5r0ZeDkS8a4zKw6RxbcPf9MrDpHFtw9_0_6QJkJDdbsRmH2GnS0a0SWzzOOn1nKRiJ2UEr_cgHZ0&_nc_ohc=fmkLaF8s1-UQ7kNvgFfhqXR&_nc_ht=scontent.fsgn4-1.fna&oh=00_AYDv9FvVwJIMDxxAwNMsYxyMKqQgdZTnAb9c6y5uzCW7Ew&oe=6659FA4D',
+        rating: 7.0,
+        authors: [{
+            name: 'Tac gia 1',
+        },
+        {
+            name: 'Tac gia 2',
+        },
+        {
+            name: 'Tac gia 3',
+        },
+        {
+            name: 'Tac gia 4',
+        },
+        ],
+        categories: [{
+            name: 'The loai 1',
+        },
+        {
+            name: 'The loai 2',
+        },
+        {
+            name: 'The loai 3',
+        },
+        {
+            name: 'The loai 4',
+        },
+        ],
         updatedAt: Date.now(),
-        categories: ['Phiêu lưu', 'Thế giới mở', 'Hành động', 'Giả tưởng', 'Xuyên không'],
+        chapters: [{
+            slug: 'phong-luu-diem-hiep-truyen-ky',
+            title: 'Chương 1'
+        },
+        {
+            slug: 'phong-luu-diem-hiep-truyen-ky',
+            title: 'Chương 2'
+        },
+        {
+            slug: 'phong-luu-diem-hiep-truyen-ky',
+            title: 'Chương 3'
+        },
+        {
+            slug: 'phong-luu-diem-hiep-truyen-ky',
+            title: 'Chương 4'
+        },
+        ],
+        description: 'Thong tin mo ta'
     }
-    const [novel, setNovel] = useState();
-    const getNovelInfo = async (source, slug) => {
-        const content = await NovelService.fetchDetailNovel(source, slug);
-        const data = content.data;
-        setNovel(data);
+
+    const [totalPage, setTotalPage] = useState(5);
+    const handlePageClick = async () => {
+        // TODO: replace this with calling API from server
     }
+
+    const [novel, setNovel] = useState(defaultNovel);
+    const fetchNovelInfo = async (source, slug) => {
+        try {
+            const response = await NovelService.fetchDetailNovel(source, slug);
+            if (response && response.data && parseInt(response.statusCode) === 200) {
+                console.log("Novel id: " + response.data.id);
+                console.log(response.data);
+                setNovel(response.data);
+            } else {
+                toast.error("Error fetching novel Info: " + response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching novel Info: " + error.message);
+        }
+    }
+
 
     useEffect(() => {
-        getNovelInfo('PluginCrawlTruyenFull', 'phong-luu-diem-hiep-truyen-ky');
+        fetchNovelInfo('PluginCrawlTruyenFull', 'phong-luu-diem-hiep-truyen-ky');
     }, []);
-
-    console.log(novel);
 
     return (
         <div className='novel-page-container'>
@@ -42,8 +100,8 @@ function NovelPage(props) {
                             ))}
                             <br></br>
                             <span className="fw-bold">Thể loại: </span>
-                            {novel.categories.map((categorie, index) => (
-                                <span key={index}>{categorie.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
+                            {novel.categories.map((category, index) => (
+                                <span key={index}>{category.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
                             ))}
                             <br></br>
                             <h5>Điểm đánh giá: {novel.rating}</h5>
@@ -63,14 +121,35 @@ function NovelPage(props) {
                             </tr>
                         </thead>
                         <tbody className="table-striped">
-                            {novel.chapters.map((chapter, index) => (
-                                <tr >
-                                    <th scope="row"><a href="/detailactor/">{chapter.slug}</a></th>
+                            {novel.chapters && novel.chapters.map((chapter, index) => (
+                                <tr key={`novel-chapter-${index}`}>
                                     <td>{chapter.title}</td>
+                                    <th scope="row"><Link to={`/novel/1/chapter/${index}`}>{chapter.slug}</Link></th>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+
+                    <ReactPaginate
+                        containerClassName='pagination justify-content-center' //important
+                        activeClassName='active'
+                        breakLabel="..."
+                        nextLabel="Next ->"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={5}
+                        marginPagesDisplayed={2}
+                        pageCount={totalPage}
+                        previousLabel="<- Previous"
+                        pageClassName='page-item'
+                        pageLinkClassName='page-link'
+                        breakClassName='page-item'
+                        breakLinkClassName='page-link'
+                        previousClassName='page-item'
+                        previousLinkClassName='page-link'
+                        nextClassName='page-item'
+                        nextLinkClassName='page-link'
+                        renderOnZeroPageCount={null}
+                    />
 
 
                 </>

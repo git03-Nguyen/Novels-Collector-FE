@@ -7,6 +7,7 @@ import CategoryService from '../../services/category.s';
 function Header(props) {
     const { searchKeyword, setSearchKeyword } = useContext(SearchContext);
 
+    const [testAPIData, setTestAPIData] = useState('');
 
     const defaultCategoryDisplayQuantity = parseInt(window.innerWidth * 0.6 / 110 - 1);
 
@@ -42,10 +43,27 @@ function Header(props) {
         }
     }
 
+    const fetchTestAPIData = async () => {
+        try {
+            let response = await CategoryService.fetchTestAPI();
+            if (response && response.data && parseInt(response.statusCode) === 200) {
+                setTestAPIData(response.data.message);
+            } else {
+                console.log("Error fetching categories: " + response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching categories: " + error.message);
+        }
+    }
+
 
     useEffect(() => {
         fetchCategories();
     }, []);
+
+    useEffect(() => {
+        fetchTestAPIData();
+    }, [testAPIData])
 
     return (
         <header className='app-header'>
@@ -78,7 +96,7 @@ function Header(props) {
 
             <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
                 <i className='fa-solid fa-gear'></i>
-                <span className='ps-2'>Cài đặt</span>
+                <span className='ps-2'>Cài đặt - testapi: {testAPIData}</span>
             </button>
             <ul className="dropdown-menu">
                 <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>

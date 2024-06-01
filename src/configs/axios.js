@@ -4,9 +4,9 @@ const instance = axios.create({
     baseURL: process.env.REACT_APP_SERVER_HTTPS_URL,
 });
 
-instance.defaults.withCredentials = true;
-// instance.defaults.headers.common['Authorization'] = `Bearer ` + localStorage.getItem('accessToken');
 // Un-comment this in case you want to pass cookies to the server through req.headers
+// instance.defaults.withCredentials = true;
+// instance.defaults.headers.common['Authorization'] = `Bearer ` + localStorage.getItem('accessToken');
 
 //REQUEST
 instance.interceptors.request.use((config) => {
@@ -18,7 +18,10 @@ instance.interceptors.request.use((config) => {
 
 //RESPONSE
 instance.interceptors.response.use((response) => {
-    return response.data;
+    return {
+        ...response.data,
+        statusCode: response.status,
+    }
 }, (err) => {
     let msg = err.response.data.message;
     if (msg) {
