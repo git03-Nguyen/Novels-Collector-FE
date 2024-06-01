@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import NovelService from '../../services/detailnovel.s';
+import ReactPaginate from 'react-paginate';
+import './NovelPage.css';
+import { set } from 'lodash';
 function NovelPage(props) {
 
     const defaultNovel = {
@@ -22,9 +25,21 @@ function NovelPage(props) {
     useEffect(() => {
         getNovelInfo('PluginCrawlTruyenFull', 'phong-luu-diem-hiep-truyen-ky');
     }, []);
-
+    const [itemOffset, setItemOffset] = useState(0);
     console.log(novel);
-
+    const items = novel.chapters;
+    const perPage = 8;
+    const offset = 0;
+    const currentPage = offset / perPage;
+    const pageCount = Math.ceil(items.length / perPage);
+    const start = offset;
+    const end = start + perPage;
+    const slice = items.slice(start, end);
+    const totalPage = Math.ceil(items.length / perPage);
+    const handlePageClick = async (e) => {
+        const newOffset = (e.selected * perPage) % items.length;
+        setItemOffset(newOffset);
+    }
     return (
         <div className='novel-page-container'>
             {novel &&
@@ -46,7 +61,7 @@ function NovelPage(props) {
                                 <span key={index}>{categorie.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
                             ))}
                             <br></br>
-                            <h5>Điểm đánh giá: {novel.rating}</h5>
+                            <span className="fw-bold">Điểm đánh giá: {novel.rating}</span>
                             <p>{novel.description}</p>
                             <button className='btn btn-primary'>
                                 <Link to='/novel/1/chapter/10'>Đọc ngay</Link>
@@ -55,24 +70,44 @@ function NovelPage(props) {
                     </div>
 
                     <h5>Danh sách chương</h5>
-                    <table className="table table-bordered border-secondary table-hover table-striped chapter-table">
-                        <thead className="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nội dung</th>
-                            </tr>
-                        </thead>
-                        <tbody className="table-striped">
-                            {novel.chapters.map((chapter, index) => (
-                                <tr >
-                                    <th scope="row"><a href="/detailactor/">{chapter.slug}</a></th>
-                                    <td>{chapter.title}</td>
+                    <div className="chapter-table-container">
+                        <table className="table table-bordered border-secondary table-hover table-striped chapter-table">
+                            <thead className="table-primary">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nội dung</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-
+                            </thead>
+                            <tbody className="table-striped">
+                                {novel.chapters.map((chapter, index) => (
+                                    <tr >
+                                        <th scope="row"><a href="/detailactor/">{chapter.slug}</a></th>
+                                        <td>{chapter.title}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <ReactPaginate
+                        containerClassName='pagination justify-content-center' //important
+                        activeClassName='active'
+                        breakLabel="..."
+                        nextLabel="Next ->"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={5}
+                        marginPagesDisplayed={2}
+                        pageCount={totalPage}
+                        previousLabel="<- Previous"
+                        pageClassName='page-item'
+                        pageLinkClassName='page-link'
+                        breakClassName='page-item'
+                        breakLinkClassName='page-link'
+                        previousClassName='page-item'
+                        previousLinkClassName='page-link'
+                        nextClassName='page-item'
+                        nextLinkClassName='page-link'
+                        renderOnZeroPageCount={null}
+                    />
                 </>
             }
         </div>

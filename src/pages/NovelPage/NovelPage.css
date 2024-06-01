@@ -1,3 +1,9 @@
 .chapter-table {
     width: 50%;
 }
+
+.chapter-table-container {
+
+    display: flex;
+    justify-content: center;
+}
