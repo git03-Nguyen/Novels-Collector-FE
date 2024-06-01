@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import NovelService from '../../services/detailNovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
+import { set } from 'lodash';
+import './NovelPage.css';
 function NovelPage(props) {
 
 
@@ -58,19 +60,19 @@ function NovelPage(props) {
         description: 'Thong tin mo ta'
     }
 
-    const [totalPage, setTotalPage] = useState(5);
-    const handlePageClick = async () => {
-        // TODO: replace this with calling API from server
-    }
+
 
     const [novel, setNovel] = useState(defaultNovel);
+
     const fetchNovelInfo = async (source, slug) => {
         try {
             const response = await NovelService.fetchDetailNovel(source, slug);
+
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 console.log("Novel id: " + response.data.id);
                 console.log(response.data);
                 setNovel(response.data);
+                toast.success(response.message);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -79,10 +81,25 @@ function NovelPage(props) {
         }
     }
 
-
     useEffect(() => {
         fetchNovelInfo('PluginCrawlTruyenFull', 'phong-luu-diem-hiep-truyen-ky');
     }, []);
+
+    const [totalPage, setTotalPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
+    const perPage = 5;
+
+    useEffect(() => {
+        setTotalPage(Math.ceil(novel.chapters.length / perPage));
+        console.log(totalPage);
+    }, [novel])
+
+
+    const handlePageClick = async (e) => {
+        setCurrentPage(e.selected);
+    }
+
+    const displayChapters = novel.chapters.slice(currentPage * perPage, (currentPage + 1) * perPage);
 
     return (
         <div className='novel-page-container'>
@@ -115,7 +132,7 @@ function NovelPage(props) {
 
                     <h5>Danh sách chương</h5>
                     <div className="chapter-table-container">
-                        <table className="table table-bordered border-secondary table-hover table-striped chapter-table">
+                        <table className="table table-bordered border-primary table-hover table-striped chapter-table">
                             <thead className="table-primary">
                                 <tr>
                                     <th>ID</th>
@@ -123,52 +140,15 @@ function NovelPage(props) {
                                 </tr>
                             </thead>
                             <tbody className="table-striped">
-                                {novel.chapters.map((chapter, index) => (
-                                    <tr >
-                                        <th scope="row"><a href="/detailactor/">{chapter.slug}</a></th>
+                                {displayChapters && displayChapters.map((chapter, index) => (
+                                    <tr key={`novel-chapter-${index}`}>
                                         <td>{chapter.title}</td>
+                                        <th scope="row"><Link to={`/novel/1/chapter/${index}`}>{chapter.slug}</Link></th>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
-                    <ReactPaginate
-                        containerClassName='pagination justify-content-center' //important
-                        activeClassName='active'
-                        breakLabel="..."
-                        nextLabel="Next ->"
-                        onPageChange={handlePageClick}
-                        pageRangeDisplayed={5}
-                        marginPagesDisplayed={2}
-                        pageCount={totalPage}
-                        previousLabel="<- Previous"
-                        pageClassName='page-item'
-                        pageLinkClassName='page-link'
-                        breakClassName='page-item'
-                        breakLinkClassName='page-link'
-                        previousClassName='page-item'
-                        previousLinkClassName='page-link'
-                        nextClassName='page-item'
-                        nextLinkClassName='page-link'
-                        renderOnZeroPageCount={null}
-                    />
-                    <table className="table table-bordered border-secondary table-hover table-striped chapter-table">
-                        <thead className="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nội dung</th>
-                            </tr>
-                        </thead>
-                        <tbody className="table-striped">
-                            {novel.chapters && novel.chapters.map((chapter, index) => (
-                                <tr key={`novel-chapter-${index}`}>
-                                    <td>{chapter.title}</td>
-                                    <th scope="row"><Link to={`/novel/1/chapter/${index}`}>{chapter.slug}</Link></th>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
                     <ReactPaginate
                         containerClassName='pagination justify-content-center' //important
                         activeClassName='active'
