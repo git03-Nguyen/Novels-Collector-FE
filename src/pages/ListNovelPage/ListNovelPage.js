@@ -93,7 +93,7 @@ function ListNovelPage(props) {
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
                             <button type="button" className="btn btn-primary">
-                                <Link to={`/novel/1`}>
+                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky`}>
                                     Xem chi tiết
                                 </Link>
                             </button>
@@ -117,7 +117,7 @@ function ListNovelPage(props) {
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
                             <button type="button" className="btn btn-primary">
-                                <Link to={`/novel/1`}>
+                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky`}>
                                     Xem chi tiết
                                 </Link>
                             </button>                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
@@ -140,7 +140,7 @@ function ListNovelPage(props) {
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
                             <button type="button" className="btn btn-primary">
-                                <Link to={`/novel/1`}>
+                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky`}>
                                     Xem chi tiết
                                 </Link>
                             </button>                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
@@ -163,7 +163,7 @@ function ListNovelPage(props) {
                             </div>
                             <div className="mt-1.5 fs-4 fw-bold leading-8 text-center text-black">Sherlock holmes [FULL]</div>
                             <button type="button" className="btn btn-primary">
-                                <Link to={`/novel/1`}>
+                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky`}>
                                     Xem chi tiết
                                 </Link>
                             </button>                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">

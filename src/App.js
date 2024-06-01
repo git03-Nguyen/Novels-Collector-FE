@@ -7,19 +7,26 @@ import IndexRoute from './routes/IndexRoute';
 //Toastify
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import BreadCrumb from './Components/BreadCrumb/BreadCrumb';
+import { useContext, useEffect, useState } from 'react';
+import { NovelContext } from './context/NovelContext';
 
 function App() {
+  const { isLoadingNovel } = useContext(NovelContext);
+
   return (
     <div className="App">
       <Header />
 
-      <div className='app-breadcrumb'>
-        <Link to="/">
-          Trang chủ
-        </Link>
-      </div>
+      <BreadCrumb />
+
       <div className='app-container'>
-        <IndexRoute />
+        {/* {isLoadingNovel === true && <h1>Loading Novel Data ...</h1>} */}
+        {isLoadingNovel === true ?
+          <h1 className='loading-message'>... Loading Data ...</h1>
+          : <IndexRoute />}
+        {/* <IndexRoute /> */}
+
       </div>
 
       <Footer />
