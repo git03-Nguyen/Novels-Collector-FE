@@ -33,7 +33,7 @@
     width: 100%;
 }
 
-.filter-button-list > button{
+.filter-button-list>button {
     box-shadow: 1.5px 1px var(--light-blue);
 }
 

@@ -3,7 +3,6 @@ import axios from '../configs/axios';
 const fetchDetailNovel = async (source, slug) => {
     try {
         const response = await axios.get(`/api/v1/novel/${source}/${slug}`);
-        console.log(response);
         if (response) {
 
 
@@ -11,7 +10,7 @@ const fetchDetailNovel = async (source, slug) => {
                 statusCode: response.statusCode ?? 200,
                 message: "Fetch detail novel info successfully!",
                 data: response?.data ?? {},
-                meta: response?.meta
+                meta: response?.meta ?? {}
             }
 
             const sub_response = await axios.get(`/api/v1/novel/${source}/${slug}/chapters`);
