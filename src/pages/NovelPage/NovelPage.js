@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
 import { NovelContext } from '../../context/NovelContext';
+import './NovelPage.css';
 function NovelPage(props) {
 
     const { novelSlug } = useParams();
@@ -64,7 +65,7 @@ function NovelPage(props) {
 
 
     const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
-    const [novel, setNovel] = useState({});
+    const [novel, setNovel] = useState(defaultNovel);
     const fetchNovelInfo = async (source, slug) => {
         try {
             const response = await NovelService.fetchDetailNovel(source, slug);
@@ -79,9 +80,9 @@ function NovelPage(props) {
             console.error("Error fetching novel Info: " + error.message);
         }
     }
-
     useEffect(() => {
         fetchNovelInfo(pluginSources[0].name, novelSlug);
+        console.log(novel);
     }, []);
 
     const [totalPage, setTotalPage] = useState(0);
@@ -124,7 +125,7 @@ function NovelPage(props) {
                                         <span key={index}>{category.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
                                     ))}
                                     <br></br>
-                                    <h5>Điểm đánh giá: {novel.rating}</h5>
+                                    <span className="fw-bold">Điểm đánh giá: {novel.rating}</span>
                                     <p>{novel?.description}</p>
                                     <button className='btn btn-primary'>
                                         <Link to='/novel/phong-luu-diem-hiep-truyen-ky/chapter/10'>Đọc ngay</Link>
@@ -133,23 +134,24 @@ function NovelPage(props) {
                             </div>
 
                             <h5>Danh sách chương</h5>
-                            <table className="table table-bordered border-secondary table-hover table-striped chapter-table">
-                                <thead className="table-dark">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nội dung</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="table-striped">
-                                    {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
-                                        <tr key={`novel-chapter-${index}`}>
-                                            <td>{chapter.title}</td>
-                                            <th scope="row"><Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link></th>
+                            <div className="chapter-table-container">
+                                <table className="table table-bordered border-primary table-hover table-striped chapter-table">
+                                    <thead className="table-primary">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nội dung</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-
+                                    </thead>
+                                    <tbody className="table-striped">
+                                        {displayChapters && displayChapters.length > 0 && displayChapters.map((chapter, index) => (
+                                            <tr key={`novel-chapter-${index}`}>
+                                                <td>{chapter.title}</td>
+                                                <th scope="row"><Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link></th>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                             <ReactPaginate
                                 containerClassName='pagination justify-content-center' //important
                                 activeClassName='active'
