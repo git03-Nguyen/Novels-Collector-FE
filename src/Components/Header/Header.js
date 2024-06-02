@@ -84,7 +84,6 @@ function Header(props) {
                 <li><hr className="dropdown-divider" /></li>
                 <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
                 <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
-
             </ul>
         </header>
     );
