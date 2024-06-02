@@ -1,13 +1,11 @@
 import { React, useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom'
 import './Header.css'
-import { SearchContext } from '../../context/SearchContext';
 import CategoryService from '../../services/category.s';
+import { NovelContext } from '../../context/NovelContext';
 
 function Header(props) {
-    const { searchKeyword, setSearchKeyword } = useContext(SearchContext);
-
-    const [testAPIData, setTestAPIData] = useState('');
+    const { searchKeyword, setSearchKeyword } = useContext(NovelContext);
 
     const defaultCategoryDisplayQuantity = parseInt(window.innerWidth * 0.6 / 110 - 1);
 
@@ -32,7 +30,7 @@ function Header(props) {
     const fetchCategories = async () => {
         try {
             let response = await CategoryService.fetchCategories();
-            if (response && response.data && response.statusCode === 200) {
+            if (response && response.data && parseInt(response.statusCode) === 200) {
                 let newCategories = response.data.slice(0, categoryDisplayQuantity);
                 setCategories(newCategories);
             } else {
@@ -43,27 +41,9 @@ function Header(props) {
         }
     }
 
-    const fetchTestAPIData = async () => {
-        try {
-            let response = await CategoryService.fetchTestAPI();
-            if (response && response.data && parseInt(response.statusCode) === 200) {
-                setTestAPIData(response.data.message);
-            } else {
-                console.log("Error fetching categories: " + response?.message);
-            }
-        } catch (error) {
-            console.error("Error fetching categories: " + error.message);
-        }
-    }
-
-
     useEffect(() => {
         fetchCategories();
     }, []);
-
-    useEffect(() => {
-        fetchTestAPIData();
-    }, [testAPIData])
 
     return (
         <header className='app-header'>
@@ -96,7 +76,7 @@ function Header(props) {
 
             <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
                 <i className='fa-solid fa-gear'></i>
-                <span className='ps-2'>Cài đặt - testapi: {testAPIData}</span>
+                <span className='ps-2'>Cài đặt</span>
             </button>
             <ul className="dropdown-menu">
                 <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>

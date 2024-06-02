@@ -22,9 +22,9 @@ function NovelChapterPage(props) {
             const response = await ChapterService.fetchChapterContent();
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setChapterContent(response.data);
+                const urlPath = window.location.pathname;
                 toast.success(response.message);
             } else {
-                console.log("Error fetching chapter content: " + response?.message);
                 toast.error(response?.message);
             }
         } catch (error) {
