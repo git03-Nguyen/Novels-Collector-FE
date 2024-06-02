@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 const NovelContext = React.createContext({
     searchKeyword: '',
-    novel: {},
+    novelContext: {},
     pluginSources: {},
     isLoadingNovel: false,
 })
@@ -12,8 +12,9 @@ const NovelContext = React.createContext({
 function NovelProvider(props) {
     const { children } = props;
     const [isLoadingNovel, setIsLoadingNovel] = useState(true);
-    const [novel, setNovel] = useState();
-    const [pluginSources, setPluginSources] = useState([{ name: 'PluginCrawlTruyenFull' }]);
+    const [novelContext, setNovelContext] = useState({});
+    const [chapterContext, setChapterContext] = useState({});
+    const [pluginSources, setPluginSources] = useState([{ name: 'TruyenFullVn' }]);
     const [searchKeyword, setSearchKeyword] = useState('');
 
 
@@ -43,7 +44,7 @@ function NovelProvider(props) {
     }
 
     const addNewPluginSource = () => {
-        // TODO: Calling API from server here
+        // TODO: Calling API from server here 
     }
 
     useEffect(() => {
@@ -52,8 +53,8 @@ function NovelProvider(props) {
 
     return (
         <NovelContext.Provider value={{
-            searchKeyword, novel, pluginSources, isLoadingNovel,
-            setSearchKeyword, setNovel, setPluginSources, addNewPluginSource, setIsLoadingNovel
+            searchKeyword, novelContext, chapterContext, pluginSources, isLoadingNovel,
+            setSearchKeyword, setNovelContext, setChapterContext, setPluginSources, addNewPluginSource, setIsLoadingNovel
         }}>
             {children}
         </NovelContext.Provider>
