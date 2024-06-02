@@ -13,6 +13,12 @@ const fetchTestAPI = async () => {
                 data: response?.data ?? {},
             }
         }
+
+        return {
+            statusCode: 404,
+            data: null,
+            message: "Test API not found !"
+        }
     } catch (error) {
         console.log("Error fetching test API: " + error.message);
         return {

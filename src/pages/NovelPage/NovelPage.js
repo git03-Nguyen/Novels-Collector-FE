@@ -5,11 +5,15 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
 import { NovelContext } from '../../context/NovelContext';
+
+import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
+
+
 function NovelPage(props) {
 
     const { novelSlug } = useParams();
-    const { pluginSources, setPluginSources, isLoadingNovel, setIsLoadingNovel } = useContext(NovelContext);
+    const { pluginSources, setNovelContext } = useContext(NovelContext);
 
     const defaultNovel = {
         title: `Mushoku Tensei - Old Dragon's Tale`,
@@ -71,8 +75,11 @@ function NovelPage(props) {
             const response = await NovelService.fetchDetailNovel(source, slug);
 
             if (response && response.data && parseInt(response.statusCode) === 200) {
-                setNovel(response.data);
+                const newNovelInfo = handleConvertNovelStatusCode(response.data);
+                setNovel(newNovelInfo);
                 setIsLoadingNovelPage(false);
+
+                setNovelContext(newNovelInfo);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -80,6 +87,16 @@ function NovelPage(props) {
             console.error("Error fetching novel Info: " + error.message);
         }
     }
+
+    const handleConvertNovelStatusCode = (newNovel) => {
+        return {
+            ...newNovel,
+            status: ChapterStatusConverter.convertCodeToStatus(newNovel.status)
+        }
+    }
+
+
+
     useEffect(() => {
         fetchNovelInfo(pluginSources[0].name, novelSlug);
         console.log(novel);
@@ -124,8 +141,15 @@ function NovelPage(props) {
                                     {novel.categories && novel.categories.length > 0 && novel.categories.map((category, index) => (
                                         <span key={index}>{category.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
                                     ))}
+
                                     <br></br>
-                                    <span className="fw-bold">Điểm đánh giá: {novel.rating}</span>
+                                    <br></br>
+
+                                    <span className="fw-bold">Điểm đánh giá: {novel.rating} / {novel.maxRating}</span>
+                                    <h5>Trạng thái: {novel.status}</h5>
+                                    <br></br>
+
+
                                     <p>{novel?.description}</p>
                                     <button className='btn btn-primary'>
                                         <Link to='/novel/phong-luu-diem-hiep-truyen-ky/chapter/10'>Đọc ngay</Link>
@@ -134,6 +158,7 @@ function NovelPage(props) {
                             </div>
 
                             <h5>Danh sách chương</h5>
+
                             <div className="chapter-table-container">
                                 <table className="table table-bordered border-primary table-hover table-striped chapter-table">
                                     <thead className="table-primary">
@@ -143,11 +168,21 @@ function NovelPage(props) {
                                         </tr>
                                     </thead>
                                     <tbody className="table-striped">
-                                        {displayChapters && displayChapters.length > 0 && displayChapters.map((chapter, index) => (
-                                            <tr key={`novel-chapter-${index}`}>
-                                                <td>{chapter.title}</td>
-                                                <th scope="row"><Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link></th>
-                                            </tr>
+                                    {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
+                                        <tr key={`novel-chapter-${index}`}>
+                                            <td>{chapter.title}</td>
+                                            <th scope="row">
+                                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${chapter.slug}`}>
+                                                    {chapter.slug}
+                                                </Link>
+                                            </th>
+                                        </tr>
+//                                     <tbody className="table-striped">
+//                                         {displayChapters && displayChapters.length > 0 && displayChapters.map((chapter, index) => (
+//                                             <tr key={`novel-chapter-${index}`}>
+//                                                 <td>{chapter.title}</td>
+//                                                 <th scope="row"><Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link></th>
+//                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
