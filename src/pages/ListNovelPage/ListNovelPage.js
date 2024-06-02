@@ -166,7 +166,8 @@ function ListNovelPage(props) {
                                 <Link to={`/novel/phong-luu-diem-hiep-truyen-ky`}>
                                     Xem chi tiết
                                 </Link>
-                            </button>                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
+                            </button>
+                            <div className="flex gap-1.5 justify-between px-1.5 mt-1.5 w-full text-base leading-6 text-center text-black">
                                 <div className="flex gap-1.5 justify-center">
                                     <img alt='novel-thumbnail' loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/887cb135afc58e6b9a91786b9c574bc29b0d2777c3cee22055172f7bbd1d6f69?" className="shrink-0 w-9 aspect-[1.12]" />
                                     <div>124 lượt đọc</div>

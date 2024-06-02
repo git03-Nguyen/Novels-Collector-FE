@@ -3,27 +3,34 @@ import axios from '../configs/axios';
 const fetchDetailNovel = async (source, slug) => {
     try {
         const response = await axios.get(`/api/v1/novel/${source}/${slug}`);
+        console.log(response);
         if (response) {
 
 
             let returnedData = {
                 statusCode: response.statusCode ?? 200,
-                message: response.message,
+                message: "Fetch detail novel info successfully!",
                 data: response?.data ?? {},
                 meta: response?.meta
             }
 
             const sub_response = await axios.get(`/api/v1/novel/${source}/${slug}/chapters`);
             if (sub_response) {
-                let chapterList = sub_response.data;
-                chapterList = chapterList.map((chapter, index) => {
+                let allChapters = [];
+                let totalPage = sub_response.meta.totalPage;
+                console.log("Total page: " + totalPage);
+                for (let i = 1; i <= totalPage; i++) {
+                    let sub_response = await axios.get(`/api/v1/novel/${source}/${slug}/chapters?page=${i}`);
+                    allChapters.push(...sub_response.data);
+                }
+                allChapters = allChapters.map((chapter, index) => {
                     return {
                         ...chapter,
                         id: index,
                     }
                 })
-                chapterList = chapterList.sort((a, b) => b.id - a.id);
-                returnedData.data.chapters = chapterList;
+                allChapters = allChapters.sort((a, b) => a.id - b.id);
+                returnedData.data.chapters = allChapters;
             }
             return returnedData;
         }
