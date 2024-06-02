@@ -7,7 +7,8 @@ import { NovelContext } from '../../context/NovelContext';
 import './BreadCrumb.css';
 
 function BreadCrumb(props) {
-    const urlPath = useLocation().pathname;
+    const location = useLocation();
+    const [urlPath, setUrlPath] = useState(location.pathname);
     const separator = '>';
 
     const { novelContext, chapterContext } = useContext(NovelContext);
@@ -32,6 +33,11 @@ function BreadCrumb(props) {
 
         setSubsetOfPath(newSubSetOfPath);
     }
+
+    useEffect(() => {
+        setUrlPath(location.pathname);
+        setSubsetOfPath(BreadCrumbGenerator.convertPathToBreadCrumb(location.pathname));
+    }, [location])
 
     useEffect(() => {
         updateBreadcrumb('Truyện', novelContext?.title);

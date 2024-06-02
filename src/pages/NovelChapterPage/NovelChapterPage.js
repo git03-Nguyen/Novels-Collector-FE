@@ -4,11 +4,12 @@ import ChapterService from '../../services/chapter.s';
 import './NovelChapterPage.css'
 import { toast } from 'react-toastify';
 import { NovelContext } from '../../context/NovelContext';
-import NovelService from '../../services/detailNovel.s';
-import { useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
+import NovelService from '../../services/detailnovel.s';
 function NovelChapterPage(props) {
     const { novelSlug, chapterSlug } = useParams();
+    const navigate = useNavigate();
 
     const defaultNovel = {
         title: `Mushoku Tensei - Old Dragon's Tale`,
@@ -21,18 +22,34 @@ function NovelChapterPage(props) {
     const { novelContext, setNovelContext, pluginSources, chapterContext, setChapterContext } = useContext(NovelContext);
 
     const [novel, setNovel] = useState(defaultNovel);
+
+    // TODO: fix this perpage variable to align with specific plugin sources
+    const perpage = 50;
+    const [totalPage, setTotalPage] = useState(1);
+    const defaultChapterID = parseInt(chapterSlug.split('-')[1]);
+    const [chapterID, setChapterID] = useState(defaultChapterID);
+
+    const defaultCurrentPage = Math.floor(chapterID / perpage) + 1;
+    const [currentPage, setCurrentPage] = useState(defaultCurrentPage);
+
+
+    const defaultIsDisabledSiblingChapter = {
+        previous: false,
+        next: false
+    }
+    const [isDisabledSiblingChapter, setDisabledSiblingChapter] = useState(defaultIsDisabledSiblingChapter);
+
     const [novelChapter, setChapterContent] = useState({});
     const [isLoadingNovelChapterPage, setIsLoadingNovelChapterPage] = useState(true);
 
     const fetchNovelInfo = async (source, slug) => {
         try {
-            const response = await NovelService.fetchDetailNovel(source, slug);
+            const response = await NovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
                 setNovel(newNovelInfo);
-                setIsLoadingNovelChapterPage(false);
 
-                setNovelContext(newNovelInfo);
+                updateRelatedData(newNovelInfo)
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -41,25 +58,22 @@ function NovelChapterPage(props) {
         }
     }
 
+    const updateRelatedData = (newNovelInfo) => {
+        setTotalPage(parseInt(newNovelInfo.totalPage));
+
+        setIsLoadingNovelChapterPage(false);
+
+        setNovelContext(newNovelInfo);
+
+        setDisabledStatusForSiblingChapters(newNovelInfo);
+    }
+
     const handleConvertNovelStatusCode = (newNovel) => {
         return {
             ...newNovel,
             status: ChapterStatusConverter.convertCodeToStatus(newNovel.status)
         }
     }
-    // const fetchNovelInfo = async (source, slug) => {
-    //     try {
-    //         const response = await NovelService.fetchDetailNovel(source, slug);
-    //         if (response && response.data && parseInt(response.statusCode) === 200) {
-    //             setNovelContext(response.data);
-    //             setIsLoadingNovelChapterPage(false);
-    //         } else {
-    //             toast.error("Error fetching novel Info: " + response?.message);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error fetching novel Info: " + error.message);
-    //     }
-    // }
 
     const fetchChapterContent = async () => {
         // TODO: replace this with calling API from server
@@ -83,13 +97,51 @@ function NovelChapterPage(props) {
 
     }
 
+    const setDisabledStatusForSiblingChapters = (newNovelInfo) => {
+        let currentPosition = chapterID % perpage;
+        switch (currentPosition) {
+            case 0: {
+                if (chapterID === totalPage) {
+                    return setDisabledSiblingChapter({ previous: false, next: true })
+                }
+                return setDisabledSiblingChapter({ previous: false, next: false })
+            }
+
+            case 1: {
+                if (chapterID === 1) {
+                    return setDisabledSiblingChapter({ previous: true, next: false })
+                }
+                return setDisabledSiblingChapter({ previous: false, next: false })
+            }
+
+            case newNovelInfo.chapters.length: {
+                return setDisabledSiblingChapter({ previous: false, next: true })
+            }
+
+            default: setDisabledSiblingChapter({ previous: false, next: false })
+        }
+    }
+
+    const handleSiblingChapterClick = (increment) => {
+        // navigate(`/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
+        window.location.replace(`/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
+        // TODO: replace this with more suitable solution
+    }
+
+
+
     useEffect(() => {
         fetchChapterContent();
     }, [])
 
     useEffect(() => {
         fetchNovelInfo(pluginSources[0].name, novelSlug);
-    }, [])
+    }, [currentPage])
+
+    useEffect(() => {
+        setCurrentPage(Math.floor(chapterID / perpage) + 1);
+    }, [chapterID])
+
 
     return (
         <div className='novel-chapter-page-container'>
@@ -116,7 +168,8 @@ function NovelChapterPage(props) {
                     </div>
 
                     <div className='novel-chapter-footer-navigator'>
-                        <button className='btn btn-secondary previous-chapter-btn'>
+                        <button className='btn btn-secondary previous-chapter-btn'
+                            disabled={isDisabledSiblingChapter.previous} onClick={() => handleSiblingChapterClick(-1)}>
                             <i className="fa-solid fa-arrow-left-long"></i>
                             <span className='ps-3'>Trước</span>
                         </button>
@@ -124,7 +177,8 @@ function NovelChapterPage(props) {
                             <i className="fa-solid fa-house-user"></i>
                             <span className='ps-3'>Trang chủ</span>
                         </button>
-                        <button className='btn btn-secondary next-chapter-btn'>
+                        <button className='btn btn-secondary next-chapter-btn'
+                            disabled={isDisabledSiblingChapter.next} onClick={() => handleSiblingChapterClick(1)}>
                             <span className='pe-3'>Sau</span>
                             <i className="fa-solid fa-arrow-right-long"></i>
                         </button>
