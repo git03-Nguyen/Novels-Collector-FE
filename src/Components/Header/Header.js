@@ -63,11 +63,12 @@ function Header(props) {
     }, []);
     return (
         <header className='app-header'>
-            <Link to='/'>
-                <img src='/logo.png' className='app-logo' alt='logo' />
-            </Link>
             <div className='search-engine'>
+
                 <div className='category-container'>
+                    <Link to='/'>
+                        <img src='/logo.png' className='app-logo' alt='logo' />
+                    </Link>
                     <div className='category-list'>
                         {categories && categories.map(category => {
                             return <button key={`category-tag-${category.id}`} className='btn btn-primary category-tag'>{category.name}</button>
@@ -77,13 +78,31 @@ function Header(props) {
                             <button className='btn btn-primary category-tag'>Xem thêm ...</button>
                         </Link>
                     </div>
-
+                    <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
+                        <i className='fa-solid fa-gear'></i>
+                        <span className='ps-2'>Cài đặt</span>
+                    </button>
+                    <ul className="dropdown-menu">
+                        <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
+                        <li><Link className='dropdown-item' to='#'>Tài khoản</Link></li>
+                        <li><hr className="dropdown-divider" /></li>
+                        <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
+                        <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
+                    </ul>
                 </div>
 
                 <div className='search-bar'>
-                    <button className='btn btn-primary'>
-                        <Link to='/novel-list'>Danh sách truyện</Link>
-                    </button>
+                    <div className="form-floating">
+                        <select className="form-select " id="source">
+
+                            <option value="hot-novel">Truyện Hot</option>
+                            <option value="full-novel">Truyện Full</option>
+                            <option value="new-novel">Truyện Mới Cập nhật</option>
+
+
+                        </select>
+                        <label for="floatingSelectGrid">Danh sách Truyện</label>
+                    </div>
                     <input type='text' className='form-control' placeholder='Tìm kiếm tiểu thuyết theo tên, thể loại, tác giả, ...'
                         value={searchKeyword} onChange={(e) => handleChangeSearchKeyword(e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e)} />
@@ -101,17 +120,7 @@ function Header(props) {
 
             </div>
 
-            <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
-                <i className='fa-solid fa-gear'></i>
-                <span className='ps-2'>Cài đặt</span>
-            </button>
-            <ul className="dropdown-menu">
-                <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
-                <li><Link className='dropdown-item' to='#'>Tài khoản</Link></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
-                <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
-            </ul>
+
         </header>
     );
 }

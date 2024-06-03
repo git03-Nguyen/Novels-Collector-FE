@@ -126,7 +126,7 @@ function NovelPage(props) {
                                             </div>
                                             <div className="col">
                                                 <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                                <select className="form-select " id="source">
+                                                <select className="form-select" id="source-select-box">
                                                     {listSources && listSources.length > 0 && listSources.map((source, index) => (
                                                         <option key={index} value={source.name}>{source.name}</option>
                                                     ))}

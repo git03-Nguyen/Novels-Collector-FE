@@ -21,3 +21,7 @@
     text-align: justify;
     padding-right: 6rem;
 }
+
+#source-select-box {
+    width: 70%;
+}
