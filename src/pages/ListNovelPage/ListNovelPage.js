@@ -14,61 +14,59 @@ function ListNovelPage(props) {
         <>
             <div className="filter-engine d-flex justify-content-between align-items-center my-3">
                 <div className="btn-group filter-button-list">
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Tên
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
-                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Thể loại
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tiên hiệp</Link></li>
-                        <li><Link className="dropdown-item" to="#">Thế giới mở</Link></li>
-                        <li><Link className="dropdown-item" to="#">Phiêu lưu</Link></li>
-                        <li><Link className="dropdown-item" to="#">Ngôn tình</Link></li>
-                        <li><Link className="dropdown-item" to="#">Hài hước</Link></li>
-                        <li><Link className="dropdown-item" to="#">Xuyên không</Link></li>
 
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Năm phát hành
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Mới nhất</Link></li>
-                        <li><Link className="dropdown-item" to="#">Cũ nhất</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Số lượt đọc
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
-                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Tình trạng
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Đang tiến hành</Link></li>
-                        <li><Link className="dropdown-item" to="#">Tạm ngưng</Link></li>
-                        <li><Link className="dropdown-item" to="#">Đã hoàn thành</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Điểm đánh giá
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
-                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Nguồn cung cấp
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Truyen Full</Link></li>
-                        <li><Link className="dropdown-item" to="#">Net Truyen</Link></li>
-                    </ul>
+                    <div class="form-floating me-3">
+                        <select class="form-select " id="categories">
+                            <option selected value="tien-hiep">Tiên hiệp</option>
+                            <option value="the-gioi-mo">Thế giới mở</option>
+                            <option value="phieu-luu">Phiêu lưu</option>
+                            <option value="ngon-tinh">Ngôn tình</option>
+                            <option value="hai-huoc">Hài hước</option>
+                            <option value="xuyen-khong">Xuyên không</option>
+                        </select>
+                        <label for="floatingSelectGrid">Thể loại</label>
+                    </div>
+                    <div className="form-floating me-3">
+                        <select className="form-select" id="yearRelease">
+                            <option value="1" selected>Mới nhất</option>
+                            <option value="2">Cũ nhất</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Năm phát hành</label>
+                    </div>
+                    <div className="form-floating me-3">
+                        <select className="form-select " id="numReaders">
+                            <option value="1" selected>Tăng dần</option>
+                            <option value="2">Giảm dần</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Số lượt đọc</label>
+                    </div>
+                    <div className="form-floating me-3">
+                        <select className="form-select " id="Status">
+                            <option selected value="1">Đang tiến hành</option>
+                            <option value="2">Tạm ngưng</option>
+                            <option value="3">Đã hoàn thành</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Tình trạng</label>
+                    </div>
+                    <div className="form-floating me-3">
+                        <select className="form-select " id="ratingPoint">
+                            <option selected>Tăng dần</option>
+                            <option value="1">Giảm dần</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Điểm đánh giá</label>
+                    </div>
+
+                    <div className="form-floating">
+                        <select className="form-select " id="source">
+                            <option selected>PluginCrawlTruyenFull</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Nguồn Truyện</label>
+                    </div>
 
 
                 </div>
@@ -180,8 +178,8 @@ function ListNovelPage(props) {
             </div>
 
             <ReactPaginate
-                containerClassName='pagination justify-content-center' //important
-                activeClassName='active'
+                containerclassName='pagination justify-content-center' //important
+                activeclassName='active'
                 breakLabel="..."
                 nextLabel="Next ->"
                 onPageChange={handlePageClick}
@@ -189,14 +187,14 @@ function ListNovelPage(props) {
                 marginPagesDisplayed={2}
                 pageCount={totalPage}
                 previousLabel="<- Previous"
-                pageClassName='page-item'
-                pageLinkClassName='page-link'
-                breakClassName='page-item'
-                breakLinkClassName='page-link'
-                previousClassName='page-item'
-                previousLinkClassName='page-link'
-                nextClassName='page-item'
-                nextLinkClassName='page-link'
+                pageclassName='page-item'
+                pageLinkclassName='page-link'
+                breakclassName='page-item'
+                breakLinkclassName='page-link'
+                previousclassName='page-item'
+                previousLinkclassName='page-link'
+                nextclassName='page-item'
+                nextLinkclassName='page-link'
                 renderOnZeroPageCount={null}
             />
         </>

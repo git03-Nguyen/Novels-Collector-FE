@@ -25,6 +25,7 @@ function NovelPage(props) {
         try {
             const response = await NovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
+                response.data.source = response.meta.source;
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
                 setNovel(newNovelInfo);
 
