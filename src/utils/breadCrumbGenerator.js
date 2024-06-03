@@ -1,7 +1,7 @@
 
 const convertPathToBreadCrumb = (path) => {
     // Path format: '/foo/bar' ==> ignore the first slash
-    if (path == '/') {
+    if (path === '/') {
         return [];
     }
     const subsetOfPath = path.split('/').slice(1);
@@ -22,7 +22,7 @@ const convertPathToBreadCrumb = (path) => {
             result[i / 2].path = subsetOfPath[i];
         }
 
-        result[i / 2].name = subsetOfPath[i + 1];
+        result[i / 2].name = subsetOfPath[i + 1] ?? '';
 
         result[i / 2].path += `/${result[i / 2].name}`;
     }
@@ -34,6 +34,7 @@ const convertPathToMeaningfulSegment = (path) => {
         case 'novel': return 'Truyện';
         case 'chapter': return 'Chương';
         case 'admin': return 'Quản trị';
+        case 'novel-list': return 'Danh sách';
         // TODO: Add new role for displaying breadcrumb if needed
 
         default: return '';

@@ -1,79 +1,37 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import NovelService from '../../services/detailNovel.s';
+import NovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
 import { NovelContext } from '../../context/NovelContext';
+
+import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
+
+
 function NovelPage(props) {
 
     const { novelSlug } = useParams();
-    const { pluginSources, setPluginSources, isLoadingNovel, setIsLoadingNovel } = useContext(NovelContext);
-
-    const defaultNovel = {
-        title: `Mushoku Tensei - Old Dragon's Tale`,
-        cover: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/311151454_441803738051212_5345550456087243642_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcq4yB9NvQ5r0ZeDkS8a4zKw6RxbcPf9MrDpHFtw9_0_6QJkJDdbsRmH2GnS0a0SWzzOOn1nKRiJ2UEr_cgHZ0&_nc_ohc=fmkLaF8s1-UQ7kNvgFfhqXR&_nc_ht=scontent.fsgn4-1.fna&oh=00_AYDv9FvVwJIMDxxAwNMsYxyMKqQgdZTnAb9c6y5uzCW7Ew&oe=6659FA4D',
-        rating: 7.0,
-        authors: [{
-            name: 'Tac gia 1',
-        },
-        {
-            name: 'Tac gia 2',
-        },
-        {
-            name: 'Tac gia 3',
-        },
-        {
-            name: 'Tac gia 4',
-        },
-        ],
-        categories: [{
-            name: 'The loai 1',
-        },
-        {
-            name: 'The loai 2',
-        },
-        {
-            name: 'The loai 3',
-        },
-        {
-            name: 'The loai 4',
-        },
-        ],
-        updatedAt: Date.now(),
-        chapters: [{
-            slug: 'phong-luu-diem-hiep-truyen-ky',
-            title: 'Chương 1'
-        },
-        {
-            slug: 'phong-luu-diem-hiep-truyen-ky',
-            title: 'Chương 2'
-        },
-        {
-            slug: 'phong-luu-diem-hiep-truyen-ky',
-            title: 'Chương 3'
-        },
-        {
-            slug: 'phong-luu-diem-hiep-truyen-ky',
-            title: 'Chương 4'
-        },
-        ],
-        description: 'Thong tin mo ta'
-    }
-
-
+    const { pluginSources, setNovelContext } = useContext(NovelContext);
 
     const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
-    const [novel, setNovel] = useState(defaultNovel);
+    const [novel, setNovel] = useState({});
+    const [totalPage, setTotalPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+
+
     const fetchNovelInfo = async (source, slug) => {
         try {
-            const response = await NovelService.fetchDetailNovel(source, slug);
-
+            const response = await NovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
-                response.data.source = response.meta.source;
-                setNovel(response.data);
+                const newNovelInfo = handleConvertNovelStatusCode(response.data);
+                setNovel(newNovelInfo);
+
+                setTotalPage(parseInt(newNovelInfo.totalPage));
                 setIsLoadingNovelPage(false);
+
+                setNovelContext(newNovelInfo);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -81,26 +39,25 @@ function NovelPage(props) {
             console.error("Error fetching novel Info: " + error.message);
         }
     }
-    useEffect(() => {
-        fetchNovelInfo(pluginSources[0].name, novelSlug);
-        console.log(novel);
-    }, []);
 
-    const [totalPage, setTotalPage] = useState(0);
-    const [currentPage, setCurrentPage] = useState(0);
-    const perPage = 5;
-
-    useEffect(() => {
-        setTotalPage(Math.ceil(novel.chapters.length / perPage));
-        console.log(totalPage);
-    }, [novel])
-
-
-    const handlePageClick = async (e) => {
-        setCurrentPage(e.selected);
+    const handleConvertNovelStatusCode = (newNovel) => {
+        return {
+            ...newNovel,
+            status: ChapterStatusConverter.convertCodeToStatus(newNovel.status)
+        }
     }
 
-    const displayChapters = novel.chapters.slice(currentPage * perPage, (currentPage + 1) * perPage);
+    const handlePageClick = async (e) => {
+        let selectedPage = parseInt(e.selected) + 1;
+        setCurrentPage(selectedPage);
+    }
+
+    useEffect(() => {
+        fetchNovelInfo(pluginSources[0].name, novelSlug);
+    }, [currentPage]);
+
+
+
 
     return (
         <div className='novel-page-container'>
@@ -125,8 +82,15 @@ function NovelPage(props) {
                                     {novel.categories && novel.categories.length > 0 && novel.categories.map((category, index) => (
                                         <span key={index}>{category.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
                                     ))}
+
                                     <br></br>
-                                    <span className="fw-bold">Điểm đánh giá: {novel.rating}</span>
+                                    <br></br>
+
+                                    <span className="fw-bold">Điểm đánh giá: {novel.rating} / {novel.maxRating}</span>
+                                    <h5>Trạng thái: {novel.status}</h5>
+                                    <br></br>
+
+
                                     <p>{novel?.description}</p>
                                     <button className='btn btn-primary'>
                                         <Link to='/novel/phong-luu-diem-hiep-truyen-ky/chapter/10'>Đọc ngay</Link>
@@ -192,11 +156,21 @@ function NovelPage(props) {
                                         </tr>
                                     </thead>
                                     <tbody className="table-striped">
-                                        {displayChapters && displayChapters.length > 0 && displayChapters.map((chapter, index) => (
+                                        {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
                                             <tr key={`novel-chapter-${index}`}>
                                                 <td>{chapter.title}</td>
-                                                <th scope="row"><Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link></th>
+                                                <th scope="row">
+                                                    <Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${chapter.slug}`}>
+                                                        {chapter.slug}
+                                                    </Link>
+                                                </th>
                                             </tr>
+                                            //                                     <tbody className="table-striped">
+                                            //                                         {displayChapters && displayChapters.length > 0 && displayChapters.map((chapter, index) => (
+                                            //                                             <tr key={`novel-chapter-${index}`}>
+                                            //                                                 <td>{chapter.title}</td>
+                                            //                                                 <th scope="row"><Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link></th>
+                                            //                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
