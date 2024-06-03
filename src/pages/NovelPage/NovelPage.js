@@ -71,30 +71,6 @@ function NovelPage(props) {
                                     <img className='novel-img' width={320} src={novel?.cover} alt={`${novel?.title} thumbnail`} />
                                 </div>
                                 <div className="col-md-8 text-start">
-                                    {/* <h4>{novel?.title}</h4>
-
-                                    <span className="fw-bold">Tác giả: </span>
-                                    {novel.authors && novel.authors.length > 0 && novel.authors.map((author, index) => (
-                                        <span key={index}>{author.name}{index < novel.authors.length - 1 ? ', ' : ''}</span>
-                                    ))}
-                                    <br></br>
-                                    <span className="fw-bold">Thể loại: </span>
-                                    {novel.categories && novel.categories.length > 0 && novel.categories.map((category, index) => (
-                                        <span key={index}>{category.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
-                                    ))}
-
-                                    <br></br>
-                                    <br></br>
-
-                                    <span className="fw-bold">Điểm đánh giá: {novel.rating} / {novel.maxRating}</span>
-                                    <h5>Trạng thái: {novel.status}</h5>
-                                    <br></br>
-
-
-                                    <p>{novel?.description}</p>
-                                    <button className='btn btn-primary'>
-                                        <Link to='/novel/phong-luu-diem-hiep-truyen-ky/chapter/10'>Đọc ngay</Link>
-                                    </button> */}
                                     <div className="pb-4 border-bottom border-white-50">
                                         <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
                                         <div className="d-flex">
@@ -144,41 +120,10 @@ function NovelPage(props) {
                                     </div>
                                 </div>
                             </div>
-
-
-
-                            {/* <div className="chapter-table-container">
-                                <table className="table table-bordered border-primary table-hover table-striped">
-                                    <thead className="table-primary">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nội dung</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="table-striped">
-                                        {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
-                                            <tr key={`novel-chapter-${index}`}>
-                                                <td>{chapter.title}</td>
-                                                <th scope="row">
-                                                    <Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${chapter.slug}`}>
-                                                        {chapter.slug}
-                                                    </Link>
-                                                </th>
-                                            </tr>
-                                            //                                     <tbody className="table-striped">
-                                            //                                         {displayChapters && displayChapters.length > 0 && displayChapters.map((chapter, index) => (
-                                            //                                             <tr key={`novel-chapter-${index}`}>
-                                            //                                                 <td>{chapter.title}</td>
-                                            //                                                 <th scope="row"><Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link></th>
-                                            //                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div> */}
                             <div className="accordion accordion-flush chapter-accordion mt-4" id="accordion-list-chapter">
                                 <h4 >Danh sách chương</h4>
 
-                                {displayChapters && displayChapters.length > 0 && displayChapters.map((chapter, index) => (
+                                {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
                                     <div className="accordion-item" key={`novel-chapter-${index}`}>
                                         <h2 className="accordion-header" id={`flush-heading${index}`}>
                                             <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse${index}`} aria-expanded="false" aria-controls={`flush-collapse${index}`}>
