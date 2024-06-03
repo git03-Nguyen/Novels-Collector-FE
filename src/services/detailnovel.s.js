@@ -70,28 +70,8 @@ const fetchChapterList = async (source, novelSlug, page) => {
     }
 }
 
-const fetchAllSourcesInfo = async () => {
-    try {
-        const response = await axios.get(`/api/v1/sources`);
-        if (response) {
-            return {
-                statusCode: response.statusCode ?? 200,
-                message: "Fetch all sources info successfully!",
-                data: response?.data ?? {},
-            }
-        }
-    } catch (error) {
-        console.log("Error fetching all sources info: " + error.message);
-        return {
-            statusCode: 500,
-            data: null,
-            message: "Error fetching all sources info: " + error.message
-        }
-    }
-}
 const NovelService = {
     fetchDetailNovel,
-    fetchAllSourcesInfo
 }
 
 export default NovelService;

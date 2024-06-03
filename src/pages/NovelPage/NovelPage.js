@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
 import { NovelContext } from '../../context/NovelContext';
-
+import PluginSourceService from '../../services/pluginSource.s';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 
@@ -57,6 +57,22 @@ function NovelPage(props) {
         fetchNovelInfo(pluginSources[0].name, novelSlug);
     }, [currentPage]);
 
+    const [listSources, setListSources] = useState([]);
+    const fetchPluginSources = async () => {
+        try {
+            const response = await PluginSourceService.fetchPluginSources();
+            if (response && response.data && parseInt(response.statusCode) === 200) {
+                setListSources(response.data);
+            } else {
+                console.log("Error fetching plugin sources: " + response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching plugin sources: " + error.message);
+        }
+    }
+    useEffect(() => {
+        fetchPluginSources();
+    }, []);
 
 
 
@@ -110,15 +126,23 @@ function NovelPage(props) {
                                             </div>
                                             <div className="col">
                                                 <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                                <span>{novel?.source}</span>
+                                                <select className="form-select " id="source">
+                                                    {listSources && listSources.length > 0 && listSources.map((source, index) => (
+                                                        <option key={index} value={source.name}>{source.name}</option>
+                                                    ))}
+
+                                                </select>
                                             </div>
 
                                         </div>
                                     </div>
                                     <div className="mt-0">
                                         <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
-                                        <p className="text-white mt-0">{novel?.description}</p>
+                                        <p className="text-white mt-0 novel-description">{novel?.description}</p>
                                     </div>
+                                    <button className='btn btn-primary'>
+                                        <Link to='/novel/1/chapter/10'>Đọc ngay</Link>
+                                    </button>
                                 </div>
                             </div>
                             <div className="accordion accordion-flush chapter-accordion mt-4" id="accordion-list-chapter">

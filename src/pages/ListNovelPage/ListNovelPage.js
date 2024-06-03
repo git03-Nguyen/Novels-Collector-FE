@@ -3,7 +3,7 @@ import './ListNovelPage.css'
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-
+import PluginSourceService from '../../services/pluginSource.s';
 import NovelService from '../../services/detailnovel.s';
 function ListNovelPage(props) {
     const [totalPage, setTotalPage] = useState(3);
@@ -15,7 +15,7 @@ function ListNovelPage(props) {
     const [listSources, setListSources] = useState([]);
     const fetchAllSourcesInfo = async () => {
         try {
-            const response = await NovelService.fetchAllSourcesInfo();
+            const response = await PluginSourceService.fetchPluginSources();
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setListSources(response.data);
             }
@@ -78,15 +78,7 @@ function ListNovelPage(props) {
                         <label for="floatingSelectGrid">Điểm đánh giá</label>
                     </div>
 
-                    <div className="form-floating">
-                        <select className="form-select " id="source">
-                            {listSources && listSources.length > 0 && listSources.map((source, index) => (
-                                <option key={index} value={source.name}>{source.name}</option>
-                            ))}
 
-                        </select>
-                        <label for="floatingSelectGrid">Nguồn Truyện</label>
-                    </div>
 
 
                 </div>

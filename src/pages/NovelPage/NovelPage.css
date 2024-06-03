@@ -16,3 +16,8 @@
     border-radius: 10px;
     background-color: var(--light-blue)
 }
+
+.novel-description {
+    text-align: justify;
+    padding-right: 6rem;
+}

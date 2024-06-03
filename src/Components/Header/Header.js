@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import './Header.css'
 import CategoryService from '../../services/category.s';
 import { NovelContext } from '../../context/NovelContext';
-
+import PluginSourceService from '../../services/pluginSource.s';
 function Header(props) {
     const { searchKeyword, setSearchKeyword } = useContext(NovelContext);
 
@@ -45,6 +45,22 @@ function Header(props) {
         fetchCategories();
     }, []);
 
+    const [listSources, setListSources] = useState([]);
+    const fetchPluginSources = async () => {
+        try {
+            const response = await PluginSourceService.fetchPluginSources();
+            if (response && response.data && parseInt(response.statusCode) === 200) {
+                setListSources(response.data);
+            } else {
+                console.log("Error fetching plugin sources: " + response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching plugin sources: " + error.message);
+        }
+    }
+    useEffect(() => {
+        fetchPluginSources();
+    }, []);
     return (
         <header className='app-header'>
             <Link to='/'>
@@ -56,11 +72,12 @@ function Header(props) {
                         {categories && categories.map(category => {
                             return <button key={`category-tag-${category.id}`} className='btn btn-primary category-tag'>{category.name}</button>
                         })}
+
+                        <Link >
+                            <button className='btn btn-primary category-tag'>Xem thêm ...</button>
+                        </Link>
                     </div>
 
-                    <Link >
-                        <button className='btn btn-primary category-tag'>Xem thêm ...</button>
-                    </Link>
                 </div>
 
                 <div className='search-bar'>
@@ -71,7 +88,17 @@ function Header(props) {
                         value={searchKeyword} onChange={(e) => handleChangeSearchKeyword(e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e)} />
                     <button className='btn btn-primary' onClick={() => handleSearch()}>Tìm kiếm</button>
+                    <div className="form-floating">
+                        <select className="form-select " id="source">
+                            {listSources && listSources.length > 0 && listSources.map((source, index) => (
+                                <option key={index} value={source.name}>{source.name}</option>
+                            ))}
+
+                        </select>
+                        <label for="floatingSelectGrid">Nguồn Truyện</label>
+                    </div>
                 </div>
+
             </div>
 
             <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
