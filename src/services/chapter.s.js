@@ -301,7 +301,7 @@ const fetchChapterContent = async (source, novelSlug, chapterSlug) => {
     // })
 
     try {
-        const response = await axios.get(`/api/v1/novel/${source}/${novelSlug}/${chapterSlug}`);
+        const response = await axios.get(`/api/v1/chapter/${source}/${novelSlug}/${chapterSlug}`);
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,

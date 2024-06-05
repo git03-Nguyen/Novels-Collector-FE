@@ -2,7 +2,7 @@ import axios from '../configs/axios'
 
 const fetchPluginSources = async () => {
     try {
-        const response = await axios.get('/api/v1/sources');
+        const response = await axios.get('/api/v1/source');
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,

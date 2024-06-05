@@ -149,7 +149,7 @@ function NovelChapterPage(props) {
                 ? <h1 className='loading-message'>... Loading Data ...</h1>
                 : <Fragment>
                     <h3>{novelContext.title}</h3>
-                    <h5>{novelChapter.title}</h5>
+                    <h5>Chương {novelChapter.number} {novelChapter.title}</h5>
                     <h5>Đánh giá: {novelContext.rating} / {novelContext.maxRating}
                         <span> - </span>
                         Tác giả: {novelContext.authors[0]?.name}
@@ -157,9 +157,6 @@ function NovelChapterPage(props) {
                         Trạng thái: {novelContext.status}</h5>
 
                     <div className='novel-chapter-content-container'>
-                        {/* {novelChapter.content && novelChapter.content.length > 0 && novelChapter.content.map((line, index) => {
-                            return <div key={`content-line-${index}`} dangerouslySetInnerHTML={{ __html: line }}></div>
-                        })} */}
 
                         {novelChapter.content && novelChapter.content.length > 0 &&
                             <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter.content }}></div>

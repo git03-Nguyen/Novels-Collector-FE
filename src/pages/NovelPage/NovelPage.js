@@ -106,7 +106,7 @@ function NovelPage(props) {
                                                     ))}
                                                 </div>
                                                 <p className="text-white-50 mb-1">
-                                                    <span className="text-white-400 ms-2"> <i class="fas fa-eye fs-5 text-light me-1" aria-hidden="true"></i> 124 lượt đọc</span>
+                                                    <span className="text-white-400 ms-2"> <i className="fas fa-eye fs-5 text-light me-1" aria-hidden="true"></i> 124 lượt đọc</span>
                                                 </p>
                                             </div>
 
@@ -121,7 +121,7 @@ function NovelPage(props) {
                                             <div className="col">
                                                 <p className="text-white fw-bold mb-1">Thể loại</p>
                                                 {novel.categories && novel.categories.length > 0 && novel.categories.map((category, index) => (
-                                                    <span key={index}>{category.name}{index < novel.categories.length - 1 ? ', ' : ''}</span>
+                                                    <span key={index}>{category.title}{index < novel.categories.length - 1 ? ', ' : ''}</span>
                                                 ))}
                                             </div>
                                             <div className="col">
@@ -140,9 +140,6 @@ function NovelPage(props) {
                                         <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
                                         <p className="text-white mt-0 novel-description">{novel?.description}</p>
                                     </div>
-                                    <button className='btn btn-primary'>
-                                        <Link to='/novel/1/chapter/10'>Đọc ngay</Link>
-                                    </button>
                                 </div>
                             </div>
                             <div className="accordion accordion-flush chapter-accordion mt-4" id="accordion-list-chapter">
@@ -157,7 +154,7 @@ function NovelPage(props) {
                                         </h2>
                                         <div id={`flush-collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${index}`} data-bs-parent="#accordionl-list-chapter">
                                             <div className="accordion-body">
-                                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${index}`}>{chapter.slug}</Link>
+                                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${chapter.slug}`}>{chapter.slug}</Link>
                                             </div>
                                         </div>
                                     </div>
@@ -167,12 +164,12 @@ function NovelPage(props) {
                                 containerClassName='pagination justify-content-center' //important
                                 activeClassName='active'
                                 breakLabel="..."
-                                nextLabel="Next ->"
+                                nextLabel="Sau >"
                                 onPageChange={handlePageClick}
                                 pageRangeDisplayed={5}
                                 marginPagesDisplayed={2}
                                 pageCount={totalPage}
-                                previousLabel="<- Previous"
+                                previousLabel="< Trước"
                                 pageClassName='page-item'
                                 pageLinkClassName='page-link'
                                 breakClassName='page-item'
