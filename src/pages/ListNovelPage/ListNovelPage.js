@@ -33,8 +33,8 @@ function ListNovelPage(props) {
             <div className="filter-engine d-flex justify-content-between align-items-center my-3">
                 <div className="btn-group filter-button-list">
 
-                    <div class="form-floating me-3">
-                        <select class="form-select " id="categories">
+                    <div className="form-floating me-3">
+                        <select className="form-select " id="categories">
                             <option selected value="tien-hiep">Tiên hiệp</option>
                             <option value="the-gioi-mo">Thế giới mở</option>
                             <option value="phieu-luu">Phiêu lưu</option>
@@ -42,7 +42,7 @@ function ListNovelPage(props) {
                             <option value="hai-huoc">Hài hước</option>
                             <option value="xuyen-khong">Xuyên không</option>
                         </select>
-                        <label for="floatingSelectGrid">Thể loại</label>
+                        <label htmlFor="floatingSelectGrid">Thể loại</label>
                     </div>
                     <div className="form-floating me-3">
                         <select className="form-select" id="yearRelease">
@@ -50,7 +50,7 @@ function ListNovelPage(props) {
                             <option value="2">Cũ nhất</option>
 
                         </select>
-                        <label for="floatingSelectGrid">Năm phát hành</label>
+                        <label htmlFor="floatingSelectGrid">Năm phát hành</label>
                     </div>
                     <div className="form-floating me-3">
                         <select className="form-select " id="numReaders">
@@ -58,7 +58,7 @@ function ListNovelPage(props) {
                             <option value="2">Giảm dần</option>
 
                         </select>
-                        <label for="floatingSelectGrid">Số lượt đọc</label>
+                        <label htmlFor="floatingSelectGrid">Số lượt đọc</label>
                     </div>
                     <div className="form-floating me-3">
                         <select className="form-select " id="Status">
@@ -67,7 +67,7 @@ function ListNovelPage(props) {
                             <option value="3">Đã hoàn thành</option>
 
                         </select>
-                        <label for="floatingSelectGrid">Tình trạng</label>
+                        <label htmlFor="floatingSelectGrid">Tình trạng</label>
                     </div>
                     <div className="form-floating me-3 select-item">
                         <select className="form-select " id="ratingPoint">
@@ -75,7 +75,7 @@ function ListNovelPage(props) {
                             <option value="1">Giảm dần</option>
 
                         </select>
-                        <label for="floatingSelectGrid">Điểm đánh giá</label>
+                        <label htmlFor="floatingSelectGrid">Điểm đánh giá</label>
                     </div>
 
 
