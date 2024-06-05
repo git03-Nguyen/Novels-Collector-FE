@@ -22,7 +22,7 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
                 statusCode: response.statusCode ?? 200,
                 message: "Fetch detail novel info successfully!",
                 data: response?.data ?? {},
-                meta: response?.meta
+                meta: response?.meta ?? {}
             }
 
             const chapterListResponse = await fetchChapterList(source, novelSlug, page);
@@ -69,7 +69,6 @@ const fetchChapterList = async (source, novelSlug, page) => {
         }
     }
 }
-
 
 const NovelService = {
     fetchDetailNovel,

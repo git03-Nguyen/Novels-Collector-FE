@@ -3,6 +3,8 @@ import './ListNovelPage.css'
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
+import PluginSourceService from '../../services/pluginSource.s';
+import NovelService from '../../services/detailnovel.s';
 function ListNovelPage(props) {
     const [totalPage, setTotalPage] = useState(3);
 
@@ -10,65 +12,73 @@ function ListNovelPage(props) {
 
     }
 
+    const [listSources, setListSources] = useState([]);
+    const fetchAllSourcesInfo = async () => {
+        try {
+            const response = await PluginSourceService.fetchPluginSources();
+            if (response && response.data && parseInt(response.statusCode) === 200) {
+                setListSources(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching all sources info: " + error.message);
+        }
+    }
+
+    useEffect(() => {
+        fetchAllSourcesInfo();
+    }, []);
+
     return (
         <>
             <div className="filter-engine d-flex justify-content-between align-items-center my-3">
                 <div className="btn-group filter-button-list">
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Tên
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
-                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Thể loại
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tiên hiệp</Link></li>
-                        <li><Link className="dropdown-item" to="#">Thế giới mở</Link></li>
-                        <li><Link className="dropdown-item" to="#">Phiêu lưu</Link></li>
-                        <li><Link className="dropdown-item" to="#">Ngôn tình</Link></li>
-                        <li><Link className="dropdown-item" to="#">Hài hước</Link></li>
-                        <li><Link className="dropdown-item" to="#">Xuyên không</Link></li>
 
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Năm phát hành
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Mới nhất</Link></li>
-                        <li><Link className="dropdown-item" to="#">Cũ nhất</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Số lượt đọc
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
-                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Tình trạng
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Đang tiến hành</Link></li>
-                        <li><Link className="dropdown-item" to="#">Tạm ngưng</Link></li>
-                        <li><Link className="dropdown-item" to="#">Đã hoàn thành</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Điểm đánh giá
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Tăng dần</Link></li>
-                        <li><Link className="dropdown-item" to="#">Giảm dần</Link></li>
-                    </ul>
-                    <button type="button" className="btn btn-primary dropdown-toggle me-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Nguồn cung cấp
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className="dropdown-item" to="#">Truyen Full</Link></li>
-                        <li><Link className="dropdown-item" to="#">Net Truyen</Link></li>
-                    </ul>
+                    <div class="form-floating me-3">
+                        <select class="form-select " id="categories">
+                            <option selected value="tien-hiep">Tiên hiệp</option>
+                            <option value="the-gioi-mo">Thế giới mở</option>
+                            <option value="phieu-luu">Phiêu lưu</option>
+                            <option value="ngon-tinh">Ngôn tình</option>
+                            <option value="hai-huoc">Hài hước</option>
+                            <option value="xuyen-khong">Xuyên không</option>
+                        </select>
+                        <label for="floatingSelectGrid">Thể loại</label>
+                    </div>
+                    <div className="form-floating me-3">
+                        <select className="form-select" id="yearRelease">
+                            <option value="1" selected>Mới nhất</option>
+                            <option value="2">Cũ nhất</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Năm phát hành</label>
+                    </div>
+                    <div className="form-floating me-3">
+                        <select className="form-select " id="numReaders">
+                            <option value="1" selected>Tăng dần</option>
+                            <option value="2">Giảm dần</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Số lượt đọc</label>
+                    </div>
+                    <div className="form-floating me-3">
+                        <select className="form-select " id="Status">
+                            <option selected value="1">Đang tiến hành</option>
+                            <option value="2">Tạm ngưng</option>
+                            <option value="3">Đã hoàn thành</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Tình trạng</label>
+                    </div>
+                    <div className="form-floating me-3 select-item">
+                        <select className="form-select " id="ratingPoint">
+                            <option selected>Tăng dần</option>
+                            <option value="1">Giảm dần</option>
+
+                        </select>
+                        <label for="floatingSelectGrid">Điểm đánh giá</label>
+                    </div>
+
+
 
 
                 </div>
@@ -78,8 +88,95 @@ function ListNovelPage(props) {
                 </div>
 
             </div>
+            <div className='homepage-container'>
+                <div className='novel-sublists'>
+                    <div className='outstanding-sublist'>
+                        <div className='category-info-row'>
+                            <strong className='sublist-label'>Truyện top lượt xem</strong>
+                            <Link to='/novel-list'>
+                                <strong className='sublist-label'>Xem thêm</strong>
+                            </Link>
+                        </div>
+                        <div className='novel-sublist-row'>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/311151454_441803738051212_5345550456087243642_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcq4yB9NvQ5r0ZeDkS8a4zKw6RxbcPf9MrDpHFtw9_0_6QJkJDdbsRmH2GnS0a0SWzzOOn1nKRiJ2UEr_cgHZ0&_nc_ohc=fmkLaF8s1-UQ7kNvgFfhqXR&_nc_ht=scontent.fsgn4-1.fna&oh=00_AYDv9FvVwJIMDxxAwNMsYxyMKqQgdZTnAb9c6y5uzCW7Ew&oe=6659FA4D' alt='novel' />
+                                    <h6>Mushoku Tensei - Old Dragon's Tale</h6>
+                                </Link>
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://i2.docln.net/ln/series/covers/s12957-595fd6ec-610c-4481-b187-172cc7cb4896.jpg' alt='novel' />
+                                    <h6>Rebuild World</h6>
+                                </Link>
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://i.docln.net/lightnovel/covers/s3601-9a25c91a-ffda-4826-9b55-361cb909f9bc-m.jpg' alt='novel' />
+                                    <h6>Maou Gakuin no Futekigousha</h6>
+                                </Link>
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://4.bp.blogspot.com/-SfvDenZRZrk/W3Uf4bf783I/AAAAAAABiIM/0Xj67F0v-A8lBBzYUHfwhBQuKq8uptSawCHMYCw/w215/default.jpg' alt='novel' />
+                                    <h6>Sevens</h6>
+                                </Link>
 
-            <div className="trending-novel-container">
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://3.bp.blogspot.com/-coc62nTZN9M/WO2v-JFMCuI/AAAAAAAAKBE/Kb8JLmHVElw/w215/series_259.jpg' alt='novel' />
+                                    <h6>Kumo Desu Ga Nani Ka</h6>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='latest-sublist'>
+                        <div className='category-info-row'>
+                            <strong className='sublist-label'>Truyện mới nhất</strong>
+                            <Link to='/novel-list'>
+                                <strong className='sublist-label'>Xem thêm</strong>
+                            </Link>
+                        </div>
+                        <div className='novel-sublist-row'>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/311151454_441803738051212_5345550456087243642_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcq4yB9NvQ5r0ZeDkS8a4zKw6RxbcPf9MrDpHFtw9_0_6QJkJDdbsRmH2GnS0a0SWzzOOn1nKRiJ2UEr_cgHZ0&_nc_ohc=fmkLaF8s1-UQ7kNvgFfhqXR&_nc_ht=scontent.fsgn4-1.fna&oh=00_AYDv9FvVwJIMDxxAwNMsYxyMKqQgdZTnAb9c6y5uzCW7Ew&oe=6659FA4D' alt='novel' />
+                                    <h6>Mushoku Tensei - Old Dragon's Tale</h6>
+                                </Link>
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://i2.docln.net/ln/series/covers/s12957-595fd6ec-610c-4481-b187-172cc7cb4896.jpg' alt='novel' />
+                                    <h6>Rebuild World</h6>
+                                </Link>
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://i.docln.net/lightnovel/covers/s3601-9a25c91a-ffda-4826-9b55-361cb909f9bc-m.jpg' alt='novel' />
+                                    <h6>Maou Gakuin no Futekigousha</h6>
+                                </Link>
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://4.bp.blogspot.com/-SfvDenZRZrk/W3Uf4bf783I/AAAAAAABiIM/0Xj67F0v-A8lBBzYUHfwhBQuKq8uptSawCHMYCw/w215/default.jpg' alt='novel' />
+                                    <h6>Sevens</h6>
+                                </Link>
+
+                            </div>
+                            <div className='novel-card'>
+                                <Link to='/novel/phong-luu-diem-hiep-truyen-ky'>
+                                    <img src='https://3.bp.blogspot.com/-coc62nTZN9M/WO2v-JFMCuI/AAAAAAAAKBE/Kb8JLmHVElw/w215/series_259.jpg' alt='novel' />
+                                    <h6>Kumo Desu Ga Nani Ka</h6>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {/* <div className="trending-novel-container">
                 <div className="novel-grid">
                     <div className="novel-item">
                         <img alt='novel-thumbnail' src="https://rukminim2.flixcart.com/image/850/1000/kk76wsw0/book/s/t/a/the-complete-novels-sherlock-holmes-b-original-imafzhubtkywgr5w.jpeg?q=90&crop=false" className="novel-thumbnail" />
@@ -177,11 +274,11 @@ function ListNovelPage(props) {
                     </div>
                 </div>
 
-            </div>
+            </div> */}
 
-            <ReactPaginate
-                containerClassName='pagination justify-content-center' //important
-                activeClassName='active'
+            {/* <ReactPaginate
+                containerclassName='pagination justify-content-center' //important
+                activeclassName='active'
                 breakLabel="..."
                 nextLabel="Next ->"
                 onPageChange={handlePageClick}
@@ -189,16 +286,16 @@ function ListNovelPage(props) {
                 marginPagesDisplayed={2}
                 pageCount={totalPage}
                 previousLabel="<- Previous"
-                pageClassName='page-item'
-                pageLinkClassName='page-link'
-                breakClassName='page-item'
-                breakLinkClassName='page-link'
-                previousClassName='page-item'
-                previousLinkClassName='page-link'
-                nextClassName='page-item'
-                nextLinkClassName='page-link'
+                pageclassName='page-item'
+                pageLinkclassName='page-link'
+                breakclassName='page-item'
+                breakLinkclassName='page-link'
+                previousclassName='page-item'
+                previousLinkclassName='page-link'
+                nextclassName='page-item'
+                nextLinkclassName='page-link'
                 renderOnZeroPageCount={null}
-            />
+            /> */}
         </>
 
     );

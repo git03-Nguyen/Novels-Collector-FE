@@ -33,7 +33,7 @@
     width: 100%;
 }
 
-.filter-button-list > button{
+.filter-button-list>button {
     box-shadow: 1.5px 1px var(--light-blue);
 }
 
@@ -53,4 +53,8 @@
 .my-pagination {
     display: flex;
     justify-content: center;
+}
+
+.select-item {
+    background-color: #0d6efd;
 }

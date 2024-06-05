@@ -2,7 +2,26 @@
     width: 60%;
 }
 
-.chapter-table-container {
-    display: flex;
-    justify-content: center;
+.novel-img {
+    border: solid 4px #000;
+    border-radius: 6px;
+}
+
+.chapter-accordion {
+    width: 60%;
+    /* margin: 0 auto; */
+    margin-bottom: 1.4rem;
+    margin-left: 33%;
+    border: solid 6px #000;
+    border-radius: 10px;
+    background-color: var(--light-blue)
+}
+
+.novel-description {
+    text-align: justify;
+    padding-right: 6rem;
+}
+
+#source-select-box {
+    width: 70%;
 }
