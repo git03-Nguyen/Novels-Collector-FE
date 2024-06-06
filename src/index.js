@@ -9,20 +9,21 @@ import { BrowserRouter } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 //Font Awesome
 import 'font-awesome/css/font-awesome.min.css';
-import { SearchProvider } from './context/SearchContext';
 import { UserProvider } from './context/UserContext';
+import { NovelProvider } from './context/NovelContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
-    <SearchProvider>
+    <NovelProvider>
       <UserProvider>
         <App />
       </UserProvider>
-    </SearchProvider>
+    </NovelProvider>
   </BrowserRouter>
   // </React.StrictMode>
+
 );
 
 // If you want to start measuring performance in your app, pass a function

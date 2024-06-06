@@ -1,60 +1,51 @@
 .app-header {
     width: 100%;
-    /* max-height: 15vh; */
-    padding: 4px;
+    padding: 0 5%;
 
     color: white;
     background-color: var(--dark-blue);
-
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 15% auto 10%;
 }
 
 .app-logo {
     max-height: calc(15vh - 8px) !important;
 }
 
-.search-engine {
-    width: 60%;
 
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-}
-
-
-.search-bar,
-.category-container,
-.category-list {
-    min-width: 60%;
-
-    margin: 4px 0;
+.settings-bar {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
 
-.category-list > button {
+.search-bar {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-around;
+}
+
+button {
     margin: 0 2px;
 }
 
-.search-bar > input {
-    max-width: 60%;
+.search-bar>input {
+    max-width: 500px;
 }
 
-.search-bar  a {
+.search-bar a {
     color: white;
     text-decoration: none;
 }
 
-.category-tag {
-    background: linear-gradient(90deg,var(--dark-blue),black) !important;
+.settings-bar > button {
+    margin: 0 8px;
     box-shadow: 1.5px 1px var(--light-blue);
+    background: linear-gradient(90deg, var(--dark-blue), black) !important;
 }
 
-.category-tag:hover {
-    background: linear-gradient(90deg,#3b66f5,#163bcd) !important;
+.settings-bar > button:hover {
+    background: linear-gradient(90deg, #3b66f5, #163bcd) !important;
 }

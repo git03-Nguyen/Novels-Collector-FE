@@ -7,12 +7,12 @@ function AdminPage(props) {
         <>
             <h1>Admin</h1>
             <div id="menu" >
-                <div class="container text-center ">
-                    <ul class="row align-items-start ul-admin ">
-                        <li class="col">
+                <div className="container text-center ">
+                    <ul className="row align-items-start ul-admin ">
+                        <li className="col">
                             <Link className='btn btn-primary my-3 py-4' to='/admin/account'>Quản lý sub-admin</Link>
                         </li>
-                        <li class="col">
+                        <li className="col">
                             <Link className='btn btn-primary my-3 py-4' to='/admin/category'>Quản lý các nguồn API tiểu thuyết</Link>
                         </li>
                     </ul>

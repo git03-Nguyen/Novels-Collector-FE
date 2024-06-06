@@ -14,8 +14,8 @@ function IndexRoute(props) {
             <Route path='/' element={<HomePage />} />
             <Route path='/novel-list' element={<ListNovelPage />} />
             {/* <Route path='/novel' element={<NovelPage />} /> */}
-            <Route path='/novel/:novelID' element={<NovelPage />} />
-            <Route path='/novel/:novelID/chapter/:chapterID' element={<NovelChapterPage />} />
+            <Route path='/novel/:novelSlug' element={<NovelPage />} />
+            <Route path='/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage />} />
 
             {/* Private */}
             <Route path='/admin/' element={<AdminPage />} />

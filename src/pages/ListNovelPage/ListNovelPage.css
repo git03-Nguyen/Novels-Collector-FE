@@ -1,3 +1,12 @@
+.list-novel-page-container {
+    display: grid;
+    grid-template-columns: 75% auto;
+}
+
+.list-novel-page-content {
+    border-right: 1px dotted white;
+}
+
 .header-title {
     text-align: left;
 }
@@ -33,7 +42,7 @@
     width: 100%;
 }
 
-.filter-button-list > button{
+.filter-button-list>button {
     box-shadow: 1.5px 1px var(--light-blue);
 }
 
@@ -53,4 +62,8 @@
 .my-pagination {
     display: flex;
     justify-content: center;
+}
+
+.select-item {
+    background-color: #0d6efd;
 }
