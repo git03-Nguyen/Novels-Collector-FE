@@ -1,3 +1,12 @@
+.list-novel-page-container {
+    display: grid;
+    grid-template-columns: 75% auto;
+}
+
+.list-novel-page-content {
+    border-right: 1px dotted white;
+}
+
 .header-title {
     text-align: left;
 }

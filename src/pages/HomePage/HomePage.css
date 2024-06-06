@@ -1,15 +1,20 @@
 .homepage-container {
+    display: grid;
+    grid-template-columns: 75% auto;
+}
 
+.homepage-content {
     color: white;
     margin: 20px 0;
     min-height: 50vh;
+    
+    border-right: 1px dotted white;
 
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-evenly;
     align-items: center;
 }
-
 .sublist-label {
     font-size: 18px;
     margin: 8px 0 4px 0;
@@ -47,7 +52,8 @@
 }
 
 .outstanding-sublist,
-.latest-sublist {
+.latest-sublist,
+.completed-sublist {
     width: 70vw;
     margin-bottom: 40px;
 

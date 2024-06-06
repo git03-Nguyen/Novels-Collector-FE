@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { NovelContext } from '../../context/NovelContext';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
-import NovelService from '../../services/detailnovel.s';
+import DetailNovelService from '../../services/detailnovel.s';
 function NovelChapterPage(props) {
     const { novelSlug, chapterSlug } = useParams();
     const navigate = useNavigate();
@@ -44,7 +44,7 @@ function NovelChapterPage(props) {
 
     const fetchNovelInfo = async (source, slug) => {
         try {
-            const response = await NovelService.fetchDetailNovel(source, slug, currentPage);
+            const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
                 setNovel(newNovelInfo);
