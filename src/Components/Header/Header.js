@@ -94,12 +94,10 @@ function Header(props) {
                 <div className='search-bar'>
                     <div className="form-floating">
                         <select className="form-select " id="source">
-
                             <option value="hot-novel">Truyện Hot</option>
                             <option value="full-novel">Truyện Full</option>
                             <option value="new-novel">Truyện Mới Cập nhật</option>
-
-
+                            <option value="more-novel">Wating for calling API</option>
                         </select>
                         <label for="floatingSelectGrid">Danh sách Truyện</label>
                     </div>
