@@ -70,8 +70,8 @@ const fetchChapterList = async (source, novelSlug, page) => {
     }
 }
 
-const NovelService = {
+const DetailNovelService = {
     fetchDetailNovel,
 }
 
-export default NovelService;
+export default DetailNovelService;

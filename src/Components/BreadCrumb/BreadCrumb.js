@@ -50,7 +50,7 @@ function BreadCrumb(props) {
     return (
         <div className='app-breadcrumb'>
             <Link to="/">
-                Trang chủ
+                <span>Trang chủ</span>
             </Link>
             {subsetOfPath && subsetOfPath.length > 0 &&
                 <Fragment>

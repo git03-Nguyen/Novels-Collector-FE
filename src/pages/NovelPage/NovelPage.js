@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import NovelService from '../../services/detailnovel.s';
+import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
@@ -23,7 +23,7 @@ function NovelPage(props) {
 
     const fetchNovelInfo = async (source, slug) => {
         try {
-            const response = await NovelService.fetchDetailNovel(source, slug, currentPage);
+            const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 response.data.source = response.meta.source;
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
@@ -65,6 +65,7 @@ function NovelPage(props) {
                 setListSources(response.data);
             } else {
                 console.log("Error fetching plugin sources: " + response?.message);
+                toast.error("Error fetching plugin sources: " + response?.message);
             }
         } catch (error) {
             console.error("Error fetching plugin sources: " + error.message);
@@ -154,7 +155,7 @@ function NovelPage(props) {
                                         </h2>
                                         <div id={`flush-collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${index}`} data-bs-parent="#accordionl-list-chapter">
                                             <div className="accordion-body">
-                                                <Link to={`/novel/phong-luu-diem-hiep-truyen-ky/chapter/${chapter.slug}`}>{chapter.slug}</Link>
+                                                <Link to={`/novel/${novelSlug}/chapter/${chapter.slug}`}>{chapter.slug}</Link>
                                             </div>
                                         </div>
                                     </div>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import PluginSourceService from '../../services/pluginSource.s';
-import NovelService from '../../services/detailnovel.s';
+import DetailNovelService from '../../services/detailnovel.s';
 function ListNovelPage(props) {
     const [totalPage, setTotalPage] = useState(3);
 
