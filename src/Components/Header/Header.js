@@ -99,7 +99,7 @@ function Header(props) {
                             <option value="new-novel">Truyện Mới Cập nhật</option>
                             <option value="more-novel">Wating for calling API</option>
                         </select>
-                        <label for="floatingSelectGrid">Danh sách Truyện</label>
+                        <label htmlFor="floatingSelectGrid">Danh sách Truyện</label>
                     </div>
                     <input type='text' className='form-control' placeholder='Tìm kiếm tiểu thuyết theo tên, thể loại, tác giả, ...'
                         value={searchKeyword} onChange={(e) => handleChangeSearchKeyword(e.target.value)}
@@ -112,7 +112,7 @@ function Header(props) {
                             ))}
 
                         </select>
-                        <label for="floatingSelectGrid">Nguồn Truyện</label>
+                        <label htmlFor="floatingSelectGrid">Nguồn Truyện</label>
                     </div>
                 </div>
 
