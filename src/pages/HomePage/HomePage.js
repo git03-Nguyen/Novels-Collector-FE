@@ -12,6 +12,8 @@ function HomePage(props) {
     const [latestNovels, setLatestNovels] = useState([]);
     const [completedNovels, setCompletedNovels] = useState([]);
 
+    const [isLoadingHomePage, setIsLoadingHomePage] = useState(false);
+
     // WARNING: ALWAYS TAKE THE DEFAULT PAGE = 1
     const defaultPage = 1;
 
@@ -20,8 +22,6 @@ function HomePage(props) {
             const response = await ListNovelService.fetchHotNovels(pluginSources[0].name, defaultPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setHotNovels(response.data);
-                console.log("Hot novels: ");
-                console.log(response.data);
             } else {
                 toast.error("Error fetching hot novel lists: " + response?.message);
             }
@@ -35,8 +35,6 @@ function HomePage(props) {
             const response = await ListNovelService.fetchLatestNovels(pluginSources[0].name, defaultPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setLatestNovels(response.data);
-                console.log("Latest novels: ");
-                console.log(response.data);
             } else {
                 toast.error("Error fetching latest novel lists: " + response?.message);
             }
@@ -50,8 +48,6 @@ function HomePage(props) {
             const response = await ListNovelService.fetchCompletedNovels(pluginSources[0].name, defaultPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setCompletedNovels(response.data);
-                console.log("Completed novels: ");
-                console.log(response.data);
             } else {
                 toast.error("Error fetching completed novel lists: " + response?.message);
             }
@@ -61,96 +57,96 @@ function HomePage(props) {
     }
 
 
-
-    useEffect(() => {
+    const fetchHomePageContent = () => {
         fetchHotNovels();
-    }, [])
-
-    useEffect(() => {
         fetchLatestNovels();
-    }, [])
+        fetchCompletedNovels();
 
+        setIsLoadingHomePage(false);
+    }
 
     useEffect(() => {
-        fetchCompletedNovels();
-    }, [])
-
-
+        setIsLoadingHomePage(true);
+        fetchHomePageContent();
+    }, [pluginSources])
 
     return (
         <>
-            <div className='homepage-container'>
-                <div className='novel-sublists'>
-                    <div className='outstanding-sublist'>
-                        <div className='category-info-row'>
-                            <strong className='sublist-label'>Truyện hot</strong>
-                            <Link to='/novel-list'>
-                                <strong className='sublist-label'>Xem thêm</strong>
-                            </Link>
+            {isLoadingHomePage === true
+                ? <h1 className='loading-message'>... Loading data ...</h1>
+                : <div className='homepage-container'>
+                    <div className='novel-sublists'>
+                        <div className='outstanding-sublist'>
+                            <div className='category-info-row'>
+                                <strong className='sublist-label'>Truyện hot</strong>
+                                <Link to='/novel-list'>
+                                    <strong className='sublist-label'>Xem thêm</strong>
+                                </Link>
+                            </div>
+                            <div className='novel-sublist-row'>
+                                {hotNovels && hotNovels?.length > 0 && hotNovels.map((novel, index) => {
+                                    return <div key={`hot-novel-card-${index}`} className='novel-card'>
+                                        <Link to={`/novel/${novel.slug}`}>
+                                            <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
+                                            <h6>{novel.title.length <= 50
+                                                ? novel.title
+                                                : `${novel.title.slice(0, 51) + ' ...'}`
+                                            } </h6>
+                                        </Link>
+                                    </div>
+                                })}
+                            </div>
                         </div>
-                        <div className='novel-sublist-row'>
-                            {hotNovels && hotNovels?.length > 0 && hotNovels.map((novel, index) => {
-                                return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                    <Link to={`/novel/${novel.slug}`}>
-                                        <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                        <h6>{novel.title.length <= 50
-                                            ? novel.title
-                                            : `${novel.title.slice(0, 51) + ' ...'}`
-                                        } </h6>
-                                    </Link>
-                                </div>
-                            })}
+
+                        <div className='latest-sublist'>
+                            <div className='category-info-row'>
+                                <strong className='sublist-label'>Truyện mới nhất</strong>
+                                <Link to='/novel-list'>
+                                    <strong className='sublist-label'>Xem thêm</strong>
+                                </Link>
+                            </div>
+                            <div className='novel-sublist-row'>
+                                {latestNovels && latestNovels?.length > 0 && latestNovels.map((novel, index) => {
+                                    return <div key={`hot-novel-card-${index}`} className='novel-card'>
+                                        <Link to={`/novel/${novel.slug}`}>
+                                            <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
+                                            <h6>{novel.title.length <= 50
+                                                ? novel.title
+                                                : `${novel.title.slice(0, 51) + ' ...'}`
+                                            } </h6>
+                                        </Link>
+                                    </div>
+                                })}
+
+                            </div>
                         </div>
+
+                        <div className='completed-sublist'>
+                            <div className='category-info-row'>
+                                <strong className='sublist-label'>Truyện đã hoàn thành</strong>
+                                <Link to='/novel-list'>
+                                    <strong className='sublist-label'>Xem thêm</strong>
+                                </Link>
+                            </div>
+                            <div className='novel-sublist-row'>
+                                {completedNovels && completedNovels?.length > 0 && completedNovels.map((novel, index) => {
+                                    return <div key={`hot-novel-card-${index}`} className='novel-card'>
+                                        <Link to={`/novel/${novel.slug}`}>
+                                            <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
+                                            <h6>{novel.title.length <= 50
+                                                ? novel.title
+                                                : `${novel.title.slice(0, 51) + ' ...'}`
+                                            } </h6>
+                                        </Link>
+                                    </div>
+                                })}
+
+                            </div>
+                        </div>
+
                     </div>
+                </div>}
 
-                    <div className='latest-sublist'>
-                        <div className='category-info-row'>
-                            <strong className='sublist-label'>Truyện mới nhất</strong>
-                            <Link to='/novel-list'>
-                                <strong className='sublist-label'>Xem thêm</strong>
-                            </Link>
-                        </div>
-                        <div className='novel-sublist-row'>
-                            {latestNovels && latestNovels?.length > 0 && latestNovels.map((novel, index) => {
-                                return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                    <Link to={`/novel/${novel.slug}`}>
-                                        <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                        <h6>{novel.title.length <= 50
-                                            ? novel.title
-                                            : `${novel.title.slice(0, 51) + ' ...'}`
-                                        } </h6>
-                                    </Link>
-                                </div>
-                            })}
-
-                        </div>
-                    </div>
-
-                    <div className='latest-sublist'>
-                        <div className='category-info-row'>
-                            <strong className='sublist-label'>Truyện đã hoàn thành</strong>
-                            <Link to='/novel-list'>
-                                <strong className='sublist-label'>Xem thêm</strong>
-                            </Link>
-                        </div>
-                        <div className='novel-sublist-row'>
-                            {completedNovels && completedNovels?.length > 0 && completedNovels.map((novel, index) => {
-                                return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                    <Link to={`/novel/${novel.slug}`}>
-                                        <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                        <h6>{novel.title.length <= 50
-                                            ? novel.title
-                                            : `${novel.title.slice(0, 51) + ' ...'}`
-                                        } </h6>
-                                    </Link>
-                                </div>
-                            })}
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
         </>
 
     );

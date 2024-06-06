@@ -47,7 +47,8 @@
 }
 
 .outstanding-sublist,
-.latest-sublist {
+.latest-sublist,
+.completed-sublist {
     width: 70vw;
     margin-bottom: 40px;
 

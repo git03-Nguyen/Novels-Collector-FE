@@ -1,16 +1,13 @@
 import { React, useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom'
 import './Header.css'
-import CategoryService from '../../services/category.s';
 import { NovelContext } from '../../context/NovelContext';
-import PluginSourceService from '../../services/pluginSource.s';
+import { toast } from 'react-toastify';
+
 function Header(props) {
-    const { searchKeyword, setSearchKeyword } = useContext(NovelContext);
-
-    const defaultCategoryDisplayQuantity = parseInt(window.innerWidth * 0.6 / 110 - 1);
-
-    const [categories, setCategories] = useState([]);
-    const [categoryDisplayQuantity, setCategoryDisplayQuantity] = useState(defaultCategoryDisplayQuantity);
+    const { searchKeyword, setSearchKeyword, pluginSources, setPluginSources } = useContext(NovelContext);
+    const [searchTarget, setSearchTarget] = useState('keyword');
+    const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
 
     const handleChangeSearchKeyword = (value) => {
         setSearchKeyword(value);
@@ -22,101 +19,96 @@ function Header(props) {
         }
     }
 
+    const handleChangeSearchTarget = (e) => {
+        setSearchTarget(e.target.value);
+
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        const selectedOptionName = selectedOption.getAttribute('name');
+        toast.success(`Đã chuyển tìm kiếm theo ${selectedOptionName}`)
+    }
+
     const handleSearch = async () => {
         // TODO: replace this with calling API from server
         alert(`You are searching for ${searchKeyword}`)
     }
 
-    const fetchCategories = async () => {
-        try {
-            let response = await CategoryService.fetchCategories();
-            if (response && response.data && parseInt(response.statusCode) === 200) {
-                let newCategories = response.data.slice(0, categoryDisplayQuantity);
-                setCategories(newCategories);
-            } else {
-                console.log("Error fetching categories: " + response?.message);
-            }
-        } catch (error) {
-            console.error("Error fetching categories: " + error.message);
+    const handleChangeSource = (e) => {
+        if (window.confirm(`Bạn có chắc chắn muốn chuyển sang nguồn truyện ${e.target.value} không ?`) === false) {
+            return;
         }
+        console.log(e.target.value);
+        setSelectedSource(e.target.value);
+        let newPluginSources = pluginSources.map(src => {
+            let newSrc = src;
+            if (src.name === e.target.value) {
+                newSrc.prior = 2;
+            } else {
+                newSrc.prior = 1;
+            }
+
+            return newSrc;
+        })
+
+        newPluginSources.sort((a, b) => b.prior - a.prior);
+        setPluginSources(newPluginSources);
+        toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
 
-    useEffect(() => {
-        fetchCategories();
-    }, []);
-
-    const [listSources, setListSources] = useState([]);
-    const fetchPluginSources = async () => {
-        try {
-            const response = await PluginSourceService.fetchPluginSources();
-            if (response && response.data && parseInt(response.statusCode) === 200) {
-                setListSources(response.data);
-            } else {
-                console.log("Error fetching plugin sources: " + response?.message);
-            }
-        } catch (error) {
-            console.error("Error fetching plugin sources: " + error.message);
-        }
-    }
-    useEffect(() => {
-        fetchPluginSources();
-    }, []);
     return (
         <header className='app-header'>
-            <div className='search-engine'>
+            <Link to='/'>
+                <img src='/logo.png' className='app-logo' alt='logo' />
+            </Link>
 
-                <div className='category-container'>
-                    <Link to='/'>
-                        <img src='/logo.png' className='app-logo' alt='logo' />
-                    </Link>
-                    <div className='category-list'>
-                        {categories && categories.map(category => {
-                            return <button key={`category-tag-${category.id}`} className='btn btn-primary category-tag'>{category.name}</button>
-                        })}
-
-                        <Link >
-                            <button className='btn btn-primary category-tag'>Xem thêm ...</button>
-                        </Link>
-                    </div>
-                    <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
-                        <i className='fa-solid fa-gear'></i>
-                        <span className='ps-2'>Cài đặt</span>
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
-                        <li><Link className='dropdown-item' to='#'>Tài khoản</Link></li>
-                        <li><hr className="dropdown-divider" /></li>
-                        <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
-                        <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
-                    </ul>
+            <div className='search-bar'>
+                <div className="form-floating">
+                    <select className="form-select " id="source"
+                        value={searchTarget} onChange={(e) => handleChangeSearchTarget(e)}>
+                        <option name="Tên truyện" value="keyword">Tên truyện</option>
+                        <option name="Tác giả" value="author">Tác giả</option>
+                        <option name="Năm" value="year">Năm</option>
+                    </select>
+                    <label htmlFor="floatingSelectGrid">Tìm kiếm theo</label>
                 </div>
 
-                <div className='search-bar'>
-                    <div className="form-floating">
-                        <select className="form-select " id="source">
-
-                            <option value="hot-novel">Truyện Hot</option>
-                            <option value="full-novel">Truyện Full</option>
-                            <option value="new-novel">Truyện Mới Cập nhật</option>
+                <input type='text' className='form-control'
+                    placeholder='Tìm kiếm truyện, tác giả, ...'
+                    value={searchKeyword} onChange={(e) => handleChangeSearchKeyword(e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e)} />
+                <button className='btn btn-primary' onClick={() => handleSearch()}>Tìm kiếm</button>
 
 
-                        </select>
-                        <label htmlFor="floatingSelectGrid">Danh sách Truyện</label>
-                    </div>
-                    <input type='text' className='form-control' placeholder='Tìm kiếm tiểu thuyết theo tên, thể loại, tác giả, ...'
-                        value={searchKeyword} onChange={(e) => handleChangeSearchKeyword(e.target.value)}
-                        onKeyDown={(e) => handleKeyDown(e)} />
-                    <button className='btn btn-primary' onClick={() => handleSearch()}>Tìm kiếm</button>
-                    <div className="form-floating">
-                        <select className="form-select " id="source">
-                            {listSources && listSources.length > 0 && listSources.map((source, index) => (
-                                <option key={index} value={source.name}>{source.name}</option>
-                            ))}
+                <div className="form-floating">
+                    <select className="form-select " id="result"
+                        value={selectedSource}
+                        onChange={(e) => handleChangeSource(e)}>
+                        {pluginSources && pluginSources.length > 0 && pluginSources.map((source, index) => (
+                            <option key={index} value={source.name}>
+                                {source.name}
+                            </option>
+                        ))}
 
-                        </select>
-                        <label htmlFor="floatingSelectGrid">Nguồn Truyện</label>
-                    </div>
+                    </select>
+                    <label htmlFor="floatingSelectGrid">Nguồn Truyện</label>
                 </div>
+
+
+
+            </div>
+
+            <div className='settings-bar'>
+                <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
+                    <i className='fa-solid fa-gear'></i>
+                    <span className='ps-2'>Cài đặt</span>
+                </button>
+                <ul className="dropdown-menu">
+                    <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
+                    <li><Link className='dropdown-item' to='#'>Tài khoản</Link></li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
+                    <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
+                </ul>
+
 
             </div>
 
