@@ -3,12 +3,13 @@ import { Link, useParams } from 'react-router-dom';
 import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
-import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
 import { NovelContext } from '../../context/NovelContext';
 import PluginSourceService from '../../services/pluginSource.s';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
+import HTMLToReactParser from '../../utils/htmlToReactParser';
 
+import { domToReact } from 'html-react-parser';
 
 function NovelPage(props) {
 
@@ -20,6 +21,20 @@ function NovelPage(props) {
     const [totalPage, setTotalPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
+    // Default max length of truncated description = 500
+    const maxLengthTruncatedDescription = 500;
+
+    const [novelDescription, setNovelDescription] = useState('');
+    const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
+
+    const handleSetNovelDescription = (description) => {
+        let newNovelDescription = description;
+        if (pluginSources[0].name === "TruyenTangThuVienVn") {
+            newNovelDescription = truncateNovelDescription(description);
+        }
+
+        setNovelDescription(newNovelDescription);
+    }
 
     const fetchNovelInfo = async (source, slug) => {
         try {
@@ -31,6 +46,9 @@ function NovelPage(props) {
 
                 setTotalPage(parseInt(newNovelInfo.totalPage));
                 setIsLoadingNovelPage(false);
+
+                handleSetNovelDescription(newNovelInfo.description);
+
 
                 setNovelContext(newNovelInfo);
             } else {
@@ -53,28 +71,16 @@ function NovelPage(props) {
         setCurrentPage(selectedPage);
     }
 
+    const truncateNovelDescription = (desc) => {
+        const truncatedDesc = HTMLToReactParser.truncateHtml(desc, maxLengthTruncatedDescription);
+        return truncatedDesc;
+    }
+
+
+
     useEffect(() => {
         fetchNovelInfo(pluginSources[0].name, novelSlug);
     }, [currentPage]);
-
-    const [listSources, setListSources] = useState([]);
-    const fetchPluginSources = async () => {
-        try {
-            const response = await PluginSourceService.fetchPluginSources();
-            if (response && response.data && parseInt(response.statusCode) === 200) {
-                setListSources(response.data);
-            } else {
-                console.log("Error fetching plugin sources: " + response?.message);
-                toast.error("Error fetching plugin sources: " + response?.message);
-            }
-        } catch (error) {
-            console.error("Error fetching plugin sources: " + error.message);
-        }
-    }
-    useEffect(() => {
-        fetchPluginSources();
-    }, []);
-
 
 
     return (
@@ -84,11 +90,11 @@ function NovelPage(props) {
                 : <>
                     {novel && novel.cover &&
                         <>
-                            <div className="row">
+                            <div className="row w-100">
                                 <div className="col-md-4 mt-2">
-                                    <img className='novel-img' width={320} src={novel?.cover} alt={`${novel?.title} thumbnail`} />
+                                    <img className='novel-img' src={novel?.cover} alt={`${novel?.title} thumbnail`} />
                                 </div>
-                                <div className="col-md-8 text-start">
+                                <div className="col-md-8 text-start px-0">
                                     <div className="pb-4 border-bottom border-white-50">
                                         <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
                                         <div className="d-flex">
@@ -127,19 +133,24 @@ function NovelPage(props) {
                                             </div>
                                             <div className="col">
                                                 <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                                <select className="form-select" id="source-select-box">
-                                                    {listSources && listSources.length > 0 && listSources.map((source, index) => (
-                                                        <option key={index} value={source.name}>{source.name}</option>
-                                                    ))}
-
-                                                </select>
+                                                <span>{pluginSources[0].name}</span>
                                             </div>
 
                                         </div>
                                     </div>
                                     <div className="mt-0">
                                         <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
-                                        <p className="text-white mt-0 novel-description">{novel?.description}</p>
+
+                                        <div className="text-white mt-0 novel-description">
+                                            {isSeeMoreDescription === true
+                                                ? novelDescription
+                                                : novelDescription.slice(0, maxLengthTruncatedDescription) + ' ...'
+                                            }
+                                        </div>
+
+                                        <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
+                                            {isSeeMoreDescription === true ? "Thu gọn" : "Xem thêm"}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
