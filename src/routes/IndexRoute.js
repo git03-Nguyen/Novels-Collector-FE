@@ -6,6 +6,8 @@ import AdminPage from '../pages/AdminPage/AdminPage';
 import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import NovelPage from '../pages/NovelPage/NovelPage';
 import NovelChapterPage from '../pages/NovelChapterPage/NovelChapterPage';
+import LoginPage from '../pages/LoginPage/LoginPage';
+import SourceManagementPage from '../pages/SourceManagementPage/SourceManagementPage';
 import PrivateRoute from './PrivateRoute';
 function IndexRoute(props) {
     return (
@@ -18,7 +20,11 @@ function IndexRoute(props) {
             <Route path='/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage />} />
 
             {/* Private */}
+            <Route path='/login/' element={<LoginPage />} />
             <Route path='/admin/' element={<AdminPage />} />
+            <Route path='/admin/source' element={<SourceManagementPage />} />
+
+
             {/* TODO: Fix it when complete login feature */}
             <Route path="/admin/:adminID" element={<PrivateRoute>
                 <AdminPage />
