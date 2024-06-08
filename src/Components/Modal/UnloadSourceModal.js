@@ -5,17 +5,17 @@ const UnloadSourceModal = ({ source, show, onConfirm, onCancel }) => {
     return (
         <Modal show={show} onHide={onCancel} backdrop="static" centered>
             <Modal.Header closeButton>
-                <Modal.Title>Unload Source</Modal.Title>
+                <Modal.Title>Gỡ bỏ Nguồn truyện</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Are you sure you want to unload the source "{source?.name}"?
+                Bạn có chắc chắn muốn gỡ bỏ nguồn <strong>"{source?.name}"</strong> ?
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onCancel}>
-                    Cancel
+                    Huỷ
                 </Button>
                 <Button variant="primary" onClick={onConfirm}>
-                    Confirm
+                    Xác nhận
                 </Button>
             </Modal.Footer>
         </Modal>

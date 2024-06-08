@@ -20,8 +20,49 @@ const fetchPluginSources = async () => {
     }
 }
 
+const unloadPluginSource = async (sourceName) => {
+    try {
+        const response = await axios.get(`/api/v1/source/unload/${sourceName}`);
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error while unloading source: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
+
+const reloadAllSources = async () => {
+    try {
+        const response = await axios.get('/api/v1/source/reload');
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error reloading all plugin sources: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
 const PluginSourceService = {
     fetchPluginSources,
+    unloadPluginSource,
+    reloadAllSources
 }
 
 export default PluginSourceService;

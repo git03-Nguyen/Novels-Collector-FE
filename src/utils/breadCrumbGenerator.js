@@ -26,6 +26,7 @@ const convertPathToBreadCrumb = (path) => {
 
         result[i / 2].path += `/${result[i / 2].name}`;
     }
+    console.log(result);
     return result;
 }
 
