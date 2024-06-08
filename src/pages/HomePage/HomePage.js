@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import './HomePage.css'
 import ListNovelService from '../../services/listnovel.s';
 import { NovelContext } from '../../context/NovelContext';
@@ -7,8 +7,9 @@ import { toast } from 'react-toastify';
 import NovelSidebar from '../../Components/NovelSidebar/NovelSidebar';
 
 function HomePage(props) {
-    const { pluginSources } = useContext(NovelContext);
+    const { pluginSources, setPluginSources } = useContext(NovelContext);
 
+    const { sourceSlug } = useParams();
     const [hotNovels, setHotNovels] = useState([]);
     const [latestNovels, setLatestNovels] = useState([]);
     const [completedNovels, setCompletedNovels] = useState([]);
@@ -57,6 +58,24 @@ function HomePage(props) {
         }
     }
 
+    const handleSetupPluginSourceByParams = () => {
+        if (sourceSlug == "") {
+            return;
+        }
+
+        const newPluginSource = pluginSources.map((src, index) => {
+            return {
+                ...src,
+                prior: src.name === sourceSlug ? 2 : 1,
+            }
+        })
+        newPluginSource.sort((a, b) => b.prior - a.prior)
+
+        console.log("New plugin source: ");
+        console.log(newPluginSource);
+        setPluginSources(newPluginSource);
+    }
+
 
     const fetchHomePageContent = () => {
         fetchHotNovels();
@@ -67,9 +86,19 @@ function HomePage(props) {
     }
 
     useEffect(() => {
+        window.setTimeout(() => {
+            console.log("Change this by param");
+            handleSetupPluginSourceByParams();
+        }, 1000);
+        //WARNING: This delay is my effort to change pluginSource after setup sourceSlug
+    }, [sourceSlug])
+
+    useEffect(() => {
+        console.log("plugin source now: " + pluginSources[0].name);
         setIsLoadingHomePage(true);
         fetchHomePageContent();
     }, [pluginSources])
+
 
     return (
         <>

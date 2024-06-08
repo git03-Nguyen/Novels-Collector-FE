@@ -54,6 +54,10 @@ function Header(props) {
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
 
+    useEffect(() => {
+        setSelectedSource(pluginSources[0].name);
+    }, [pluginSources])
+
     return (
         <header className='app-header'>
             <Link to='/'>

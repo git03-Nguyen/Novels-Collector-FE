@@ -123,8 +123,8 @@ function NovelChapterPage(props) {
     }
 
     const handleSiblingChapterClick = (increment) => {
-        // navigate(`/source${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
-        window.location.replace(`/source${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
+        // navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
+        window.location.replace(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
         // TODO: replace this with more suitable solution
     }
 

@@ -54,7 +54,7 @@ function NovelSidebar(props) {
     useEffect(() => {
         fetchRecentNovels();
         fetchCategories();
-    }, [])
+    }, [pluginSources])
 
 
     return (
