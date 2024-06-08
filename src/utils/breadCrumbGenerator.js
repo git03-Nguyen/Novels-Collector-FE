@@ -33,6 +33,7 @@ const convertPathToMeaningfulSegment = (path) => {
     switch (path) {
         case 'novel': return 'Truyện';
         case 'chapter': return 'Chương';
+        case 'source': return 'Nguồn';
         case 'admin': return 'Quản trị';
         case 'novel-list': return 'Danh sách';
         case 'login': return 'Đăng nhập';

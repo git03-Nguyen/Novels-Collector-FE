@@ -4,22 +4,20 @@ import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { NovelContext } from '../../context/NovelContext';
-import PluginSourceService from '../../services/pluginSource.s';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 import HTMLToReactParser from '../../utils/htmlToReactParser';
 
-import { domToReact } from 'html-react-parser';
 
 function NovelPage(props) {
-
-    const { novelSlug } = useParams();
-    const { pluginSources, setNovelContext } = useContext(NovelContext);
+    const { novelSlug, sourceSlug } = useParams();
+    const { setNovelContext } = useContext(NovelContext);
 
     const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
     const [novel, setNovel] = useState({});
     const [totalPage, setTotalPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
+    const [reviewStars, setReviewStars] = useState([]);
 
     // Default max length of truncated description = 500
     const maxLengthTruncatedDescription = 500;
@@ -29,12 +27,33 @@ function NovelPage(props) {
 
     const handleSetNovelDescription = (description) => {
         let newNovelDescription = description;
-        if (pluginSources[0].name === "TruyenTangThuVienVn") {
+        if (sourceSlug === "TruyenTangThuVienVn") {
             newNovelDescription = truncateNovelDescription(description);
         }
 
         setNovelDescription(newNovelDescription);
     }
+
+    const handleSetReviewStars = (rating, maxRating) => {
+        let ratingArr = [];
+
+        for (let i = 1; i <= maxRating; i++) {
+            ratingArr[i] = {
+                className: "fa-regular fa-star",
+                color: "#FFD43B",
+            }
+            const decisionPoint = parseFloat(parseFloat(rating) - i);
+            if (decisionPoint >= 0) {
+                ratingArr[i].className = "fa-solid fa-star";
+            } else if (decisionPoint > -1) {
+                ratingArr[i].className = "fa-regular fa-star-half-stroke";
+            }
+        }
+
+        setReviewStars(ratingArr);
+    }
+
+
 
     const fetchNovelInfo = async (source, slug) => {
         try {
@@ -49,7 +68,7 @@ function NovelPage(props) {
 
                 handleSetNovelDescription(newNovelInfo.description);
 
-
+                handleSetReviewStars(newNovelInfo.rating, newNovelInfo.maxRating);
                 setNovelContext(newNovelInfo);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
@@ -79,7 +98,7 @@ function NovelPage(props) {
 
 
     useEffect(() => {
-        fetchNovelInfo(pluginSources[0].name, novelSlug);
+        fetchNovelInfo(sourceSlug, novelSlug);
     }, [currentPage]);
 
 
@@ -99,9 +118,17 @@ function NovelPage(props) {
                                         <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
                                         <div className="d-flex">
                                             <div className="d-flex align-items-center mr-3">
-                                                <span className="text-white-50 me-1">{novel?.rating}/{novel?.maxRating}</span>
+                                                <span className="text-white-50 me-1">Đánh giá: {novel?.rating}/{novel?.maxRating}</span>
                                                 <div className="d-flex align-items-center">
-                                                    {[...Array(parseInt(novel?.rating)) || 0].map((_, index) => (
+                                                    {reviewStars && reviewStars?.length > 0 && reviewStars.map((ele, index) => {
+                                                        return <i
+                                                            key={`review-star-${index}`}
+                                                            className={ele.className}
+                                                            style={{ color: ele.color }}
+                                                        ></i>
+                                                    })}
+
+                                                    {/* {[...Array(parseInt(novel?.rating)) || 0].map((_, index) => (
                                                         <img
                                                             key={index}
                                                             src="https://waka.vn/svgs/icon-star.svg"
@@ -110,11 +137,8 @@ function NovelPage(props) {
                                                             width="16"
                                                             height="24"
                                                         />
-                                                    ))}
+                                                    ))} */}
                                                 </div>
-                                                <p className="text-white-50 mb-1">
-                                                    <span className="text-white-400 ms-2"> <i className="fas fa-eye fs-5 text-light me-1" aria-hidden="true"></i> 124 lượt đọc</span>
-                                                </p>
                                             </div>
 
                                         </div>
@@ -133,7 +157,7 @@ function NovelPage(props) {
                                             </div>
                                             <div className="col">
                                                 <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                                <span>{pluginSources[0].name}</span>
+                                                <span>{sourceSlug}</span>
                                             </div>
 
                                         </div>
@@ -166,7 +190,7 @@ function NovelPage(props) {
                                         </h2>
                                         <div id={`flush-collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${index}`} data-bs-parent="#accordionl-list-chapter">
                                             <div className="accordion-body">
-                                                <Link to={`/novel/${novelSlug}/chapter/${chapter.slug}`}>{chapter.slug}</Link>
+                                                <Link to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}>{chapter.slug}</Link>
                                             </div>
                                         </div>
                                     </div>

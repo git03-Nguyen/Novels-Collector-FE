@@ -4,24 +4,13 @@ import ChapterService from '../../services/chapter.s';
 import './NovelChapterPage.css'
 import { toast } from 'react-toastify';
 import { NovelContext } from '../../context/NovelContext';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 function NovelChapterPage(props) {
-    const { novelSlug, chapterSlug } = useParams();
-    const navigate = useNavigate();
+    const { novelSlug, chapterSlug, sourceSlug } = useParams();
 
-    const defaultNovel = {
-        title: `Mushoku Tensei - Old Dragon's Tale`,
-        imageURL: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/311151454_441803738051212_5345550456087243642_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcq4yB9NvQ5r0ZeDkS8a4zKw6RxbcPf9MrDpHFtw9_0_6QJkJDdbsRmH2GnS0a0SWzzOOn1nKRiJ2UEr_cgHZ0&_nc_ohc=fmkLaF8s1-UQ7kNvgFfhqXR&_nc_ht=scontent.fsgn4-1.fna&oh=00_AYDv9FvVwJIMDxxAwNMsYxyMKqQgdZTnAb9c6y5uzCW7Ew&oe=6659FA4D',
-        rating: 0.0,
-        ratingNum: 0,
-        categories: ['Phiêu lưu', 'Thế giới mở', 'Hành động', 'Giả tưởng', 'Xuyên không'],
-    }
-
-    const { novelContext, setNovelContext, pluginSources, chapterContext, setChapterContext } = useContext(NovelContext);
-
-    const [novel, setNovel] = useState(defaultNovel);
+    const { novelContext, setNovelContext, setChapterContext } = useContext(NovelContext);
 
     // TODO: fix this perpage variable to align with specific plugin sources
     const perpage = 50;
@@ -47,7 +36,6 @@ function NovelChapterPage(props) {
             const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
-                setNovel(newNovelInfo);
 
                 updateRelatedData(newNovelInfo)
             } else {
@@ -78,7 +66,7 @@ function NovelChapterPage(props) {
     const fetchChapterContent = async () => {
         // TODO: replace this with calling API from server
         try {
-            const response = await ChapterService.fetchChapterContent(pluginSources[0].name, novelSlug, chapterSlug);
+            const response = await ChapterService.fetchChapterContent(sourceSlug, novelSlug, chapterSlug);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setChapterContent(response.data);
                 toast.success(response.message);
@@ -123,8 +111,8 @@ function NovelChapterPage(props) {
     }
 
     const handleSiblingChapterClick = (increment) => {
-        // navigate(`/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
-        window.location.replace(`/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
+        // navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
+        window.location.replace(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
         // TODO: replace this with more suitable solution
     }
 
@@ -135,7 +123,7 @@ function NovelChapterPage(props) {
     }, [])
 
     useEffect(() => {
-        fetchNovelInfo(pluginSources[0].name, novelSlug);
+        fetchNovelInfo(sourceSlug, novelSlug);
     }, [currentPage])
 
     useEffect(() => {
