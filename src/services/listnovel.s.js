@@ -78,10 +78,42 @@ const fetchCompletedNovels = async (source, page) => {
     }
 }
 
+const fetchNovelListData = async (source, keyword, page = 1, filter) => {
+    let realKeyword = (keyword === '' ? 'anh' : keyword);
+
+    let APIUrl = `/api/v1/search/${source}?keyword=${realKeyword}&page=${page}`;
+    // TODO: ask for filter in server's API
+
+    try {
+        const response = await axios.get(APIUrl);
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+                meta: response?.meta ?? {},
+            }
+        }
+        return {
+            statusCode: 404,
+            data: null,
+            message: "Search novel list not found !"
+        }
+    } catch (error) {
+        console.log("Error fetching search novel list: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
+
 const ListNovelService = {
     fetchHotNovels,
     fetchLatestNovels,
     fetchCompletedNovels,
+    fetchNovelListData,
 }
 
 

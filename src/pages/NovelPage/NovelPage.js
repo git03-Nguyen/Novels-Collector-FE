@@ -10,8 +10,6 @@ import HTMLToReactParser from '../../utils/htmlToReactParser';
 
 
 function NovelPage(props) {
-    const EPSILON = 0.00001;
-
     const { novelSlug, sourceSlug } = useParams();
     const { setNovelContext } = useContext(NovelContext);
 
