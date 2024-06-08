@@ -36,6 +36,7 @@ const convertPathToMeaningfulSegment = (path) => {
         case 'source': return 'Nguồn';
         case 'admin': return 'Quản trị';
         case 'novel-list': return 'Danh sách';
+        case 'login': return 'Đăng nhập';
         // TODO: Add new role for displaying breadcrumb if needed
 
         default: return '';

@@ -1,5 +1,6 @@
 import { React, useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+
 import './Header.css'
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
@@ -107,7 +108,7 @@ function Header(props) {
                 </button>
                 <ul className="dropdown-menu">
                     <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
-                    <li><Link className='dropdown-item' to='#'>Tài khoản</Link></li>
+                    <li><Link className='dropdown-item' to='/login'>Tài khoản</Link></li>
                     <li><hr className="dropdown-divider" /></li>
                     <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
                     <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
