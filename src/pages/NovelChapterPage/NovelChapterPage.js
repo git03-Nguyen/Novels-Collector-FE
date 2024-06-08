@@ -8,7 +8,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 function NovelChapterPage(props) {
-    const { novelSlug, chapterSlug } = useParams();
+    const { novelSlug, chapterSlug, sourceSlug } = useParams();
     const navigate = useNavigate();
 
     const defaultNovel = {
@@ -78,7 +78,7 @@ function NovelChapterPage(props) {
     const fetchChapterContent = async () => {
         // TODO: replace this with calling API from server
         try {
-            const response = await ChapterService.fetchChapterContent(pluginSources[0].name, novelSlug, chapterSlug);
+            const response = await ChapterService.fetchChapterContent(sourceSlug, novelSlug, chapterSlug);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setChapterContent(response.data);
                 toast.success(response.message);
@@ -123,8 +123,8 @@ function NovelChapterPage(props) {
     }
 
     const handleSiblingChapterClick = (increment) => {
-        // navigate(`/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
-        window.location.replace(`/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
+        // navigate(`/source${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
+        window.location.replace(`/source${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
         // TODO: replace this with more suitable solution
     }
 
@@ -135,7 +135,7 @@ function NovelChapterPage(props) {
     }, [])
 
     useEffect(() => {
-        fetchNovelInfo(pluginSources[0].name, novelSlug);
+        fetchNovelInfo(sourceSlug, novelSlug);
     }, [currentPage])
 
     useEffect(() => {

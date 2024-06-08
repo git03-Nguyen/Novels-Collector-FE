@@ -64,15 +64,15 @@ function NovelSidebar(props) {
                 <div className='novel-list'>
                     {recentNovels && recentNovels?.length && recentNovels.map((novel, index) => {
                         return <div key={`recent-novel-card-${index}`} className='novel-card-mini'>
-                            <Link to={`/novel/${novel.slug}`}>
+                            <Link to={`/source/${novel.source}/novel/${novel.slug}`}>
                                 <img src={novel?.cover} />
                             </Link>
                             <div className='novel-brief-info'>
-                                <Link to={`/novel/${novel.slug}`}>
+                                <Link to={`/source/${novel.source}/novel/${novel.slug}`}>
                                     <strong>{novel.title}</strong>
                                 </Link>
                                 <i>{novel.source}</i>
-                                <Link to={`/novel/${novel.slug}/chapter/${novel.recentChapter.slug}`}>
+                                <Link to={`/source/${novel.source}/novel/${novel.slug}/chapter/${novel.recentChapter.slug}`}>
                                     <span>{novel.recentChapter.title}</span>
                                 </Link>
 

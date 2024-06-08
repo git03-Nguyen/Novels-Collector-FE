@@ -88,7 +88,7 @@ function HomePage(props) {
                                 <div className='novel-sublist-row'>
                                     {hotNovels && hotNovels?.length > 0 && hotNovels.map((novel, index) => {
                                         return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                            <Link to={`/novel/${novel.slug}`}>
+                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
                                                 <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
                                                 <h6>{novel.title.length <= 50
                                                     ? novel.title
@@ -110,7 +110,7 @@ function HomePage(props) {
                                 <div className='novel-sublist-row'>
                                     {latestNovels && latestNovels?.length > 0 && latestNovels.map((novel, index) => {
                                         return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                            <Link to={`/novel/${novel.slug}`}>
+                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
                                                 <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
                                                 <h6>{novel.title.length <= 50
                                                     ? novel.title
@@ -133,7 +133,7 @@ function HomePage(props) {
                                 <div className='novel-sublist-row'>
                                     {completedNovels && completedNovels?.length > 0 && completedNovels.map((novel, index) => {
                                         return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                            <Link to={`/novel/${novel.slug}`}>
+                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
                                                 <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
                                                 <h6>{novel.title.length <= 50
                                                     ? novel.title
