@@ -18,7 +18,7 @@ function LoginPage(props) {
                                 <p className="text-secondary">As Administrator</p>
                                 <div className="input-group mb-3">
                                     <div className="input-group-text">
-                                        <i class="fa-solid fa-user"></i>
+                                        <i className="fa-solid fa-user"></i>
                                     </div>
                                     <input
                                         type="text"
@@ -29,7 +29,7 @@ function LoginPage(props) {
                                 </div>
                                 <div className="input-group mb-2">
                                     <div className="input-group-text">
-                                        <i class="fa-solid fa-lock"></i>
+                                        <i className="fa-solid fa-lock"></i>
                                     </div>
                                     <input
                                         type="password"
