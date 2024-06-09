@@ -32,3 +32,9 @@
 #source-select-box {
     width: 70%;
 }
+
+.scrollable-list-group {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 70%;
+}
