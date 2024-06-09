@@ -5,13 +5,12 @@ import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 
 function Header(props) {
-    const { searchKeyword, setSearchKeyword, pluginSources, setPluginSources } = useContext(NovelContext);
-    const [searchTarget, setSearchTarget] = useState('keyword');
+    const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
     const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
 
     const navigate = useNavigate();
     const handleChangeSearchKeyword = (value) => {
-        setSearchKeyword(value);
+        setSearchValue(value);
     }
 
     const handleKeyDown = (e) => {
@@ -29,7 +28,7 @@ function Header(props) {
     }
 
     const handleSearch = () => {
-        navigate(`/novel-list?keyword=${searchKeyword}`);
+        navigate(`/novel-list?keyword=${searchValue}`);
     }
 
     const handleChangeSource = (e) => {
@@ -70,14 +69,13 @@ function Header(props) {
                         value={searchTarget} onChange={(e) => handleChangeSearchTarget(e)}>
                         <option name="Tên truyện" value="keyword">Tên truyện</option>
                         <option name="Tác giả" value="author">Tác giả</option>
-                        <option name="Năm" value="year">Năm</option>
                     </select>
                     <label htmlFor="floatingSelectGrid">Tìm kiếm theo</label>
                 </div>
 
                 <input type='text' className='form-control'
                     placeholder='Tìm kiếm truyện, tác giả, ...'
-                    value={searchKeyword} onChange={(e) => handleChangeSearchKeyword(e.target.value)}
+                    value={searchValue} onChange={(e) => handleChangeSearchKeyword(e.target.value)}
                     onKeyDown={(e) => handleKeyDown(e)} />
                 <button className='btn btn-primary' onClick={() => handleSearch()}>Tìm kiếm</button>
 
