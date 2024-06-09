@@ -11,9 +11,9 @@ import { toast } from 'react-toastify';
 
 
 function ListNovelPage(props) {
-    const { pluginSources, searchKeyword } = useContext(NovelContext);
+    const { pluginSources, searchValue, searchTarget } = useContext(NovelContext);
 
-    const [totalPage, setTotalPage] = useState(3);
+    const [totalPage, setTotalPage] = useState(1);
     const [isLoadingListNovelPage, setIsLoadingListNovelPage] = useState(true);
 
     const [novels, setNovels] = useState([]);
@@ -21,7 +21,8 @@ function ListNovelPage(props) {
     const [searchParams, setSearchParams] = useSearchParams();
     const [curPage, setCurPage] = useState(1);
     const [curCategory, setCurCategory] = useState('');
-    const [curKeyword, setCurKeyword] = useState('');
+    const [curSearchValue, setCurSearchValue] = useState();
+    const [isHandlingSearchParams, setIsHandlingSearchParams] = useState(true);
 
     const handlePageClick = async (e) => {
         let selectedPage = parseInt(e.selected) + 1;
@@ -31,9 +32,26 @@ function ListNovelPage(props) {
 
     const fetchListNovelData = async () => {
         try {
-            const response = await ListNovelService.fetchNovelListData(pluginSources[0].name, searchKeyword, curPage, curCategory);
+            if (curSearchValue === '') {
+                console.log("Cur search value is empty");
+                return;
+            }
+            const response = await ListNovelService.fetchNovelListData(pluginSources[0].name, curSearchValue, searchTarget, curPage, curCategory);
             if (response && response.data && parseInt(response.statusCode) === 200) {
-                // do something
+                setNovels(response.data);
+                setTotalPage(response?.meta?.totalPage);
+            } else {
+                toast.error("Error fetching novel Info: " + response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching novel Info: " + error.message);
+        }
+    }
+
+    const fetchHottestData = async () => {
+        try {
+            const response = await ListNovelService.fetchHotNovels(pluginSources[0].name, curPage);
+            if (response && response.data && parseInt(response.statusCode) === 200) {
                 setNovels(response.data);
                 setTotalPage(response?.meta?.totalPage);
             } else {
@@ -51,20 +69,36 @@ function ListNovelPage(props) {
         }
     }
 
-    useEffect(() => {
+    const handleChangeByParams = () => {
         setCurPage(searchParams.get('page') ?? 1);
         setCurCategory(searchParams.get('category') ?? '');
-        setCurKeyword(searchParams.get('keyword') ?? searchKeyword)
-        fetchListNovelData();
 
-        setIsLoadingListNovelPage(false);
+        console.log("searchValue: " + searchValue);
+        if (searchValue && searchValue !== '') {
+            setCurSearchValue(searchParams.get(searchTarget) ?? searchValue)
+        }
 
-    }, [searchParams, pluginSources[0]])
+        setIsHandlingSearchParams(false)
+    }
 
     useEffect(() => {
-        fetchListNovelData();
-        scrollToFrontList();
-    }, [curPage]);
+        setIsHandlingSearchParams(true)
+        handleChangeByParams();
+
+    }, [searchTarget, searchParams, pluginSources[0]])
+
+    useEffect(() => {
+        if (isHandlingSearchParams === false) {
+            if (curSearchValue) {
+                fetchListNovelData();
+            } else {
+                fetchHottestData();
+            }
+            scrollToFrontList();
+
+            setIsLoadingListNovelPage(false);
+        }
+    }, [isHandlingSearchParams, curPage, curSearchValue]);
 
     return (
         <div className='list-novel-page-container'> {isLoadingListNovelPage === true
@@ -76,6 +110,7 @@ function ListNovelPage(props) {
                             <select defaultValue={"1"} className="form-select" id="yearRelease">
                                 <option value="1">Tăng dần</option>
                                 <option value="2">Giảm dần</option>
+                                <option value="3">{curSearchValue}</option>
 
                             </select>
                             <label htmlFor="floatingSelectGrid">Tên truyện</label>
@@ -114,18 +149,20 @@ function ListNovelPage(props) {
                         <div className='outstanding-sublist' id='outstanding-sublist'>
 
                             <div className='novel-sublist-row'>
-                                {novels && novels?.length > 0 && novels.map((novel, index) => {
-                                    return <div key={`novel-list-card-${index}`} className='novel-card'>
-                                        <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
-                                            <img className='' src={novel.cover} alt={`Ảnh bìa truyện ${novel.title}`} />
-                                            <h6>{novel.title.length <= 30
-                                                ? novel.title
-                                                : `${novel.title.slice(0, 31) + ' ...'}`
-                                            } </h6>
-                                            <span>{novel.authors[0].name}</span>
-                                        </Link>
-                                    </div>
-                                })}
+                                {novels && novels?.length > 0
+                                    ? novels.map((novel, index) => {
+                                        return <div key={`novel-list-card-${index}`} className='novel-card'>
+                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                                <img className='' src={novel.cover} alt={`Ảnh bìa truyện ${novel.title}`} />
+                                                <h6>{novel.title.length <= 30
+                                                    ? novel.title
+                                                    : `${novel.title.slice(0, 31) + ' ...'}`
+                                                } </h6>
+                                                <span>{novel.authors[0].name}</span>
+                                            </Link>
+                                        </div>
+                                    })
+                                    : <h3 className='mt-3'>Không tìm thấy kết quả nào !</h3>}
                             </div>
                         </div>
                     </div>

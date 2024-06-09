@@ -3,7 +3,7 @@ import PluginSourceService from '../services/pluginSource.s';
 import _ from 'lodash';
 
 const NovelContext = React.createContext({
-    searchKeyword: '',
+    searchValue: '',
     novelContext: {},
     pluginSources: {},
     isLoadingNovel: false,
@@ -15,7 +15,9 @@ function NovelProvider(props) {
     const [novelContext, setNovelContext] = useState({});
     const [chapterContext, setChapterContext] = useState({});
     const [pluginSources, setPluginSources] = useState([{ name: 'TruyenFullVn' }]);
-    const [searchKeyword, setSearchKeyword] = useState('');
+
+    const [searchValue, setSearchValue] = useState('');
+    const [searchTarget, setSearchTarget] = useState('keyword');
 
 
     // PLUGIN
@@ -53,8 +55,8 @@ function NovelProvider(props) {
 
     return (
         <NovelContext.Provider value={{
-            searchKeyword, novelContext, chapterContext, pluginSources, isLoadingNovel,
-            setSearchKeyword, setNovelContext, setChapterContext, setPluginSources, addNewPluginSource, setIsLoadingNovel
+            searchValue, novelContext, chapterContext, pluginSources, isLoadingNovel, searchTarget,
+            setSearchValue, setNovelContext, setChapterContext, setPluginSources, addNewPluginSource, setIsLoadingNovel, setSearchTarget
         }}>
             {children}
         </NovelContext.Provider>

@@ -78,10 +78,16 @@ const fetchCompletedNovels = async (source, page) => {
     }
 }
 
-const fetchNovelListData = async (source, keyword, page = 1, filter) => {
-    let realKeyword = (keyword === '' ? 'anh' : keyword);
-
-    let APIUrl = `/api/v1/search/${source}?keyword=${realKeyword}&page=${page}`;
+const fetchNovelListData = async (source, searchValue, searchTarget, page = 1, filter) => {
+    let APIUrl = `/api/v1/search/${source}?page=${page}`;
+    const defaultKeyword = 'anh';
+    console.log("Search value from service: " + searchValue);
+    if (searchTarget === 'keyword') {
+        let keywordValue = (searchValue === '') ? defaultKeyword : searchValue;
+        APIUrl += `&keyword=${keywordValue}`
+    } else {
+        APIUrl += `&keyword=${defaultKeyword}&${searchTarget}=${searchValue}`
+    }
     // TODO: ask for filter in server's API
 
     try {
