@@ -182,7 +182,7 @@ function NovelPage(props) {
                                             }
                                         </span>
                                         <div></div>
-                                        
+
                                         <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
                                             {isSeeMoreDescription ? "Thu gọn" : "Xem thêm"}
                                         </button>
@@ -208,35 +208,35 @@ function NovelPage(props) {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
-
-                            <ReactPaginate
-                                containerClassName='pagination justify-content-center'
-                                activeClassName='active'
-                                breakLabel="..."
-                                nextLabel="Sau >"
-                                onPageChange={handlePageClick}
-                                pageRangeDisplayed={5}
-                                marginPagesDisplayed={2}
-                                pageCount={totalPage}
-                                previousLabel="< Trước"
-                                pageClassName='page-item'
-                                pageLinkClassName='page-link'
-                                breakClassName='page-item'
-                                breakLinkClassName='page-link'
-                                previousClassName='page-item'
-                                previousLinkClassName='page-link'
-                                nextClassName='page-item'
-                                nextLinkClassName='page-link'
-                                renderOnZeroPageCount={null}
-                            />
                         </>
                     )}
+
+                    <ReactPaginate
+                        containerClassName='pagination justify-content-center'
+                        activeClassName='active'
+                        breakLabel="..."
+                        nextLabel="Sau >"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={5}
+                        marginPagesDisplayed={2}
+                        pageCount={totalPage}
+                        previousLabel="< Trước"
+                        pageClassName='page-item'
+                        pageLinkClassName='page-link'
+                        breakClassName='page-item'
+                        breakLinkClassName='page-link'
+                        previousClassName='page-item'
+                        previousLinkClassName='page-link'
+                        nextClassName='page-item'
+                        nextLinkClassName='page-link'
+                        renderOnZeroPageCount={null}
+                    />
                 </>
             )}
         </div>
-    );
+    )
 }
 
 export default NovelPage;
