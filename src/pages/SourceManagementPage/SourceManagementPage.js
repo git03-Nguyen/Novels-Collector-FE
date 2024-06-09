@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import UnloadSourceModal from '../../Components/Modal/UnloadSourceModal';
 import PluginSourceService from '../../services/pluginSource.s';
-import { Button } from 'react-bootstrap';
-
-const SourceManagementPage = (props) => {
+import { Badge, Button, Table } from 'react-bootstrap';
+import './SourceManagementPage.css';
+import { toast } from 'react-toastify';
+const SourceManagementPage = () => {
     const [listSources, setListSources] = useState([]);
     const [unloadSource, setUnloadSource] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -25,15 +26,32 @@ const SourceManagementPage = (props) => {
         getAllSources();
     }, []);
 
+    const unloadNovelSource = async (source) => {
+        try {
+            const response = await PluginSourceService.unloadPluginSource(source.name);
+            if (response.statusCode === 200) {
+                console.log("Unloaded source: " + source.name);
+            } else {
+                console.log("Error unloading source: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error unloading source: " + error.message);
+        }
+    };
+
     const handleUnloadSource = (source) => {
         setUnloadSource(source);
         setShowModal(true);
     };
 
-    const handleConfirmUnload = () => {
-        setListSources(listSources.filter(source => source !== unloadSource));
+    const handleConfirmUnload = async () => {
+        await unloadNovelSource(unloadSource);
+        setListSources(listSources.map(source =>
+            source.name === unloadSource.name ? { ...source, enabled: false } : source
+        ));
         setUnloadSource(null);
         setShowModal(false);
+        toast.success(`Đã gỡ bỏ nguồn truyện ${unloadSource.name} thành công!`);
     };
 
     const handleCancelUnload = () => {
@@ -41,6 +59,19 @@ const SourceManagementPage = (props) => {
         setShowModal(false);
     };
 
+    const reloadAllSources = async () => {
+        try {
+            const response = await PluginSourceService.reloadAllSources();
+            if (response.statusCode === 200) {
+                setListSources(response.data);
+                toast.success("Đã khởi động lại tất cả nguồn truyện thành công!");
+            } else {
+                console.log("Error reloading all plugin sources: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error reloading all plugin sources: " + error.message);
+        }
+    }
     return (
         <div className="px-3 py-3 text-center">
             <div className="row mx-5 mb-2">
@@ -48,57 +79,70 @@ const SourceManagementPage = (props) => {
                     <a href="/">
                         <Button variant="success">
                             <i className="fas fa-plus"></i>
-                            <span className="ms-1">Add New Source</span>
+                            <span className="ms-1">Thêm Nguồn Truyện Mới</span>
+                        </Button>
+                    </a>
+                    <a href="#">
+                        <Button variant="success" onClick={() => reloadAllSources()}>
+                            <i className="fa-solid fa-rotate-right"></i>
+                            <span className="ms-1">Khởi động lại tất cả Nguồn Truyện</span>
                         </Button>
                     </a>
                 </div>
 
                 <div className="table-responsive mt-3">
-                    <table className="table">
-                        <thead className="table-light table-bordered">
+                    <Table bordered striped className='border border-secondary border-3'>
+                        <thead className="table-primary">
                             <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Source Name</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">URL</th>
-                                <th scope="col">Version</th>
-                                <th scope="col">Author</th>
-                                <th scope="col">Enabled Status</th>
-                                <th scope="col">Action</th>
+                                <th>ID</th>
+                                <th>Nguồn Truyện</th>
+                                <th>Phiên bản</th>
+                                <th>Tác giả</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="table-dark my-table">
                             {listSources.map((source, index) => (
-                                <tr key={source.url}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{source.name}</td>
-                                    <td className="text-start">{source.description}</td>
-                                    <td className="text-start">{source.url}</td>
-                                    <td>{source.version}</td>
-                                    <td>{source.author}</td>
-                                    <td>{source.enabled ? (
-                                        <Button variant="success" disabled>
-                                            <i className="fa-solid fa-check"></i>
-                                        </Button>
-                                    ) : (
-                                        <Button variant="danger" disabled>
-                                            <i className="fa-solid fa-xmark"></i>
-                                        </Button>
-                                    )}</td>
+                                <tr key={source.url} className='align-middle'>
+                                    <td>{index + 1}</td>
                                     <td>
-                                        <div className="d-flex align-items-center justify-content-center">
-                                            <Button
-                                                variant="outline-dark"
-                                                onClick={() => handleUnloadSource(source)}
-                                            >
-                                                <i className="fas fa-trash-alt"></i>
-                                            </Button>
+                                        <div>
+                                            <p className='fw-bold mb-1 text-start'>{source.name}</p>
+                                            <p className='text-white-50 mb-0 text-start fs-10'>{source.description}</p>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <p className='fw-bold mb-1'>{source.version}</p>
+                                            <p className='text-muted mb-0'><a className='text-blue-50 source-url' href={source.url}>{source.url}</a></p>
+                                        </div>
+                                    </td>
+                                    <td className="fw-bold">{source.author}</td>
+                                    <td>
+                                        {source.enabled ? (
+                                            <Badge bg='success'>
+                                                Đang hoạt động
+                                            </Badge>
+                                        ) : (
+                                            <Badge bg='danger'>
+                                                Đã gỡ bỏ
+                                            </Badge>
+                                        )}
+                                    </td>
+                                    <td>
+                                        <Button
+                                            variant='danger'
+                                            onClick={() => handleUnloadSource(source)}
+                                            disabled={!source.enabled}
+                                        >
+                                            <i className="fa-solid fa-trash"></i>
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                    </Table>
                 </div>
             </div>
             {unloadSource && (

@@ -14,8 +14,8 @@ function LoginPage(props) {
                     <div className="card p-4">
                         <div className="card-body">
                             <form>
-                                <h1>Login</h1>
-                                <p className="text-secondary">As Administrator</p>
+                                <h1>Đăng nhập</h1>
+                                <p className="text-secondary">Với vai trò Quản trị viên</p>
                                 <div className="input-group mb-3">
                                     <div className="input-group-text">
                                         <i className="fa-solid fa-user"></i>
@@ -41,7 +41,7 @@ function LoginPage(props) {
                                 <div className="row mb-4 justify-content-center">
                                     <div className="col-xs-6">
                                         <a href="forgot-password">
-                                            Forgot password?
+                                            Quên mật khẩu?
                                         </a>
                                     </div>
                                 </div>
@@ -51,7 +51,7 @@ function LoginPage(props) {
                                             type="button"
                                             className="btn btn-primary px-4 login-btn"
                                             onClick={handleLogin}>
-                                            Login
+                                            Đăng nhập
                                         </button>
                                     </div>
                                 </div>

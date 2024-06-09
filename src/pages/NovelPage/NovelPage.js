@@ -8,7 +8,6 @@ import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 import HTMLToReactParser from '../../utils/htmlToReactParser';
 
-
 function NovelPage(props) {
     const navigate = useNavigate();
 
@@ -58,8 +57,6 @@ function NovelPage(props) {
         setReviewStars(ratingArr);
     }
 
-
-
     const fetchNovelInfo = async (source, slug) => {
         try {
             const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
@@ -104,13 +101,13 @@ function NovelPage(props) {
         navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
     }
 
+
     const getInnerTextOfDescription = () => {
         const descriptionText = window.document.querySelector('#raw-novel-description');
         const description = descriptionText?.innerText ?? '';
 
         setNovelDescription(description);
     }
-
 
     useEffect(() => {
         fetchNovelInfo(sourceSlug, novelSlug);
@@ -124,10 +121,11 @@ function NovelPage(props) {
 
     return (
         <div className='novel-page-container'>
-            {isLoadingNovelPage === true ?
+            {isLoadingNovelPage ? (
                 <h1 className='loading-message'>... Loading Data ...</h1>
-                : <>
-                    {novel && novel.cover &&
+            ) : (
+                <>
+                    {novel && novel.cover && (
                         <>
                             <div className="row w-100">
                                 <div className="col-md-4 mt-2">
@@ -140,27 +138,15 @@ function NovelPage(props) {
                                             <div className="d-flex align-items-center mr-3">
                                                 <span className="text-white-50 me-1">Đánh giá: {novel?.rating}/{novel?.maxRating}</span>
                                                 <div className="d-flex align-items-center">
-                                                    {reviewStars && reviewStars?.length > 0 && reviewStars.map((ele, index) => {
-                                                        return <i
+                                                    {reviewStars && reviewStars.length > 0 && reviewStars.map((ele, index) => (
+                                                        <i
                                                             key={`review-star-${index}`}
                                                             className={ele.className}
                                                             style={{ color: ele.color }}
                                                         ></i>
-                                                    })}
-
-                                                    {/* {[...Array(parseInt(novel?.rating)) || 0].map((_, index) => (
-                                                        <img
-                                                            key={index}
-                                                            src="https://waka.vn/svgs/icon-star.svg"
-                                                            alt="icon-star"
-                                                            className="cursor-pointer me-1"
-                                                            width="16"
-                                                            height="24"
-                                                        />
-                                                    ))} */}
+                                                    ))}
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div className="mt-4 row">
                                             <div className="col">
@@ -179,7 +165,6 @@ function NovelPage(props) {
                                                 <p className="text-white fw-bold mb-1">Nguồn truyện</p>
                                                 <span>{sourceSlug}</span>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div className="mt-0">
@@ -197,8 +182,9 @@ function NovelPage(props) {
                                             }
                                         </span>
                                         <div></div>
+                                        
                                         <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
-                                            {isSeeMoreDescription === true ? "Thu gọn" : "Xem thêm"}
+                                            {isSeeMoreDescription ? "Thu gọn" : "Xem thêm"}
                                         </button>
                                     </div>
                                 </div>
@@ -222,10 +208,11 @@ function NovelPage(props) {
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                </div>
                             </div>
+
                             <ReactPaginate
-                                containerClassName='pagination justify-content-center' //important
+                                containerClassName='pagination justify-content-center'
                                 activeClassName='active'
                                 breakLabel="..."
                                 nextLabel="Sau >"
@@ -244,13 +231,11 @@ function NovelPage(props) {
                                 nextLinkClassName='page-link'
                                 renderOnZeroPageCount={null}
                             />
-
-
                         </>
-                    }
-                </>}
-            {/* <BookPreview /> */}
-        </div >
+                    )}
+                </>
+            )}
+        </div>
     );
 }
 
