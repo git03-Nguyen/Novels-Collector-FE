@@ -24,6 +24,7 @@ function NovelPage(props) {
     // Default max length of truncated description = 500
     const maxLengthTruncatedDescription = 500;
 
+    const [rawNovelDescription, setRawNovelDescription] = useState('');
     const [novelDescription, setNovelDescription] = useState('');
     const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
 
@@ -32,13 +33,10 @@ function NovelPage(props) {
 
 
 
-    const handleSetNovelDescription = (description) => {
-        let newNovelDescription = description;
-        if (sourceSlug === "TruyenTangThuVienVn") {
-            newNovelDescription = truncateNovelDescription(description);
-        }
+    const handleSetRawNovelDescription = (description) => {
+        let newRawNovelDescription = description;
+        setRawNovelDescription(newRawNovelDescription);
 
-        setNovelDescription(newNovelDescription);
     }
 
     const handleSetReviewStars = (rating, maxRating) => {
@@ -73,7 +71,7 @@ function NovelPage(props) {
                 setTotalPage(parseInt(newNovelInfo.totalPage));
                 setIsLoadingNovelPage(false);
 
-                handleSetNovelDescription(newNovelInfo.description);
+                handleSetRawNovelDescription(newNovelInfo.description);
 
                 handleSetReviewStars(newNovelInfo.rating, newNovelInfo.maxRating);
                 setNovelContext(newNovelInfo);
@@ -97,11 +95,6 @@ function NovelPage(props) {
         setCurrentPage(selectedPage);
     }
 
-    const truncateNovelDescription = (desc) => {
-        const truncatedDesc = HTMLToReactParser.truncateHtml(desc, maxLengthTruncatedDescription);
-        return truncatedDesc;
-    }
-
     const handleClickChapter = (chapter, index) => {
         let newChapterContext = {
             ...chapter,
@@ -111,9 +104,22 @@ function NovelPage(props) {
         navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
     }
 
+    const getInnerTextOfDescription = () => {
+        const descriptionText = window.document.querySelector('#raw-novel-description');
+        const description = descriptionText?.innerText ?? '';
+
+        setNovelDescription(description);
+    }
+
+
     useEffect(() => {
         fetchNovelInfo(sourceSlug, novelSlug);
+        getInnerTextOfDescription();
     }, [currentPage]);
+
+    useEffect(() => {
+        getInnerTextOfDescription();
+    }, [rawNovelDescription])
 
 
     return (
@@ -179,13 +185,18 @@ function NovelPage(props) {
                                     <div className="mt-0">
                                         <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
 
-                                        <div className="text-white mt-0 novel-description">
+                                        {(sourceSlug === "DTruyenCom" || sourceSlug === "TruyenTangThuVienVn")
+                                            ? <span className='d-none' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
+                                            : <span className='d-none' id='raw-novel-description' >{rawNovelDescription}</span>
+                                        }
+
+                                        <span className="text-white mt-0 novel-description">
                                             {isSeeMoreDescription === true
                                                 ? novelDescription
-                                                : novelDescription.slice(0, maxLengthTruncatedDescription) + ' ...'
+                                                : novelDescription?.slice(0, maxLengthTruncatedDescription) + ' ...'
                                             }
-                                        </div>
-
+                                        </span>
+                                        <div></div>
                                         <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
                                             {isSeeMoreDescription === true ? "Thu gọn" : "Xem thêm"}
                                         </button>

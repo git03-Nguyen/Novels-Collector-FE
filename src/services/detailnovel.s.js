@@ -13,7 +13,6 @@ const sortChapterListByCustomID = (chapterList) => {
 }
 
 const fetchDetailNovel = async (source, novelSlug, page) => {
-    console.log("fetchDetailNovel page: " + page);
     try {
         const response = await axios.get(`/api/v1/novel/${source}/${novelSlug}`);
         if (response) {

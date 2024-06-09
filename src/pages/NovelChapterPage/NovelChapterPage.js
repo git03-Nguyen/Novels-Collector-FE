@@ -32,12 +32,9 @@ function NovelChapterPage(props) {
 
     const fetchNovelInfo = async (source, slug) => {
         try {
-            console.log('Current page: ' + currentPage);
             const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
-                console.log("Update related data: ");
-                console.log(newNovelInfo);
                 updateRelatedData(newNovelInfo)
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
@@ -74,19 +71,7 @@ function NovelChapterPage(props) {
 
         setPerpage(parseInt(newNovelInfo?.chapters?.length))
         setNovelContext(newNovelInfo);
-        // setCurrentPage(newNovelInfo?.page);
         setDisabledStatusForSiblingChapters(newNovelInfo);
-
-
-        // const curChapterInList = newNovelInfo.chapters.find((novel) => {
-        //     return novel.slug === chapterSlug;
-        // })
-        // console.log("CurChapterInList: ");
-        // console.log(newNovelInfo.chapters);
-        // console.log(curChapterInList);
-        // if (!curChapterInList) {
-        //     setCurrentPage(currentPage + 1);
-        // }
     }
 
     const handleConvertNovelStatusCode = (newNovel) => {
@@ -97,7 +82,6 @@ function NovelChapterPage(props) {
     }
 
     const fetchChapterContent = async () => {
-        // TODO: replace this with calling API from server
         try {
             const response = await ChapterService.fetchChapterContent(sourceSlug, novelSlug, chapterSlug);
             if (response && response.data && parseInt(response.statusCode) === 200) {
@@ -112,9 +96,6 @@ function NovelChapterPage(props) {
                 setChapterID(newChapterID);
                 const newPage = Math.floor(newChapterID / perpage + 1);
                 if (parseInt(newPage) !== parseInt(currentPage)) {
-                    console.log(`newChapterid: ${newChapterID}`);
-                    console.log(`perpage: ${perpage}`);
-                    console.log(`newpage ${newPage} VS curpage ${currentPage}`);
                     setCurrentPage(newPage);
                 }
                 setChapterContext(newChapterData);
@@ -154,15 +135,9 @@ function NovelChapterPage(props) {
     }
 
     const handleSiblingChapterClick = (increment) => {
-        console.log("chapter id: ");
-        console.log(chapterID);
-        console.log(novelContext);
-        console.log(novelContext?.chapters);
-        console.log("current novel slug: ");
         const curChapter = novelContext?.chapters.map(novel => {
             return parseInt(novel.id) === chapterID ? novel : undefined;
         })
-        console.log(curChapter);
         // navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
         // window.location.replace(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
         // TODO: replace this with more suitable solution
@@ -175,12 +150,7 @@ function NovelChapterPage(props) {
     }, [])
 
     useEffect(() => {
-        // window.setTimeout(() => {
-        //     fetchNovelInfo(sourceSlug, novelSlug);
-        // }, 2750);
-
         fetchNovelInfo(sourceSlug, novelSlug);
-
     }, [currentPage])
 
     return (
