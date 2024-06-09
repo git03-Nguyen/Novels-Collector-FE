@@ -13,6 +13,7 @@ const sortChapterListByCustomID = (chapterList) => {
 }
 
 const fetchDetailNovel = async (source, novelSlug, page) => {
+    console.log("fetchDetailNovel page: " + page);
     try {
         const response = await axios.get(`/api/v1/novel/${source}/${novelSlug}`);
         if (response) {
@@ -31,6 +32,7 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
 
                 returnedData.data.chapters = sortChapterListByCustomID(chapterList);
                 returnedData.data.totalPage = chapterListResponse.meta.totalPage;
+                returnedData.data.page = chapterListResponse.meta.page;
             }
             return returnedData;
         }
@@ -72,6 +74,7 @@ const fetchChapterList = async (source, novelSlug, page) => {
 
 const DetailNovelService = {
     fetchDetailNovel,
+    fetchChapterList,
 }
 
 export default DetailNovelService;

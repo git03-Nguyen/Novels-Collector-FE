@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
@@ -10,8 +10,10 @@ import HTMLToReactParser from '../../utils/htmlToReactParser';
 
 
 function NovelPage(props) {
+    const navigate = useNavigate();
+
     const { novelSlug, sourceSlug } = useParams();
-    const { setNovelContext } = useContext(NovelContext);
+    const { setNovelContext, setChapterContext } = useContext(NovelContext);
 
     const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
     const [novel, setNovel] = useState({});
@@ -24,6 +26,11 @@ function NovelPage(props) {
 
     const [novelDescription, setNovelDescription] = useState('');
     const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
+
+
+
+
+
 
     const handleSetNovelDescription = (description) => {
         let newNovelDescription = description;
@@ -95,7 +102,14 @@ function NovelPage(props) {
         return truncatedDesc;
     }
 
-
+    const handleClickChapter = (chapter, index) => {
+        let newChapterContext = {
+            ...chapter,
+            chapterId: parseInt(index) + 1,
+        };
+        setChapterContext(newChapterContext);
+        navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
+    }
 
     useEffect(() => {
         fetchNovelInfo(sourceSlug, novelSlug);
@@ -190,7 +204,10 @@ function NovelPage(props) {
                                         </h2>
                                         <div id={`flush-collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${index}`} data-bs-parent="#accordionl-list-chapter">
                                             <div className="accordion-body">
-                                                <Link to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}>{chapter.slug}</Link>
+                                                <button className='btn btn-secondary'
+                                                    onClick={() => handleClickChapter(chapter, index)}>
+                                                    {chapter.title}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

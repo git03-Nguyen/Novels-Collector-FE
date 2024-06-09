@@ -7,19 +7,18 @@ import { NovelContext } from '../../context/NovelContext';
 import { useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
+import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 function NovelChapterPage(props) {
     const { novelSlug, chapterSlug, sourceSlug } = useParams();
 
-    const { novelContext, setNovelContext, setChapterContext } = useContext(NovelContext);
+    const { novelContext, setNovelContext, chapterContext, setChapterContext } = useContext(NovelContext);
 
-    // TODO: fix this perpage variable to align with specific plugin sources
-    const perpage = 50;
+    const defaultPerpage = PluginSourcePerpageGetter.getChaptersPerpageByPluginSource(sourceSlug);
+    const [perpage, setPerpage] = useState(defaultPerpage);
     const [totalPage, setTotalPage] = useState(1);
-    const defaultChapterID = parseInt(chapterSlug.split('-')[1]);
-    const [chapterID, setChapterID] = useState(defaultChapterID);
+    const [chapterID, setChapterID] = useState(chapterContext?.chapterId ?? 1);
 
-    const defaultCurrentPage = Math.floor(chapterID / perpage) + 1;
-    const [currentPage, setCurrentPage] = useState(defaultCurrentPage);
+    const [currentPage, setCurrentPage] = useState(parseInt(novelContext?.page ?? 1));
 
 
     const defaultIsDisabledSiblingChapter = {
@@ -33,11 +32,33 @@ function NovelChapterPage(props) {
 
     const fetchNovelInfo = async (source, slug) => {
         try {
+            console.log('Current page: ' + currentPage);
             const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
-
+                console.log("Update related data: ");
+                console.log(newNovelInfo);
                 updateRelatedData(newNovelInfo)
+            } else {
+                toast.error("Error fetching novel Info: " + response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching novel Info: " + error.message);
+        }
+    }
+
+    const fetchChapterList = async (source, slug) => {
+        try {
+            const response = await DetailNovelService.fetchChapterList(source, slug, currentPage);
+            if (response && response.data && parseInt(response.statusCode) === 200) {
+                let newNovelContext = {
+                    ...novelContext,
+                    chapters: response.data,
+                    page: response.meta?.page
+                }
+
+                setCurrentPage(newNovelContext.page)
+                setNovelContext(newNovelContext);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -51,9 +72,21 @@ function NovelChapterPage(props) {
 
         setIsLoadingNovelChapterPage(false);
 
+        setPerpage(parseInt(newNovelInfo?.chapters?.length))
         setNovelContext(newNovelInfo);
-
+        // setCurrentPage(newNovelInfo?.page);
         setDisabledStatusForSiblingChapters(newNovelInfo);
+
+
+        // const curChapterInList = newNovelInfo.chapters.find((novel) => {
+        //     return novel.slug === chapterSlug;
+        // })
+        // console.log("CurChapterInList: ");
+        // console.log(newNovelInfo.chapters);
+        // console.log(curChapterInList);
+        // if (!curChapterInList) {
+        //     setCurrentPage(currentPage + 1);
+        // }
     }
 
     const handleConvertNovelStatusCode = (newNovel) => {
@@ -74,9 +107,19 @@ function NovelChapterPage(props) {
                     ...response.data,
                     content: '',
                 };
+
+                let newChapterID = parseInt(response.data?.number);
+                setChapterID(newChapterID);
+                const newPage = Math.floor(newChapterID / perpage + 1);
+                if (parseInt(newPage) !== parseInt(currentPage)) {
+                    console.log(`newChapterid: ${newChapterID}`);
+                    console.log(`perpage: ${perpage}`);
+                    console.log(`newpage ${newPage} VS curpage ${currentPage}`);
+                    setCurrentPage(newPage);
+                }
                 setChapterContext(newChapterData);
             } else {
-                toast.error(response?.message);
+                toast.error("Error fetching chapter content: " + response?.message);
             }
         } catch (error) {
             console.error("Error fetching chapter content: " + error.message);
@@ -111,8 +154,17 @@ function NovelChapterPage(props) {
     }
 
     const handleSiblingChapterClick = (increment) => {
+        console.log("chapter id: ");
+        console.log(chapterID);
+        console.log(novelContext);
+        console.log(novelContext?.chapters);
+        console.log("current novel slug: ");
+        const curChapter = novelContext?.chapters.map(novel => {
+            return parseInt(novel.id) === chapterID ? novel : undefined;
+        })
+        console.log(curChapter);
         // navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
-        window.location.replace(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
+        // window.location.replace(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
         // TODO: replace this with more suitable solution
     }
 
@@ -123,13 +175,13 @@ function NovelChapterPage(props) {
     }, [])
 
     useEffect(() => {
+        // window.setTimeout(() => {
+        //     fetchNovelInfo(sourceSlug, novelSlug);
+        // }, 2750);
+
         fetchNovelInfo(sourceSlug, novelSlug);
+
     }, [currentPage])
-
-    useEffect(() => {
-        setCurrentPage(Math.floor(chapterID / perpage) + 1);
-    }, [chapterID])
-
 
     return (
         <div className='novel-chapter-page-container'>
@@ -143,7 +195,7 @@ function NovelChapterPage(props) {
                         Tác giả: {novelContext.authors[0]?.name}
                         <span> - </span>
                         Trạng thái: {novelContext.status}</h5>
-
+                    <span className='d-none'>Trang: {currentPage} / {totalPage}</span>
                     <div className='novel-chapter-content-container'>
 
                         {novelChapter.content && novelChapter.content.length > 0 &&

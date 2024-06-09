@@ -59,7 +59,9 @@ function HomePage(props) {
     }
 
     const handleSetupPluginSourceByParams = () => {
-        if (sourceSlug == "") {
+        if (sourceSlug === "" || !sourceSlug) {
+            return;
+        } else if (sourceSlug === pluginSources[0].name) {
             return;
         }
 
@@ -71,8 +73,6 @@ function HomePage(props) {
         })
         newPluginSource.sort((a, b) => b.prior - a.prior)
 
-        console.log("New plugin source: ");
-        console.log(newPluginSource);
         setPluginSources(newPluginSource);
     }
 
@@ -87,14 +87,12 @@ function HomePage(props) {
 
     useEffect(() => {
         window.setTimeout(() => {
-            console.log("Change this by param");
             handleSetupPluginSourceByParams();
         }, 1000);
         //WARNING: This delay is my effort to change pluginSource after setup sourceSlug
     }, [sourceSlug])
 
     useEffect(() => {
-        console.log("plugin source now: " + pluginSources[0].name);
         setIsLoadingHomePage(true);
         fetchHomePageContent();
     }, [pluginSources])
