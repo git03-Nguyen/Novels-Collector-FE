@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
@@ -9,8 +9,10 @@ import './NovelPage.css';
 import HTMLToReactParser from '../../utils/htmlToReactParser';
 
 function NovelPage(props) {
+    const navigate = useNavigate();
+
     const { novelSlug, sourceSlug } = useParams();
-    const { setNovelContext } = useContext(NovelContext);
+    const { setNovelContext, setChapterContext } = useContext(NovelContext);
 
     const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
     const [novel, setNovel] = useState({});
@@ -21,16 +23,19 @@ function NovelPage(props) {
     // Default max length of truncated description = 500
     const maxLengthTruncatedDescription = 500;
 
+    const [rawNovelDescription, setRawNovelDescription] = useState('');
     const [novelDescription, setNovelDescription] = useState('');
     const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
 
-    const handleSetNovelDescription = (description) => {
-        let newNovelDescription = description;
-        if (sourceSlug === "TruyenTangThuVienVn") {
-            newNovelDescription = truncateNovelDescription(description);
-        }
 
-        setNovelDescription(newNovelDescription);
+
+
+
+
+    const handleSetRawNovelDescription = (description) => {
+        let newRawNovelDescription = description;
+        setRawNovelDescription(newRawNovelDescription);
+
     }
 
     const handleSetReviewStars = (rating, maxRating) => {
@@ -63,7 +68,7 @@ function NovelPage(props) {
                 setTotalPage(parseInt(newNovelInfo.totalPage));
                 setIsLoadingNovelPage(false);
 
-                handleSetNovelDescription(newNovelInfo.description);
+                handleSetRawNovelDescription(newNovelInfo.description);
 
                 handleSetReviewStars(newNovelInfo.rating, newNovelInfo.maxRating);
                 setNovelContext(newNovelInfo);
@@ -87,14 +92,32 @@ function NovelPage(props) {
         setCurrentPage(selectedPage);
     }
 
-    const truncateNovelDescription = (desc) => {
-        const truncatedDesc = HTMLToReactParser.truncateHtml(desc, maxLengthTruncatedDescription);
-        return truncatedDesc;
+    const handleClickChapter = (chapter, index) => {
+        let newChapterContext = {
+            ...chapter,
+            chapterId: parseInt(index) + 1,
+        };
+        setChapterContext(newChapterContext);
+        navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
+    }
+
+
+    const getInnerTextOfDescription = () => {
+        const descriptionText = window.document.querySelector('#raw-novel-description');
+        const description = descriptionText?.innerText ?? '';
+
+        setNovelDescription(description);
     }
 
     useEffect(() => {
         fetchNovelInfo(sourceSlug, novelSlug);
+        getInnerTextOfDescription();
     }, [currentPage]);
+
+    useEffect(() => {
+        getInnerTextOfDescription();
+    }, [rawNovelDescription])
+
 
     return (
         <div className='novel-page-container'>
@@ -146,24 +169,44 @@ function NovelPage(props) {
                                     </div>
                                     <div className="mt-0">
                                         <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
-                                        <div className="text-white mt-0 novel-description">
-                                            {isSeeMoreDescription ? novelDescription : novelDescription.slice(0, maxLengthTruncatedDescription) + ' ...'}
-                                        </div>
+
+                                        {(sourceSlug === "DTruyenCom" || sourceSlug === "TruyenTangThuVienVn")
+                                            ? <span className='d-none' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
+                                            : <span className='d-none' id='raw-novel-description' >{rawNovelDescription}</span>
+                                        }
+
+                                        <span className="text-white mt-0 novel-description">
+                                            {isSeeMoreDescription === true
+                                                ? novelDescription
+                                                : novelDescription?.slice(0, maxLengthTruncatedDescription) + ' ...'
+                                            }
+                                        </span>
+                                        <div></div>
+                                        
                                         <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
                                             {isSeeMoreDescription ? "Thu gọn" : "Xem thêm"}
                                         </button>
                                     </div>
-                                    <h5 className="text-white fw-bold mt-3 mb-2">Danh sách chương</h5>
-                                    <div className="list-group scrollable-list-group mt-3 border border-dark border-4 mb-4 round-pill">
-                                        {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
-                                            <Link
-                                                to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
-                                                className="list-group-item list-group-item-action border border-double"
-                                                key={`novel-chapter-${index}`}
-                                            >
-                                                <strong>{chapter.title}</strong>
-                                            </Link>
-                                        ))}
+                                </div>
+                            </div>
+                            <div className="accordion accordion-flush chapter-accordion mt-4" id="accordion-list-chapter">
+                                <h4 >Danh sách chương</h4>
+
+                                {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
+                                    <div className="accordion-item" key={`novel-chapter-${index}`}>
+                                        <h2 className="accordion-header" id={`flush-heading${index}`}>
+                                            <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse${index}`} aria-expanded="false" aria-controls={`flush-collapse${index}`}>
+                                                {chapter.title}
+                                            </button>
+                                        </h2>
+                                        <div id={`flush-collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${index}`} data-bs-parent="#accordionl-list-chapter">
+                                            <div className="accordion-body">
+                                                <button className='btn btn-secondary'
+                                                    onClick={() => handleClickChapter(chapter, index)}>
+                                                    {chapter.title}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
