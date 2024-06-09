@@ -1,3 +1,7 @@
+.novel-page-container {
+    margin-top: 20px;
+}
+
 .chapter-table {
     width: 60%;
 }
@@ -5,6 +9,9 @@
 .novel-img {
     border: solid 4px #000;
     border-radius: 6px;
+
+    max-width: 320px;
+    width: 90%;
 }
 
 .chapter-accordion {

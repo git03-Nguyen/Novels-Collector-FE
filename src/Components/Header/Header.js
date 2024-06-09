@@ -1,5 +1,6 @@
-import { React, useState, useContext } from 'react';
-import { Link } from 'react-router-dom'
+import { React, useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
+
 import './Header.css'
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
@@ -9,6 +10,7 @@ function Header(props) {
     const [searchTarget, setSearchTarget] = useState('keyword');
     const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
 
+    const navigate = useNavigate();
     const handleChangeSearchKeyword = (value) => {
         setSearchKeyword(value);
     }
@@ -27,9 +29,8 @@ function Header(props) {
         toast.success(`Đã chuyển tìm kiếm theo ${selectedOptionName}`)
     }
 
-    const handleSearch = async () => {
-        // TODO: replace this with calling API from server
-        alert(`You are searching for ${searchKeyword}`)
+    const handleSearch = () => {
+        navigate(`/novel-list?keyword=${searchKeyword}`);
     }
 
     const handleChangeSource = (e) => {
@@ -53,6 +54,10 @@ function Header(props) {
         setPluginSources(newPluginSources);
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
+
+    useEffect(() => {
+        setSelectedSource(pluginSources[0].name);
+    }, [pluginSources])
 
     return (
         <header className='app-header'>
