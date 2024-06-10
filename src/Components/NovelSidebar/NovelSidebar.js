@@ -7,29 +7,15 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import RecentNovelsGetter from '../../utils/RecentNovelsGetter';
 import CategoryService from '../../services/category.s';
+import UserCookieManager from '../../utils/userCookieManager';
+import { UserContext } from '../../context/UserContext';
 
 function NovelSidebar(props) {
     const navigate = useNavigate();
     const { pluginSources } = useContext(NovelContext);
+    const { userLatestNovels, setUserLatestNovels } = useContext(UserContext);
 
-    const [recentNovels, setRecentNovels] = useState([]);
     const [categories, setCategories] = useState([]);
-
-    const defaultPage = 1;
-
-
-    const fetchRecentNovels = async () => {
-        try {
-            const response = await RecentNovelsGetter.fetchRecentNovels(pluginSources[0].name, defaultPage);
-            if (response && response.data && parseInt(response.statusCode) === 200) {
-                setRecentNovels(response.data);
-            } else {
-                toast.error("Error fetching recent novel lists: " + response?.message);
-            }
-        } catch (error) {
-            console.error("Error fetching recent novel lists: " + error.message);
-        }
-    }
 
     const fetchCategories = async () => {
         try {
@@ -50,9 +36,18 @@ function NovelSidebar(props) {
     }
 
 
+    const getUserLatestNovelsFromCookie = () => {
+        const novels = UserCookieManager.getUserLatestNovels();
+        console.log('user latest novels from cookie: ');
+        console.log(novels);
+        setUserLatestNovels(novels);
+    }
 
     useEffect(() => {
-        fetchRecentNovels();
+        getUserLatestNovelsFromCookie();
+    }, [])
+
+    useEffect(() => {
         fetchCategories();
     }, [pluginSources])
 
@@ -62,23 +57,31 @@ function NovelSidebar(props) {
             <div className='sidebar-section recent-novel-list'>
                 <h4 className='section-title'>Truyện vừa đọc</h4>
                 <div className='novel-list'>
-                    {recentNovels && recentNovels?.length && recentNovels.map((novel, index) => {
-                        return <div key={`recent-novel-card-${index}`} className='novel-card-mini'>
-                            <Link to={`/source/${novel.source}/novel/${novel.slug}`}>
-                                <img src={novel?.cover} />
-                            </Link>
-                            <div className='novel-brief-info'>
-                                <Link to={`/source/${novel.source}/novel/${novel.slug}`}>
-                                    <strong>{novel.title}</strong>
+                    {userLatestNovels && userLatestNovels?.length > 0
+                        ? <> {userLatestNovels.map((novel, index) => {
+                            return <div key={`recent-novel-card-${index}`} className='novel-card-mini'>
+                                <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
+                                    <img src={novel?.cover} />
                                 </Link>
-                                <i>{novel.source}</i>
-                                <Link to={`/source/${novel.source}/novel/${novel.slug}/chapter/${novel.recentChapter.slug}`}>
-                                    <span>{novel.recentChapter.title}</span>
-                                </Link>
-
+                                <div className='novel-brief-info'>
+                                    <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
+                                        <strong>{novel?.title}</strong>
+                                    </Link>
+                                    <i>{novel?.source}</i>
+                                    {novel?.chapter &&
+                                        <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}/chapter/${novel?.chapter?.slug}`}>
+                                            <span>Chương {novel?.chapter?.id}</span>
+                                        </Link>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    })}
+                        })}
+                            <Link className='watch-full-user-list-btn' to={`/user-list`}>Xem toàn bộ</Link>
+                        </>
+                        : <>
+                            <span>Bạn chưa đọc truyện nào cả, hãy cùng bắt đầu với một bộ truyện nhé !</span>
+                            <Link className='text-white' to={`/novel-list`}>Xem ở đây</Link>
+                        </>}
                 </div>
             </div>
 

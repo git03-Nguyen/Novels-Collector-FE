@@ -40,12 +40,14 @@
     margin-right: 4px;
 }
 
-.novel-card-mini a {
+.novel-card-mini a,
+.novel-sidebar-container a {
     text-decoration: none;
     color: white !important;
 }
 
-.novel-card-mini a:hover {
+.novel-card-mini a:hover,
+.novel-sidebar-container a:hover {
     color: greenyellow !important;
     opacity: 0.7;
 }
@@ -78,4 +80,10 @@
 
 .category-tag:hover {
     background: linear-gradient(90deg, #3b66f5, #163bcd) !important;
+}
+
+.watch-full-user-list-btn {
+    font-size: 20px;
+    font-weight: 500;
+    font-style: italic;
 }

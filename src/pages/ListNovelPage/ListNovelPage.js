@@ -110,8 +110,6 @@ function ListNovelPage(props) {
                             <select defaultValue={"1"} className="form-select" id="yearRelease">
                                 <option value="1">Tăng dần</option>
                                 <option value="2">Giảm dần</option>
-                                <option value="3">{curSearchValue}</option>
-
                             </select>
                             <label htmlFor="floatingSelectGrid">Tên truyện</label>
                         </div>

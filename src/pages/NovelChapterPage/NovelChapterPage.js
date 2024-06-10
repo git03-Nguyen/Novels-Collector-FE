@@ -8,15 +8,20 @@ import { useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
+import { UserContext } from '../../context/UserContext';
+import UserCookieManager from '../../utils/userCookieManager';
+
+
 function NovelChapterPage(props) {
     const { novelSlug, chapterSlug, sourceSlug } = useParams();
 
     const { novelContext, setNovelContext, chapterContext, setChapterContext } = useContext(NovelContext);
+    const { setUserLatestNovels } = useContext(UserContext);
 
     const defaultPerpage = PluginSourcePerpageGetter.getChaptersPerpageByPluginSource(sourceSlug);
     const [perpage, setPerpage] = useState(defaultPerpage);
     const [totalPage, setTotalPage] = useState(1);
-    const [chapterID, setChapterID] = useState(chapterContext?.chapterId ?? 1);
+    const [chapterID, setChapterID] = useState(chapterContext?.number ?? 1);
 
     const [currentPage, setCurrentPage] = useState(parseInt(novelContext?.page ?? 1));
 
@@ -44,24 +49,22 @@ function NovelChapterPage(props) {
         }
     }
 
-    const fetchChapterList = async (source, slug) => {
-        try {
-            const response = await DetailNovelService.fetchChapterList(source, slug, currentPage);
-            if (response && response.data && parseInt(response.statusCode) === 200) {
-                let newNovelContext = {
-                    ...novelContext,
-                    chapters: response.data,
-                    page: response.meta?.page
-                }
-
-                setCurrentPage(newNovelContext.page)
-                setNovelContext(newNovelContext);
-            } else {
-                toast.error("Error fetching novel Info: " + response?.message);
-            }
-        } catch (error) {
-            console.error("Error fetching novel Info: " + error.message);
+    const saveNovelToUserLatestNovels = (newNovel) => {
+        if (!newNovel || !newNovel?.slug) {
+            return;
         }
+
+        const newUserLatestNovels = UserCookieManager.saveNovelToUserCookie({
+            ...newNovel,
+            source: sourceSlug,
+            chapterID: chapterID,
+            chapterSlug: chapterSlug,
+        });
+        if (!newUserLatestNovels) {
+            toast.error('Số lượng truyện được lưu đã vượt quá cho phép !')
+            return;
+        }
+        setUserLatestNovels(newUserLatestNovels);
     }
 
     const updateRelatedData = (newNovelInfo) => {
@@ -72,6 +75,8 @@ function NovelChapterPage(props) {
         setPerpage(parseInt(newNovelInfo?.chapters?.length))
         setNovelContext(newNovelInfo);
         setDisabledStatusForSiblingChapters(newNovelInfo);
+
+        saveNovelToUserLatestNovels(newNovelInfo);
     }
 
     const handleConvertNovelStatusCode = (newNovel) => {
@@ -93,7 +98,10 @@ function NovelChapterPage(props) {
                 };
 
                 let newChapterID = parseInt(response.data?.number);
-                setChapterID(newChapterID);
+                if (chapterID !== newChapterID) {
+                    setChapterID(newChapterID);
+                    saveNovelToUserLatestNovels(novelContext);
+                }
                 const newPage = Math.floor(newChapterID / perpage + 1);
                 if (parseInt(newPage) !== parseInt(currentPage)) {
                     setCurrentPage(newPage);

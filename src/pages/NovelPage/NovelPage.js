@@ -4,15 +4,19 @@ import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { NovelContext } from '../../context/NovelContext';
+import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 import HTMLToReactParser from '../../utils/htmlToReactParser';
+import UserCookieManager from '../../utils/userCookieManager';
 
 function NovelPage(props) {
     const navigate = useNavigate();
 
     const { novelSlug, sourceSlug } = useParams();
+
     const { setNovelContext, setChapterContext } = useContext(NovelContext);
+    const { setUserLatestNovels } = useContext(UserContext);
 
     const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
     const [novel, setNovel] = useState({});
@@ -26,9 +30,6 @@ function NovelPage(props) {
     const [rawNovelDescription, setRawNovelDescription] = useState('');
     const [novelDescription, setNovelDescription] = useState('');
     const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
-
-
-
 
 
 
@@ -72,6 +73,8 @@ function NovelPage(props) {
 
                 handleSetReviewStars(newNovelInfo.rating, newNovelInfo.maxRating);
                 setNovelContext(newNovelInfo);
+
+                saveNovelToUserLatestNovels(newNovelInfo);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -95,7 +98,7 @@ function NovelPage(props) {
     const handleClickChapter = (chapter, index) => {
         let newChapterContext = {
             ...chapter,
-            chapterId: parseInt(index) + 1,
+            chapterID: parseInt(index) + 1,
         };
         setChapterContext(newChapterContext);
         navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
@@ -107,6 +110,11 @@ function NovelPage(props) {
         const description = descriptionText?.innerText ?? '';
 
         setNovelDescription(description);
+    }
+
+    const saveNovelToUserLatestNovels = (newNovel) => {
+        const newUserLatestNovels = UserCookieManager.saveNovelToUserCookie(newNovel);
+        setUserLatestNovels(newUserLatestNovels);
     }
 
     useEffect(() => {
