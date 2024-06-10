@@ -31,6 +31,7 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
 
                 returnedData.data.chapters = sortChapterListByCustomID(chapterList);
                 returnedData.data.totalPage = chapterListResponse.meta.totalPage;
+                returnedData.data.page = chapterListResponse.meta.page;
             }
             return returnedData;
         }
@@ -72,6 +73,7 @@ const fetchChapterList = async (source, novelSlug, page) => {
 
 const DetailNovelService = {
     fetchDetailNovel,
+    fetchChapterList,
 }
 
 export default DetailNovelService;
