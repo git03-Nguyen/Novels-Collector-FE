@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import UnloadSourceModal from '../../Components/Modal/UnloadSourceModal';
 import PluginSourceService from '../../services/pluginSource.s';
-import { Badge, Button, Table } from 'react-bootstrap';
+import { Badge, Button, Table, Form } from 'react-bootstrap';
 import './SourceManagementPage.css';
 import { toast } from 'react-toastify';
+
 const SourceManagementPage = () => {
     const [listSources, setListSources] = useState([]);
     const [unloadSource, setUnloadSource] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [url, setUrl] = useState('');
 
     const getAllSources = async () => {
         try {
@@ -71,23 +73,50 @@ const SourceManagementPage = () => {
         } catch (error) {
             console.log("Error reloading all plugin sources: " + error.message);
         }
-    }
+    };
+
+    const handleUrlChange = (event) => {
+        setUrl(event.target.value);
+    };
+
+    const handleUrlSubmit = async (event) => {
+        event.preventDefault();
+        if (!url) {
+            toast.error("Vui lòng nhập URL trước khi tải lên.");
+            return;
+        }
+
+        try {
+            const response = await PluginSourceService.uploadPluginSource(url);
+            if (response.statusCode === 200) {
+                toast.success("Tải lên nguồn truyện mới thành công!");
+                getAllSources();
+                setUrl('');
+            } else {
+                toast.error("Lỗi khi tải lên nguồn truyện: " + response.message);
+            }
+        } catch (error) {
+            toast.error("Lỗi khi tải lên nguồn truyện: " + error.message);
+        }
+    };
+
     return (
         <div className="px-3 py-3 text-center">
             <div className="row mx-5 mb-2">
                 <div className="d-flex justify-content-between align-items-end mb-1">
-                    <a href="/">
-                        <Button variant="success">
+                    <Form onSubmit={handleUrlSubmit} className="d-flex">
+                        <Form.Group controlId="formUrl" className="mb-3">
+                            <Form.Control type="text" placeholder="Nhập URL của nguồn truyện" value={url} onChange={handleUrlChange} />
+                        </Form.Group>
+                        <Button variant="success" type="submit" className="ms-2">
                             <i className="fas fa-plus"></i>
                             <span className="ms-1">Thêm Nguồn Truyện Mới</span>
                         </Button>
-                    </a>
-                    <a href="#">
-                        <Button variant="success" onClick={() => reloadAllSources()}>
-                            <i className="fa-solid fa-rotate-right"></i>
-                            <span className="ms-1">Khởi động lại tất cả Nguồn Truyện</span>
-                        </Button>
-                    </a>
+                    </Form>
+                    <Button variant="success" onClick={() => reloadAllSources()}>
+                        <i className="fa-solid fa-rotate-right"></i>
+                        <span className="ms-1">Khởi động lại tất cả Nguồn Truyện</span>
+                    </Button>
                 </div>
 
                 <div className="table-responsive mt-3">
