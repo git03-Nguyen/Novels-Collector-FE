@@ -1,10 +1,10 @@
 import axios from '../configs/axios';
 
-const sortChapterListByCustomID = (chapterList) => {
-    let newChapterList = chapterList.map((chapter, index) => {
+const sortChapterListByCustomID = (chapterListResponse) => {
+    let newChapterList = chapterListResponse.data.map((chapter, index) => {
         return {
             ...chapter,
-            id: index,
+            id: parseInt((parseInt(chapterListResponse.meta.page) - 1) * chapterListResponse.data.length) + parseInt(index) + 1,
         }
     })
     newChapterList = newChapterList.sort((a, b) => a.id - b.id);
@@ -27,9 +27,7 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
 
             const chapterListResponse = await fetchChapterList(source, novelSlug, page);
             if (chapterListResponse) {
-                let chapterList = chapterListResponse.data;
-
-                returnedData.data.chapters = sortChapterListByCustomID(chapterList);
+                returnedData.data.chapters = chapterListResponse.data;
                 returnedData.data.totalPage = chapterListResponse.meta.totalPage;
                 returnedData.data.page = chapterListResponse.meta.page;
             }
@@ -52,7 +50,7 @@ const fetchChapterList = async (source, novelSlug, page) => {
             return {
                 statusCode: response.statusCode ?? 200,
                 message: response.message,
-                data: response?.data ?? {},
+                data: response?.data ? sortChapterListByCustomID(response) : {},
                 meta: response?.meta ?? {},
             }
         }

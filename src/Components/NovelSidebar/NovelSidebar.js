@@ -63,7 +63,10 @@ function NovelSidebar(props) {
                                 </Link>
                                 <div className='novel-brief-info'>
                                     <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
-                                        <strong>{novel?.title}</strong>
+                                        {novel?.title?.length <= 30
+                                            ? <strong>{novel?.title}</strong>
+                                            : <strong>{novel?.title?.slice(0, 30) + ' ...'}</strong>
+                                        }
                                     </Link>
                                     <i>{novel?.source}</i>
                                     {novel?.chapter &&

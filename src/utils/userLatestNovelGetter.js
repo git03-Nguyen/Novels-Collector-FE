@@ -1,5 +1,5 @@
 
-const USER_LOCAL_STORAGE_KEY = 'userCookie';
+const USER_LOCAL_STORAGE_KEY = 'userLatestNovel';
 const MAX_NOVELS = 10;
 const CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS = parseInt(7 * 24 * 60 * 60 * 1000); //7 days
 
@@ -48,8 +48,6 @@ const getUserLatestNovels = () => {
 
 const saveNovelToUserCookie = (newNovel) => {
     let savedNovel = validateNovel(newNovel);
-    console.log("Save new novel to user cookie: ");
-    console.log(savedNovel);
 
     const novels = getUserLatestNovels();
     const novelIndex = novels.findIndex(n => n.novelSlug === savedNovel.novelSlug);

@@ -98,7 +98,7 @@ function NovelPage(props) {
     const handleClickChapter = (chapter, index) => {
         let newChapterContext = {
             ...chapter,
-            number: parseInt(index) + 1,
+            number: parseInt((parseInt(currentPage) - 1) * novel.chapters.length) + parseInt(index) + 1,
         };
         setChapterContext(newChapterContext);
         navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
