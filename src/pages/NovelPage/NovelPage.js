@@ -187,29 +187,21 @@ function NovelPage(props) {
                                             {isSeeMoreDescription ? "Thu gọn" : "Xem thêm"}
                                         </button>
                                     </div>
+                                    <h5 className="text-white fw-bold mt-3 mb-2">Danh sách chương</h5>
+                                    <div className="list-group scrollable-list-group mt-3 border border-dark border-4 mb-4 round-pill">
+                                        {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
+                                            <Link
+                                                to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
+                                                className="list-group-item list-group-item-action border border-double"
+                                                key={`novel-chapter-${index}`}
+                                            >
+                                                <strong>{chapter.title}</strong>
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                            <div className="accordion accordion-flush chapter-accordion mt-4" id="accordion-list-chapter">
-                                <h4 >Danh sách chương</h4>
 
-                                {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
-                                    <div className="accordion-item" key={`novel-chapter-${index}`}>
-                                        <h2 className="accordion-header" id={`flush-heading${index}`}>
-                                            <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse${index}`} aria-expanded="false" aria-controls={`flush-collapse${index}`}>
-                                                {chapter.title}
-                                            </button>
-                                        </h2>
-                                        <div id={`flush-collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${index}`} data-bs-parent="#accordionl-list-chapter">
-                                            <div className="accordion-body">
-                                                <button className='btn btn-secondary'
-                                                    onClick={() => handleClickChapter(chapter, index)}>
-                                                    {chapter.title}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </>
                     )}
 
