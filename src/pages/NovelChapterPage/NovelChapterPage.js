@@ -9,7 +9,7 @@ import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
-import UserCookieManager from '../../utils/userCookieManager';
+import UserLatestNovelGetter from '../../utils/userLatestNovelGetter';
 
 
 function NovelChapterPage(props) {
@@ -54,7 +54,7 @@ function NovelChapterPage(props) {
             return;
         }
 
-        const newUserLatestNovels = UserCookieManager.saveNovelToUserCookie({
+        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserCookie({
             ...newNovel,
             source: sourceSlug,
             chapterID: chapterID,

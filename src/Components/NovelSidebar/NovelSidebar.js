@@ -5,9 +5,8 @@ import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 
-import RecentNovelsGetter from '../../utils/RecentNovelsGetter';
 import CategoryService from '../../services/category.s';
-import UserCookieManager from '../../utils/userCookieManager';
+import UserLatestNovelGetter from '../../utils/userLatestNovelGetter';
 import { UserContext } from '../../context/UserContext';
 
 function NovelSidebar(props) {
@@ -32,12 +31,11 @@ function NovelSidebar(props) {
 
     const handleClickCategoryBtn = (categorySlug) => {
         navigate(`/novel-list?category=${categorySlug}`);
-        window.location.reload();
     }
 
 
     const getUserLatestNovelsFromCookie = () => {
-        const novels = UserCookieManager.getUserLatestNovels();
+        const novels = UserLatestNovelGetter.getUserLatestNovels();
         console.log('user latest novels from cookie: ');
         console.log(novels);
         setUserLatestNovels(novels);

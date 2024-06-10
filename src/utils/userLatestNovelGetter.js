@@ -1,9 +1,7 @@
-import Cookies from "js-cookie";
 
-const USER_COOKIE_NAME = 'userCookie';
-const MAX_NOVELS = 5;
-const MAX_COOKIE_SIZE = 4000;
-const EXPIRE_TIME_USER_COOKIE__IN_DAYS = 7; //count in days
+const USER_LOCAL_STORAGE_KEY = 'userCookie';
+const MAX_NOVELS = 10;
+const CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS = parseInt(7 * 24 * 60 * 60 * 1000); //7 days
 
 const validateNovel = (novel) => {
     return {
@@ -18,10 +16,34 @@ const validateNovel = (novel) => {
     }
 }
 
+const setItemWithExpiration = (key, value, ttl) => {
+    const now = new Date();
+    const item = {
+        value: value,
+        expiredAt: now.getTime() + ttl,
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+};
+
+const getItemWithExpiration = (key) => {
+    const itemStr = localStorage.getItem(key);
+    if (!itemStr) {
+        return null;
+    }
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+    if (now.getTime() > item.expiredAt) {
+        localStorage.removeItem(key);
+        return null;
+    }
+    return item.value;
+};
+
+
 
 const getUserLatestNovels = () => {
-    const novels = Cookies.get(USER_COOKIE_NAME);
-    return novels ? JSON.parse(novels) : [];
+    const novels = getItemWithExpiration(USER_LOCAL_STORAGE_KEY);
+    return novels ? novels : [];
 }
 
 const saveNovelToUserCookie = (newNovel) => {
@@ -44,16 +66,10 @@ const saveNovelToUserCookie = (newNovel) => {
 
     if (novels.length > MAX_NOVELS) {
         novels.pop();
-        Cookies.set(USER_COOKIE_NAME, JSON.stringify(novels), { expires: EXPIRE_TIME_USER_COOKIE__IN_DAYS });
-        return;
     }
 
-    if (JSON.stringify(novels).length > MAX_COOKIE_SIZE) {
-        console.warn('Cookie size exceeds the maximum limit.');
-        return;
-    }
 
-    Cookies.set(USER_COOKIE_NAME, JSON.stringify(novels), { expires: EXPIRE_TIME_USER_COOKIE__IN_DAYS });
+    setItemWithExpiration(USER_LOCAL_STORAGE_KEY, novels, CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS);
     return novels;
 }
 
@@ -64,26 +80,16 @@ const removeNovelFromUserCookie = (novelSlug) => {
 
     if (novelIndex !== -1) {
         novels.splice(novelIndex, 1);
-
-        const novelsString = JSON.stringify(novels);
-
-        // Check if the size of the JSON string is within the allowable limit
-        // if (novelsString.length > MAX_COOKIE_SIZE) {
-        //     console.warn('Cookie size exceeds the maximum limit.');
-        //     return;
-        // }
-
-        // Save the updated list back to cookies
-        Cookies.set(USER_COOKIE_NAME, novelsString, { expires: EXPIRE_TIME_USER_COOKIE__IN_DAYS }); // Cookies expire in 7 days
+        setItemWithExpiration(USER_LOCAL_STORAGE_KEY, novels, CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS);
     }
 
     return novels;
 }
 
-const UserCookieManager = {
+const UserLatestNovelGetter = {
     getUserLatestNovels,
     saveNovelToUserCookie,
     removeNovelFromUserCookie,
 }
 
-export default UserCookieManager;
+export default UserLatestNovelGetter;

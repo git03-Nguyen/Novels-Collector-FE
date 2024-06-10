@@ -8,7 +8,7 @@ import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 import HTMLToReactParser from '../../utils/htmlToReactParser';
-import UserCookieManager from '../../utils/userCookieManager';
+import UserLatestNovelGetter from '../../utils/userLatestNovelGetter';
 
 function NovelPage(props) {
     const navigate = useNavigate();
@@ -98,7 +98,7 @@ function NovelPage(props) {
     const handleClickChapter = (chapter, index) => {
         let newChapterContext = {
             ...chapter,
-            chapterID: parseInt(index) + 1,
+            number: parseInt(index) + 1,
         };
         setChapterContext(newChapterContext);
         navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
@@ -113,7 +113,7 @@ function NovelPage(props) {
     }
 
     const saveNovelToUserLatestNovels = (newNovel) => {
-        const newUserLatestNovels = UserCookieManager.saveNovelToUserCookie(newNovel);
+        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserCookie(newNovel);
         setUserLatestNovels(newUserLatestNovels);
     }
 

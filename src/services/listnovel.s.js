@@ -78,7 +78,7 @@ const fetchCompletedNovels = async (source, page) => {
     }
 }
 
-const fetchNovelListData = async (source, searchValue, searchTarget, page = 1, filter) => {
+const fetchNovelListData = async (source, searchValue, searchTarget, page = 1) => {
     let APIUrl = `/api/v1/search/${source}?page=${page}`;
     const defaultKeyword = 'anh';
     console.log("Search value from service: " + searchValue);
