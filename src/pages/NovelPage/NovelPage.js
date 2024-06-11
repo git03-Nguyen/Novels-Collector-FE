@@ -8,7 +8,7 @@ import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 import HTMLToReactParser from '../../utils/htmlToReactParser';
-import UserLatestNovelGetter from '../../utils/userLatestNovelGetter';
+import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 
 function NovelPage(props) {
     const navigate = useNavigate();

@@ -6,4 +6,24 @@
 
 ul {
     list-style: none !important;
+    padding-left: 0px !important;
+}
+
+.draggable-plugin-source-item {
+    max-width: 50%;
+    text-align: center !important;
+    padding: 16px;
+    margin: 8px auto;
+    font-weight: bold;
+
+    background-color:  #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: background-color 0.025s ease;
+}
+
+.draggable-plugin-source-item:hover {
+    color: orange;
+    background-color: var(--transparent-blue);
 }

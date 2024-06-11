@@ -1,15 +1,17 @@
-import React, { useContext } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { Modal } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { NovelContext } from '../../context/NovelContext';
 
 import './DnDSourceModal.css'
+import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
 function DnDSourceModal(props) {
 
-    const { pluginSources, setPluginSources } = useContext(NovelContext);
+    const { pluginSources } = useContext(NovelContext);
     const { show, onCancel, onConfirm } = props;
-
+    const defaultUserPluginSources = UserPluginSourcesManager.getUserPluginSources();
+    const [userPluginSources, setUserPluginSources] = useState(defaultUserPluginSources?.length > 0 ? defaultUserPluginSources : pluginSources);
 
     const handleOnDragEnd = (result) => {
         if (!result.destination) {
@@ -17,29 +19,26 @@ function DnDSourceModal(props) {
         }
 
         const items = Array.from(pluginSources);
-        console.log("Initial items: ");
-        console.log(items);
 
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
 
-        console.log("Reordered items: ");
-        console.log(reorderedItem);
-        console.log("Changed items: ");
-        console.log(items);
 
         const updatedItems = items.map((item, index) => ({
             ...item,
             prior: items?.length - index,
         }));
 
-
-        // const updatedItems = items;
-        console.log("new plugin sources order: ");
-        console.log(updatedItems);
-
-        setPluginSources(updatedItems);
+        setUserPluginSources(updatedItems);
     }
+
+    const handleConfirm = () => {
+        onConfirm(userPluginSources);
+    }
+
+    useEffect(() => {
+        setUserPluginSources(pluginSources);
+    }, [pluginSources])
 
     return (
         <div className='dnd-source-modal-container'>
@@ -51,30 +50,27 @@ function DnDSourceModal(props) {
                     <DragDropContext onDragEnd={handleOnDragEnd}>
                         <Droppable droppableId="pluginSources">
                             {(provided) => (
-                                <ul {...provided.droppableProps} ref={provided.innerRef}>
-                                    {pluginSources
-                                        .sort((a, b) => a.prior - b.prior)
-                                        .map((source, index) => (
-                                            <Draggable key={source.slug} draggableId={`source-${index}`} index={index}>
-                                                {(provided) => (
-                                                    <li
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={{
-                                                            userSelect: 'none',
-                                                            padding: '16px',
-                                                            margin: '4px 0',
-                                                            backgroundColor: '#fff',
-                                                            border: '1px solid #ccc',
-                                                            ...provided.draggableProps.style
-                                                        }}
-                                                    >
-                                                        {source.name}
-                                                    </li>
-                                                )}
-                                            </Draggable>
-                                        ))}
+                                <ul key={`droppable-plugin-sources-list`} {...provided.droppableProps} ref={provided.innerRef}>
+                                    {userPluginSources && userPluginSources?.length > 0 &&
+                                        userPluginSources.sort((a, b) => b.prior - a.prior)
+                                            .map((source, index) => (
+                                                <Draggable key={source?.slug} draggableId={`source-${index}`} index={index}>
+                                                    {(provided) => (
+                                                        <li
+                                                            className='draggable-plugin-source-item'
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            style={{
+                                                                userSelect: 'none',
+                                                                ...provided.draggableProps.style
+                                                            }}
+                                                        >
+                                                            {source?.name}
+                                                        </li>
+                                                    )}
+                                                </Draggable>
+                                            ))}
                                     {provided.placeholder}
                                 </ul>
                             )}
@@ -83,12 +79,12 @@ function DnDSourceModal(props) {
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onCancel}>
-                        Thoát
-                    </Button>
-                    <Button variant="primary" onClick={onConfirm}>
+                    <button className="btn btn-secondary" onClick={onCancel}>
+                        Hủy
+                    </button>
+                    <button className="btn btn-secondary" onClick={handleConfirm}>
                         Xác nhận
-                    </Button>
+                    </button>
                 </Modal.Footer>
             </Modal>
         </div>

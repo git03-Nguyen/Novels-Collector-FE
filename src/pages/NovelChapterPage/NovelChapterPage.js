@@ -9,7 +9,7 @@ import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
-import UserLatestNovelGetter from '../../utils/userLatestNovelGetter';
+import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 
 
 function NovelChapterPage(props) {

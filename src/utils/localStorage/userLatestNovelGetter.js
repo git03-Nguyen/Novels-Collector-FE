@@ -1,8 +1,7 @@
+import { CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS, setItemWithExpiration, getItemWithExpiration } from './config';
 
-const USER_LOCAL_STORAGE_KEY = process.env.REACT_APP_USER_LOCAL_STORAGE_KEY;
+const USER_LOCAL_STORAGE_KEY = process.env.REACT_APP_USER_LATEST_NOVELS_KEY;
 const MAX_NOVELS = parseInt(process.env.REACT_APP_MAX_USER_LATEST_NOVELS);
-
-const CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS = parseInt(7 * 24 * 60 * 60 * 1000); //7 days
 
 const validateNovel = (novel) => {
     return {
@@ -17,30 +16,6 @@ const validateNovel = (novel) => {
         }
     }
 }
-
-const setItemWithExpiration = (key, value, ttl) => {
-    const now = new Date();
-    const item = {
-        value: value,
-        expiredAt: now.getTime() + ttl,
-    };
-    localStorage.setItem(key, JSON.stringify(item));
-};
-
-const getItemWithExpiration = (key) => {
-    const itemStr = localStorage.getItem(key);
-    if (!itemStr) {
-        return null;
-    }
-    const item = JSON.parse(itemStr);
-    const now = new Date();
-    if (now.getTime() > item.expiredAt) {
-        localStorage.removeItem(key);
-        return null;
-    }
-    return item.value;
-};
-
 
 
 const getUserLatestNovels = () => {

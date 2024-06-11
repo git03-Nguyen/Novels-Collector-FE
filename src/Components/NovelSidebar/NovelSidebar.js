@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 
 import CategoryService from '../../services/category.s';
-import UserLatestNovelGetter from '../../utils/userLatestNovelGetter';
+import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 import { UserContext } from '../../context/UserContext';
 
 function NovelSidebar(props) {

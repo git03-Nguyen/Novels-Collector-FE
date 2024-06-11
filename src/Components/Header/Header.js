@@ -5,6 +5,7 @@ import './Header.css'
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
+import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
 function Header(props) {
     const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
@@ -63,19 +64,15 @@ function Header(props) {
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
 
-    const handleShowDnDSourceModal = () => {
-        setIsShowModal(true);
-    }
-
-    const handleConfirmDnDSourceModal = () => {
-        // TODO: implement this
-    }
-
     const handleCancelDnDSourceModal = () => {
-        // TODO: implement this
         setIsShowModal(false);
     }
 
+    const handleConfirmDnDSourceModal = (userPluginSources) => {
+        UserPluginSourcesManager.savePluginSources(userPluginSources);
+        setPluginSources(userPluginSources);
+        handleCancelDnDSourceModal();
+    }
 
     useEffect(() => {
         setSelectedSource(pluginSources[0].name);
@@ -106,7 +103,6 @@ function Header(props) {
 
 
                 <div>
-                    {/* <button className='btn btn-secondary' onClick={() => handleShowDnDSourceModal()}>Quản lý nguồn truyện</button> */}
                     <DnDSourceModal
                         show={isShowModal}
                         onCancel={handleCancelDnDSourceModal} onConfirm={handleConfirmDnDSourceModal}
@@ -121,6 +117,7 @@ function Header(props) {
                                     {source.name}
                                 </option>
                             ))}
+                            <option disabled>──────────</option>
                             <option value={1}>Quản lý nguồn truyện</option>
 
                         </select>
