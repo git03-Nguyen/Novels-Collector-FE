@@ -26,7 +26,7 @@ function IndexRoute(props) {
 
             {/* Private */}
             <Route path='/login/' element={<LoginPage />} />
-            <Route path='/admin/' element={<AdminPage />} />
+            {/* <Route path='/admin/' element={<AdminPage />} /> */}
             <Route path='/admin/source' element={<SourceManagementPage />} />
             <Route path='/admin/exporter' element={<ExporterManagementPage />} />
 
