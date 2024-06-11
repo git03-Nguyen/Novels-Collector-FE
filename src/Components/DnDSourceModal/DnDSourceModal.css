@@ -1,0 +1,9 @@
+.dnd-source-modal-container ul,
+.dnd-source-modal-container li {
+    text-decoration: none !important;
+    list-style: none !important;
+}
+
+ul {
+    list-style: none !important;
+}
