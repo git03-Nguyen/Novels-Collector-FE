@@ -1,6 +1,7 @@
 
-const USER_LOCAL_STORAGE_KEY = 'userLatestNovel';
-const MAX_NOVELS = 10;
+const USER_LOCAL_STORAGE_KEY = process.env.REACT_APP_USER_LOCAL_STORAGE_KEY;
+const MAX_NOVELS = parseInt(process.env.REACT_APP_MAX_USER_LATEST_NOVELS);
+
 const CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS = parseInt(7 * 24 * 60 * 60 * 1000); //7 days
 
 const validateNovel = (novel) => {
@@ -53,9 +54,12 @@ const saveNovelToUserStorage = (newNovel) => {
     const novels = getUserLatestNovels();
     const novelIndex = novels.findIndex(n => n.novelSlug === savedNovel.novelSlug);
 
-    if (novelIndex !== -1) {
+    if (novelIndex === -1) {
+        console.log('Add new novel into user latest novel');
+    } else {
+        console.log('Update novel in user latest novel');
         if (!savedNovel?.chapter?.slug) {
-            console.log('Add new novel into user latest novel');
+            console.log("New novel status is no chapter ==> get the previous chapter");
             savedNovel.chapter = novels[novelIndex].chapter;
         }
         novels.splice(novelIndex, 1);

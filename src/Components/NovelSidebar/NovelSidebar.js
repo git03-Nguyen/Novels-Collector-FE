@@ -56,7 +56,7 @@ function NovelSidebar(props) {
                 <h4 className='section-title'>Truyện vừa đọc</h4>
                 <div className='novel-list'>
                     {userLatestNovels && userLatestNovels?.length > 0
-                        ? <> {userLatestNovels.map((novel, index) => {
+                        ? <> {userLatestNovels?.slice(0, 5).map((novel, index) => {
                             return <div key={`recent-novel-card-${index}`} className='novel-card-mini'>
                                 <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
                                     <img src={novel?.cover} />
@@ -69,7 +69,7 @@ function NovelSidebar(props) {
                                         }
                                     </Link>
                                     <i>{novel?.source}</i>
-                                    {novel?.chapter &&
+                                    {novel?.chapter?.slug &&
                                         <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}/chapter/${novel?.chapter?.slug}`}>
                                             <span>Chương {novel?.chapter?.number}</span>
                                         </Link>
@@ -77,7 +77,42 @@ function NovelSidebar(props) {
                                 </div>
                             </div>
                         })}
-                            <Link className='watch-full-user-list-btn' to={`/user-list`}>Xem toàn bộ</Link>
+                            <button className="btn btn-primary" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                Xem toàn bộ
+                            </button>
+
+                            <div className="offcanvas-user-latest-novels offcanvas offcanvas-end"
+                                data-bs-scroll="true"
+                                tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                                <div className="offcanvas-header">
+                                    <h5 className="offcanvas-title text-white" id="offcanvasRightLabel">Danh mục truyện vừa đọc</h5>
+                                    <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div className="offcanvas-body">
+                                    {userLatestNovels.map((novel, index) => {
+                                        return <div key={`recent-novel-offcanva-card-${index}`} className='offcanvas-novel-card-mini'>
+                                            <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
+                                                <img src={novel?.cover} />
+                                            </Link>
+                                            <div className='novel-brief-info'>
+                                                <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
+                                                    {novel?.title?.length <= 30
+                                                        ? <strong>{novel?.title}</strong>
+                                                        : <strong>{novel?.title?.slice(0, 30) + ' ...'}</strong>
+                                                    }
+                                                </Link>
+                                                <i>{novel?.source}</i>
+                                                {novel?.chapter &&
+                                                    <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}/chapter/${novel?.chapter?.slug}`}>
+                                                        <span>Chương {novel?.chapter?.number}</span>
+                                                    </Link>
+                                                }
+                                            </div>
+                                        </div>
+                                    })}
+                                </div>
+                            </div>
                         </>
                         : <>
                             <span>Bạn chưa đọc truyện nào cả, hãy cùng bắt đầu với một bộ truyện nhé !</span>

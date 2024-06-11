@@ -170,6 +170,9 @@ function NovelChapterPage(props) {
                     setCurrentPage(newPage);
                 }
                 setChapterContext(newChapterData);
+
+
+                saveNovelToUserLatestNovels(novelContext);
                 setDisabledStatusForSiblingChapters(newChapterID, novelContext, newPage);
             } else {
                 toast.error("Error fetching chapter content: " + response?.message);
