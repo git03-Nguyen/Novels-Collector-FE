@@ -59,10 +59,35 @@ const reloadAllSources = async () => {
         }
     }
 }
+
+
+const uploadPluginSource = async (url) => {
+    try {
+        console.log("Uploading plugin source: " + url);
+        const response = await axios.post(`/api/v1/source/add`, { url }
+        );
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+                meta: response?.meta ?? {}
+            };
+        }
+    } catch (error) {
+        console.log("Error uploading plugin source: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        };
+    }
+};
 const PluginSourceService = {
     fetchPluginSources,
     unloadPluginSource,
-    reloadAllSources
+    reloadAllSources,
+    uploadPluginSource
 }
 
 export default PluginSourceService;
