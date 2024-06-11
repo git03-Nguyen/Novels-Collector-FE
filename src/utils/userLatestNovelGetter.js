@@ -12,6 +12,7 @@ const validateNovel = (novel) => {
         chapter: {
             id: novel?.chapterID,
             slug: novel?.chapterSlug,
+            number: novel?.chapterNumber,
         }
     }
 }
@@ -46,7 +47,7 @@ const getUserLatestNovels = () => {
     return novels ? novels : [];
 }
 
-const saveNovelToUserCookie = (newNovel) => {
+const saveNovelToUserStorage = (newNovel) => {
     let savedNovel = validateNovel(newNovel);
 
     const novels = getUserLatestNovels();
@@ -71,7 +72,7 @@ const saveNovelToUserCookie = (newNovel) => {
     return novels;
 }
 
-const removeNovelFromUserCookie = (novelSlug) => {
+const removeNovelFromUserStorage = (novelSlug) => {
     let novels = getUserLatestNovels();
 
     const novelIndex = novels.findIndex(n => n.novelSlug === novelSlug);
@@ -86,8 +87,8 @@ const removeNovelFromUserCookie = (novelSlug) => {
 
 const UserLatestNovelGetter = {
     getUserLatestNovels,
-    saveNovelToUserCookie,
-    removeNovelFromUserCookie,
+    saveNovelToUserStorage,
+    removeNovelFromUserStorage,
 }
 
 export default UserLatestNovelGetter;

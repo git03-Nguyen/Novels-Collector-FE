@@ -34,15 +34,15 @@ function NovelSidebar(props) {
     }
 
 
-    const getUserLatestNovelsFromCookie = () => {
+    const getUserLatestNovelsFromStorage = () => {
         const novels = UserLatestNovelGetter.getUserLatestNovels();
-        console.log('user latest novels from cookie: ');
+        console.log('user latest novels from storage: ');
         console.log(novels);
         setUserLatestNovels(novels);
     }
 
     useEffect(() => {
-        getUserLatestNovelsFromCookie();
+        getUserLatestNovelsFromStorage();
     }, [])
 
     useEffect(() => {
@@ -71,7 +71,7 @@ function NovelSidebar(props) {
                                     <i>{novel?.source}</i>
                                     {novel?.chapter &&
                                         <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}/chapter/${novel?.chapter?.slug}`}>
-                                            <span>Chương {novel?.chapter?.id}</span>
+                                            <span>Chương {novel?.chapter?.number}</span>
                                         </Link>
                                     }
                                 </div>

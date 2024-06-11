@@ -44,7 +44,7 @@ function BreadCrumb(props) {
     }, [novelContext])
 
     useEffect(() => {
-        updateBreadcrumb('Chương', chapterContext?.title);
+        updateBreadcrumb('Chương', chapterContext?.title ?? chapterContext?.number);
     }, [chapterContext])
 
     return (

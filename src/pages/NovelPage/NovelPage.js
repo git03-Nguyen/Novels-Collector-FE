@@ -113,7 +113,7 @@ function NovelPage(props) {
     }
 
     const saveNovelToUserLatestNovels = (newNovel) => {
-        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserCookie(newNovel);
+        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage(newNovel);
         setUserLatestNovels(newUserLatestNovels);
     }
 
