@@ -7,6 +7,7 @@ import NovelSidebar from '../../Components/NovelSidebar/NovelSidebar';
 import { NovelContext } from '../../context/NovelContext';
 import ListNovelService from '../../services/listnovel.s';
 import { toast } from 'react-toastify';
+import CategoryService from '../../services/category.s';
 
 
 
@@ -36,7 +37,7 @@ function ListNovelPage(props) {
                 console.log("Cur search value is empty");
                 return;
             }
-            const response = await ListNovelService.fetchNovelListData(pluginSources[0].name, curSearchValue, searchTarget, curPage, curCategory);
+            const response = await ListNovelService.fetchNovelListData(pluginSources[0].name, curSearchValue, searchTarget, curPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setNovels(response.data);
                 setTotalPage(response?.meta?.totalPage);
@@ -62,6 +63,23 @@ function ListNovelPage(props) {
         }
     }
 
+    const fetchNovelListByCategory = async () => {
+        setIsLoadingListNovelPage(true);
+        try {
+            const response = await CategoryService.fetchNovelListByCategory(pluginSources[0].name, curCategory);
+            if (response && response.data && parseInt(response.statusCode) === 200) {
+                setNovels(response.data);
+                setTotalPage(response?.meta?.totalPage);
+            } else {
+                toast.error("Error fetching novel Info: " + response?.message);
+            }
+        } catch (error) {
+            console.error("Error fetching novel Info: " + error.message);
+        }
+
+        setIsLoadingListNovelPage(false);
+    }
+
     const scrollToFrontList = () => {
         const frontList = document.querySelector('#yearRelease');
         if (frontList) {
@@ -82,10 +100,18 @@ function ListNovelPage(props) {
     }
 
     useEffect(() => {
+        console.log("Search params: ");
+        console.log(searchParams.get('category'));
         setIsHandlingSearchParams(true)
         handleChangeByParams();
 
     }, [searchTarget, searchParams, pluginSources[0]])
+
+    useEffect(() => {
+        if (curCategory && curCategory !== '') {
+            fetchNovelListByCategory();
+        }
+    }, [curCategory])
 
     useEffect(() => {
         if (isHandlingSearchParams === false) {
@@ -110,8 +136,6 @@ function ListNovelPage(props) {
                             <select defaultValue={"1"} className="form-select" id="yearRelease">
                                 <option value="1">Tăng dần</option>
                                 <option value="2">Giảm dần</option>
-                                <option value="3">{curSearchValue}</option>
-
                             </select>
                             <label htmlFor="floatingSelectGrid">Tên truyện</label>
                         </div>
