@@ -1,25 +1,61 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
-import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
 import { NovelContext } from '../../context/NovelContext';
-import PluginSourceService from '../../services/pluginSource.s';
+import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
-
+import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 
 function NovelPage(props) {
+    const navigate = useNavigate();
 
-    const { novelSlug } = useParams();
-    const { pluginSources, setNovelContext } = useContext(NovelContext);
+    const { novelSlug, sourceSlug } = useParams();
+
+    const { setNovelContext, setChapterContext } = useContext(NovelContext);
+    const { setUserLatestNovels } = useContext(UserContext);
 
     const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
     const [novel, setNovel] = useState({});
     const [totalPage, setTotalPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
+    const [reviewStars, setReviewStars] = useState([]);
 
+    // Default max length of truncated description = 500
+    const maxLengthTruncatedDescription = 500;
+
+    const [rawNovelDescription, setRawNovelDescription] = useState('');
+    const [novelDescription, setNovelDescription] = useState('');
+    const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
+
+
+
+    const handleSetRawNovelDescription = (description) => {
+        let newRawNovelDescription = description;
+        setRawNovelDescription(newRawNovelDescription);
+
+    }
+
+    const handleSetReviewStars = (rating, maxRating) => {
+        let ratingArr = [];
+
+        for (let i = 1; i <= maxRating; i++) {
+            ratingArr[i] = {
+                className: "fa-regular fa-star",
+                color: "#FFD43B",
+            }
+            const decisionPoint = parseFloat(parseFloat(rating) - i);
+            if (decisionPoint >= 0) {
+                ratingArr[i].className = "fa-solid fa-star";
+            } else if (decisionPoint > -1) {
+                ratingArr[i].className = "fa-regular fa-star-half-stroke";
+            }
+        }
+
+        setReviewStars(ratingArr);
+    }
 
     const fetchNovelInfo = async (source, slug) => {
         try {
@@ -32,7 +68,12 @@ function NovelPage(props) {
                 setTotalPage(parseInt(newNovelInfo.totalPage));
                 setIsLoadingNovelPage(false);
 
+                handleSetRawNovelDescription(newNovelInfo.description);
+
+                handleSetReviewStars(newNovelInfo.rating, newNovelInfo.maxRating);
                 setNovelContext(newNovelInfo);
+
+                saveNovelToUserLatestNovels(newNovelInfo);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -53,64 +94,66 @@ function NovelPage(props) {
         setCurrentPage(selectedPage);
     }
 
+    const handleClickChapter = (chapter, index) => {
+        let newChapterContext = {
+            ...chapter,
+            number: parseInt((parseInt(currentPage) - 1) * novel.chapters.length) + parseInt(index) + 1,
+        };
+        setChapterContext(newChapterContext);
+        navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
+    }
+
+
+    const getInnerTextOfDescription = () => {
+        const descriptionText = window.document.querySelector('#raw-novel-description');
+        const description = descriptionText?.innerText ?? '';
+
+        setNovelDescription(description);
+    }
+
+    const saveNovelToUserLatestNovels = (newNovel) => {
+        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage(newNovel);
+        setUserLatestNovels(newUserLatestNovels);
+    }
+
     useEffect(() => {
-        fetchNovelInfo(pluginSources[0].name, novelSlug);
+        fetchNovelInfo(sourceSlug, novelSlug);
+        getInnerTextOfDescription();
     }, [currentPage]);
 
-    const [listSources, setListSources] = useState([]);
-    const fetchPluginSources = async () => {
-        try {
-            const response = await PluginSourceService.fetchPluginSources();
-            if (response && response.data && parseInt(response.statusCode) === 200) {
-                setListSources(response.data);
-            } else {
-                console.log("Error fetching plugin sources: " + response?.message);
-                toast.error("Error fetching plugin sources: " + response?.message);
-            }
-        } catch (error) {
-            console.error("Error fetching plugin sources: " + error.message);
-        }
-    }
     useEffect(() => {
-        fetchPluginSources();
-    }, []);
-
+        getInnerTextOfDescription();
+    }, [rawNovelDescription])
 
 
     return (
-        <div className='novel-page-container'>
-            {isLoadingNovelPage === true ?
+        <div className='novel-page-container  dark:bg-black dark:text-white'>
+            {isLoadingNovelPage ? (
                 <h1 className='loading-message'>... Loading Data ...</h1>
-                : <>
-                    {novel && novel.cover &&
+            ) : (
+                <>
+                    {novel && novel.cover && (
                         <>
-                            <div className="row">
+                            <div className="row w-100">
                                 <div className="col-md-4 mt-2">
-                                    <img className='novel-img' width={320} src={novel?.cover} alt={`${novel?.title} thumbnail`} />
+                                    <img className='novel-img' src={novel?.cover} alt={`${novel?.title} thumbnail`} />
                                 </div>
-                                <div className="col-md-8 text-start">
+                                <div className="col-md-8 text-start px-0">
                                     <div className="pb-4 border-bottom border-white-50">
                                         <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
                                         <div className="d-flex">
                                             <div className="d-flex align-items-center mr-3">
-                                                <span className="text-white-50 me-1">{novel?.rating}/{novel?.maxRating}</span>
+                                                <span className="text-white-50 me-1">Đánh giá: {novel?.rating}/{novel?.maxRating}</span>
                                                 <div className="d-flex align-items-center">
-                                                    {[...Array(parseInt(novel?.rating)) || 0].map((_, index) => (
-                                                        <img
-                                                            key={index}
-                                                            src="https://waka.vn/svgs/icon-star.svg"
-                                                            alt="icon-star"
-                                                            className="cursor-pointer me-1"
-                                                            width="16"
-                                                            height="24"
-                                                        />
+                                                    {reviewStars && reviewStars.length > 0 && reviewStars.map((ele, index) => (
+                                                        <i
+                                                            key={`review-star-${index}`}
+                                                            className={ele.className}
+                                                            style={{ color: ele.color }}
+                                                        ></i>
                                                     ))}
                                                 </div>
-                                                <p className="text-white-50 mb-1">
-                                                    <span className="text-white-400 ms-2"> <i className="fas fa-eye fs-5 text-light me-1" aria-hidden="true"></i> 124 lượt đọc</span>
-                                                </p>
                                             </div>
-
                                         </div>
                                         <div className="mt-4 row">
                                             <div className="col">
@@ -127,68 +170,72 @@ function NovelPage(props) {
                                             </div>
                                             <div className="col">
                                                 <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                                <select className="form-select" id="source-select-box">
-                                                    {listSources && listSources.length > 0 && listSources.map((source, index) => (
-                                                        <option key={index} value={source.name}>{source.name}</option>
-                                                    ))}
-
-                                                </select>
+                                                <span>{sourceSlug}</span>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div className="mt-0">
                                         <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
-                                        <p className="text-white mt-0 novel-description">{novel?.description}</p>
+
+                                        {(sourceSlug === "DTruyenCom" || sourceSlug === "TruyenTangThuVienVn")
+                                            ? <span className='d-none' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
+                                            : <span className='d-none' id='raw-novel-description' >{rawNovelDescription}</span>
+                                        }
+
+                                        <span className="text-white mt-0 novel-description">
+                                            {isSeeMoreDescription === true
+                                                ? novelDescription
+                                                : novelDescription?.slice(0, maxLengthTruncatedDescription) + ' ...'
+                                            }
+                                        </span>
+                                        <div></div>
+
+                                        <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
+                                            {isSeeMoreDescription ? "Thu gọn" : "Xem thêm"}
+                                        </button>
+                                    </div>
+                                    <h5 className="text-white fw-bold mt-3 mb-2">Danh sách chương</h5>
+                                    <div className="list-group scrollable-list-group mt-3 border border-dark border-4 mb-4 round-pill">
+                                        {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
+                                            <Link
+                                                to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
+                                                className="list-group-item list-group-item-action border border-double"
+                                                key={`novel-chapter-${index}`}
+                                            >
+                                                <strong>{chapter.title}</strong>
+                                            </Link>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
-                            <div className="accordion accordion-flush chapter-accordion mt-4" id="accordion-list-chapter">
-                                <h4 >Danh sách chương</h4>
-
-                                {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
-                                    <div className="accordion-item" key={`novel-chapter-${index}`}>
-                                        <h2 className="accordion-header" id={`flush-heading${index}`}>
-                                            <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse${index}`} aria-expanded="false" aria-controls={`flush-collapse${index}`}>
-                                                {chapter.title}
-                                            </button>
-                                        </h2>
-                                        <div id={`flush-collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${index}`} data-bs-parent="#accordionl-list-chapter">
-                                            <div className="accordion-body">
-                                                <Link to={`/novel/${novelSlug}/chapter/${chapter.slug}`}>{chapter.slug}</Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <ReactPaginate
-                                containerClassName='pagination justify-content-center' //important
-                                activeClassName='active'
-                                breakLabel="..."
-                                nextLabel="Sau >"
-                                onPageChange={handlePageClick}
-                                pageRangeDisplayed={5}
-                                marginPagesDisplayed={2}
-                                pageCount={totalPage}
-                                previousLabel="< Trước"
-                                pageClassName='page-item'
-                                pageLinkClassName='page-link'
-                                breakClassName='page-item'
-                                breakLinkClassName='page-link'
-                                previousClassName='page-item'
-                                previousLinkClassName='page-link'
-                                nextClassName='page-item'
-                                nextLinkClassName='page-link'
-                                renderOnZeroPageCount={null}
-                            />
-
 
                         </>
-                    }
-                </>}
-            {/* <BookPreview /> */}
-        </div >
-    );
+                    )}
+
+                    <ReactPaginate
+                        containerClassName='pagination justify-content-center'
+                        activeClassName='active'
+                        breakLabel="..."
+                        nextLabel="Sau >"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={5}
+                        marginPagesDisplayed={2}
+                        pageCount={totalPage}
+                        previousLabel="< Trước"
+                        pageClassName='page-item'
+                        pageLinkClassName='page-link'
+                        breakClassName='page-item'
+                        breakLinkClassName='page-link'
+                        previousClassName='page-item'
+                        previousLinkClassName='page-link'
+                        nextClassName='page-item'
+                        nextLinkClassName='page-link'
+                        renderOnZeroPageCount={null}
+                    />
+                </>
+            )}
+        </div>
+    )
 }
 
 export default NovelPage;

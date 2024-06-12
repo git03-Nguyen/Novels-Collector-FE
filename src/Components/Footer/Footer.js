@@ -5,7 +5,7 @@ import './Footer.css'
 
 function Footer(props) {
     return (
-        <footer className='app-footer'>
+        <footer className='app-footer dark:bg-black dark:text-white'>
             <Link to='/'>
                 <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>

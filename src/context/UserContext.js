@@ -14,6 +14,7 @@ function UserProvider(props) {
         isAdmin: false,
     }
     const [user, setUser] = useState(defaultUser);
+    const [userLatestNovels, setUserLatestNovels] = useState([]);
 
     const loginContext = (userData) => {
         let newData = {
@@ -38,7 +39,10 @@ function UserProvider(props) {
 
     return (
         <div>
-            <UserContext.Provider value={{ user, loginContext, logoutContext }}>
+            <UserContext.Provider value={{
+                user, userLatestNovels,
+                loginContext, logoutContext, setUserLatestNovels,
+            }}>
                 {children}
             </UserContext.Provider>
         </div>

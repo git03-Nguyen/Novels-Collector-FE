@@ -40,12 +40,14 @@
     margin-right: 4px;
 }
 
-.novel-card-mini a {
+.novel-card-mini a,
+.novel-sidebar-container a {
     text-decoration: none;
     color: white !important;
 }
 
-.novel-card-mini a:hover {
+.novel-card-mini a:hover,
+.novel-sidebar-container a:hover {
     color: greenyellow !important;
     opacity: 0.7;
 }
@@ -59,6 +61,11 @@
     justify-content: start;
     align-items: start;
 }
+
+.novel-brief-info strong {
+    text-align: start !important;
+}
+
 
 .category-list {
     display: grid;
@@ -79,3 +86,42 @@
 .category-tag:hover {
     background: linear-gradient(90deg, #3b66f5, #163bcd) !important;
 }
+
+.watch-full-user-list-btn {
+    font-size: 20px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.offcanvas-user-latest-novels {
+    max-width: 20vw !important;
+    background-color: var(--light-blue) !important;
+}
+
+.offcanvas-novel-card-mini {
+    width: 90%;
+    margin: 15px 0;
+    display: flex;
+    flex-flow: row wrap;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+
+.offcanvas-novel-card-mini img {
+    width: 60px;
+
+    margin-right: 4px;
+}
+
+.offcanvas-novel-card-mini a {
+    text-decoration: none;
+    color: white !important;
+}
+
+.offcanvas-novel-card-mini a:hover {
+    color: greenyellow !important;
+    opacity: 0.7;
+}
+

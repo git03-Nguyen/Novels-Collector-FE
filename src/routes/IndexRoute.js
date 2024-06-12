@@ -6,19 +6,31 @@ import AdminPage from '../pages/AdminPage/AdminPage';
 import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import NovelPage from '../pages/NovelPage/NovelPage';
 import NovelChapterPage from '../pages/NovelChapterPage/NovelChapterPage';
+import LoginPage from '../pages/LoginPage/LoginPage';
+import SourceManagementPage from '../pages/SourceManagementPage/SourceManagementPage';
+import ExporterManagementPage from '../pages/ExporterManagementPage/ExporterManagementPage';
 import PrivateRoute from './PrivateRoute';
 function IndexRoute(props) {
     return (
         <Routes>
             {/* Public */}
             <Route path='/' element={<HomePage />} />
+
+
+
             <Route path='/novel-list' element={<ListNovelPage />} />
-            {/* <Route path='/novel' element={<NovelPage />} /> */}
-            <Route path='/novel/:novelSlug' element={<NovelPage />} />
-            <Route path='/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage />} />
+
+            <Route path='/source/:sourceSlug' element={<HomePage />} />
+            <Route path='/source/:sourceSlug/novel/:novelSlug' element={<NovelPage />} />
+            <Route path='/source/:sourceSlug/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage />} />
 
             {/* Private */}
-            <Route path='/admin/' element={<AdminPage />} />
+            <Route path='/login/' element={<LoginPage />} />
+            {/* <Route path='/admin/' element={<AdminPage />} /> */}
+            <Route path='/admin/source' element={<SourceManagementPage />} />
+            <Route path='/admin/exporter' element={<ExporterManagementPage />} />
+
+
             {/* TODO: Fix it when complete login feature */}
             <Route path="/admin/:adminID" element={<PrivateRoute>
                 <AdminPage />
