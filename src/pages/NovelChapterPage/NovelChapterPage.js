@@ -4,13 +4,13 @@ import ChapterService from '../../services/chapter.s';
 import './NovelChapterPage.css'
 import { toast } from 'react-toastify';
 import { NovelContext } from '../../context/NovelContext';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
-
+import ActionBar from '../../Components/ActionBar/ActionBar';
 
 function NovelChapterPage(props) {
     const navigate = useNavigate();
@@ -281,7 +281,6 @@ function NovelChapterPage(props) {
                         {novelChapter.content && novelChapter.content.length > 0 &&
                             <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter.content }}></div>
                         }
-
                     </div>
 
                     <div className='novel-chapter-footer-navigator'>
@@ -301,7 +300,10 @@ function NovelChapterPage(props) {
                         </button>
                     </div>
                 </Fragment>}
-
+            <ActionBar 
+             isDisabledSiblingChapter={isDisabledSiblingChapter} 
+             handleSiblingChapterClick={handleSiblingChapterClick} 
+            />
 
         </div >
     );
