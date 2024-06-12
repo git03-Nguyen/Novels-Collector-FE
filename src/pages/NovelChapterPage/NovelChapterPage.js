@@ -268,7 +268,7 @@ function NovelChapterPage(props) {
             {isLoadingNovelChapterPage === true
                 ? <h1 className='loading-message'>... Loading Data ...</h1>
                 : <Fragment >
-                    <h3 id='novel-chapter-container'>{novelContext.title}</h3>
+                    <h3 id='novel-chapter-container  dark:bg-black dark:text-white'>{novelContext.title}</h3>
                     <h5 >Chương {novelChapter.number} {novelChapter.title}</h5>
                     <h5>Đánh giá: {novelContext.rating} / {novelContext.maxRating}
                         <span> - </span>
@@ -309,8 +309,6 @@ function NovelChapterPage(props) {
             chapterList={novelContext.chapters}
             sourceSlug={sourceSlug}
             novelSlug={novelSlug}
-            
-
         />
 
 

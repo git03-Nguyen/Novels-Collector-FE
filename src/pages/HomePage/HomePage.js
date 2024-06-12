@@ -102,7 +102,7 @@ function HomePage(props) {
         <>
             {isLoadingHomePage === true
                 ? <h1 className='loading-message'>... Loading data ...</h1>
-                : <div className='homepage-container'>
+                : <div className='homepage-container dark:bg-black dark:text-white'>
                     <div className='homepage-content'>
                         <div className='novel-sublists'>
                             <div className='outstanding-sublist'>

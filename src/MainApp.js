@@ -1,5 +1,5 @@
 // src/MainApp.js
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,9 +12,21 @@ import { NovelContext } from './context/NovelContext';
 function MainApp() {
     const { isLoadingNovel } = useContext(NovelContext);
 
+    let [darkMode, setdarkMode] = useState('light');
+
+    useEffect(() => {
+        if (darkMode) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }, [darkMode])
+
     return (
-        <div className="App">
-            <Header />
+        <div className="App dark:bg-black dark:text-white">
+            <Header 
+                darkMode={darkMode}
+                setdarkMode={setdarkMode}/>
             <BreadCrumb />
             <div className="app-container">
                 {isLoadingNovel === true ?

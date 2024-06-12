@@ -48,7 +48,7 @@ function BreadCrumb(props) {
     }, [chapterContext])
 
     return (
-        <div className='app-breadcrumb'>
+        <div className='app-breadcrumb dark:bg-black dark:text-white'>
             <Link to="/">
                 <span>Trang chủ</span>
             </Link>

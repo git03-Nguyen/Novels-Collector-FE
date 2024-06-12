@@ -127,7 +127,7 @@ function NovelPage(props) {
 
 
     return (
-        <div className='novel-page-container'>
+        <div className='novel-page-container  dark:bg-black dark:text-white'>
             {isLoadingNovelPage ? (
                 <h1 className='loading-message'>... Loading Data ...</h1>
             ) : (

@@ -7,12 +7,11 @@ import { toast } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
 import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
-function Header(props) {
+function Header({setdarkMode, darkMode}) {
     const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
     const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
 
     const [isShowModal, setIsShowModal] = useState(false);
-
 
     const navigate = useNavigate();
     const handleChangeSearchKeyword = (value) => {
@@ -79,7 +78,7 @@ function Header(props) {
     }, [pluginSources])
 
     return (
-        <header className='app-header'>
+        <header className='app-header dark:bg-black dark:text-white'>
             <Link to='/'>
                 <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
@@ -143,7 +142,12 @@ function Header(props) {
                 </ul>
 
             </div>
+            
+            <button onClick={()=>{setdarkMode(!darkMode)
 
+            }} className="absolute dark:bg-white dark:text-black right-5 top-5 bg-black text-white px-2 py-2 rounded hover:bg-stone-700">
+                {!darkMode ? "Light" : "Dark"} Mode
+            </button>
 
         </header>
     );

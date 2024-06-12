@@ -129,7 +129,7 @@ function ListNovelPage(props) {
     return (
         <div className='list-novel-page-container'> {isLoadingListNovelPage === true
             ? <h1 className='loading-message'>... Loading Data ...</h1>
-            : <div className='list-novel-page-content'>
+            : <div className='list-novel-page-content  dark:bg-black dark:text-white'>
                 <div className="filter-engine d-flex justify-content-between align-items-center my-3">
                     <div className="btn-group filter-button-list">
                         <div className="form-floating me-3">
