@@ -104,6 +104,7 @@ function ListNovelPage(props) {
     }
 
     useEffect(() => {
+        setIsLoadingContext(true);
         console.log("Search params: ");
         console.log(Object.entries(Object.fromEntries(searchParams)));
         setIsHandlingSearchParams(true)
@@ -111,9 +112,27 @@ function ListNovelPage(props) {
 
     }, [searchTarget, searchParams, pluginSources[0]])
 
+
+    const handleUpdateCategory = async () => {
+        await fetchNovelListByCategory();
+        scrollToFrontList();
+        setIsLoadingContext(false);
+    }
+
+    const handleUpdateSearchTargetAndValue = async () => {
+        if (curSearchValue) {
+            await fetchListNovelData();
+        } else {
+            await fetchHottestData();
+        }
+        scrollToFrontList();
+
+        setIsLoadingContext(false);
+    }
+
     useEffect(() => {
         if (curCategory && curCategory !== '') {
-            fetchNovelListByCategory();
+            handleUpdateCategory();
         }
     }, [curPage, curCategory])
 
@@ -124,14 +143,7 @@ function ListNovelPage(props) {
         }
 
         if (isHandlingSearchParams === false) {
-            if (curSearchValue) {
-                fetchListNovelData();
-            } else {
-                fetchHottestData();
-            }
-            scrollToFrontList();
-
-            setIsLoadingContext(false);
+            handleUpdateSearchTargetAndValue();
         }
     }, [isHandlingSearchParams, curPage, curSearchValue]);
 
@@ -181,20 +193,18 @@ function ListNovelPage(props) {
                         <div className='outstanding-sublist' id='outstanding-sublist'>
 
                             <div className='novel-sublist-row'>
-                                {novels && novels?.length > 0
-                                    ? novels.map((novel, index) => {
-                                        return <div key={`novel-list-card-${index}`} className='novel-card'>
-                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
-                                                <img className='' src={novel.cover} alt={`Ảnh bìa truyện ${novel.title}`} />
-                                                <h6>{novel.title.length <= 30
-                                                    ? novel.title
-                                                    : `${novel.title.slice(0, 31) + ' ...'}`
-                                                } </h6>
-                                                <span>{novel.authors[0].name}</span>
-                                            </Link>
-                                        </div>
-                                    })
-                                    : <h3 className='mt-3'>Không tìm thấy kết quả nào !</h3>}
+                                {novels && novels?.length > 0 && novels.map((novel, index) => {
+                                    return <div key={`novel-list-card-${index}`} className='novel-card'>
+                                        <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                            <img className='' src={novel.cover} alt={`Ảnh bìa truyện ${novel.title}`} />
+                                            <h6>{novel.title.length <= 30
+                                                ? novel.title
+                                                : `${novel.title.slice(0, 31) + ' ...'}`
+                                            } </h6>
+                                            <span>{novel.authors[0].name}</span>
+                                        </Link>
+                                    </div>
+                                })}
                             </div>
                         </div>
                     </div>

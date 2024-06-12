@@ -61,9 +61,9 @@ function HomePage(props) {
     }
 
     const handleSetupPluginSourceByParams = () => {
-        if (sourceSlug === "" || !sourceSlug) {
-            return;
-        } else if (sourceSlug === pluginSources[0].name) {
+        if (sourceSlug === "" || !sourceSlug || sourceSlug === pluginSources[0].name) {
+            console.log("NOT CHANGE PLUGIN SOURCES !!!");
+            setIsHomeContentFetched(true);
             return;
         }
 
@@ -107,7 +107,7 @@ function HomePage(props) {
             console.log(pluginSources);
             fetchHomePageContent();
         }
-    }, [pluginSources])
+    }, [isHomeContentFetched, pluginSources])
 
 
     return (
