@@ -7,8 +7,7 @@ import { NovelContext } from '../../context/NovelContext';
 import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
-import HTMLToReactParser from '../../utils/htmlToReactParser';
-import UserLatestNovelGetter from '../../utils/userLatestNovelGetter';
+import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 
 function NovelPage(props) {
     const navigate = useNavigate();
@@ -113,7 +112,7 @@ function NovelPage(props) {
     }
 
     const saveNovelToUserLatestNovels = (newNovel) => {
-        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserCookie(newNovel);
+        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage(newNovel);
         setUserLatestNovels(newUserLatestNovels);
     }
 
@@ -128,7 +127,7 @@ function NovelPage(props) {
 
 
     return (
-        <div className='novel-page-container'>
+        <div className='novel-page-container  dark:bg-black dark:text-white'>
             {isLoadingNovelPage ? (
                 <h1 className='loading-message'>... Loading Data ...</h1>
             ) : (

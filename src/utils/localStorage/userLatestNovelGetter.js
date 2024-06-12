@@ -1,7 +1,7 @@
+import { CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS, setItemWithExpiration, getItemWithExpiration } from './config';
 
-const USER_LOCAL_STORAGE_KEY = 'userLatestNovel';
-const MAX_NOVELS = 10;
-const CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS = parseInt(7 * 24 * 60 * 60 * 1000); //7 days
+const USER_LOCAL_STORAGE_KEY = process.env.REACT_APP_USER_LATEST_NOVELS_KEY;
+const MAX_NOVELS = parseInt(process.env.REACT_APP_MAX_USER_LATEST_NOVELS);
 
 const validateNovel = (novel) => {
     return {
@@ -12,33 +12,10 @@ const validateNovel = (novel) => {
         chapter: {
             id: novel?.chapterID,
             slug: novel?.chapterSlug,
+            number: novel?.chapterNumber,
         }
     }
 }
-
-const setItemWithExpiration = (key, value, ttl) => {
-    const now = new Date();
-    const item = {
-        value: value,
-        expiredAt: now.getTime() + ttl,
-    };
-    localStorage.setItem(key, JSON.stringify(item));
-};
-
-const getItemWithExpiration = (key) => {
-    const itemStr = localStorage.getItem(key);
-    if (!itemStr) {
-        return null;
-    }
-    const item = JSON.parse(itemStr);
-    const now = new Date();
-    if (now.getTime() > item.expiredAt) {
-        localStorage.removeItem(key);
-        return null;
-    }
-    return item.value;
-};
-
 
 
 const getUserLatestNovels = () => {
@@ -46,15 +23,18 @@ const getUserLatestNovels = () => {
     return novels ? novels : [];
 }
 
-const saveNovelToUserCookie = (newNovel) => {
+const saveNovelToUserStorage = (newNovel) => {
     let savedNovel = validateNovel(newNovel);
 
     const novels = getUserLatestNovels();
     const novelIndex = novels.findIndex(n => n.novelSlug === savedNovel.novelSlug);
 
-    if (novelIndex !== -1) {
+    if (novelIndex === -1) {
+        console.log('Add new novel into user latest novel');
+    } else {
+        console.log('Update novel in user latest novel');
         if (!savedNovel?.chapter?.slug) {
-            console.log('Add new novel into user latest novel');
+            console.log("New novel status is no chapter ==> get the previous chapter");
             savedNovel.chapter = novels[novelIndex].chapter;
         }
         novels.splice(novelIndex, 1);
@@ -71,7 +51,7 @@ const saveNovelToUserCookie = (newNovel) => {
     return novels;
 }
 
-const removeNovelFromUserCookie = (novelSlug) => {
+const removeNovelFromUserStorage = (novelSlug) => {
     let novels = getUserLatestNovels();
 
     const novelIndex = novels.findIndex(n => n.novelSlug === novelSlug);
@@ -86,8 +66,8 @@ const removeNovelFromUserCookie = (novelSlug) => {
 
 const UserLatestNovelGetter = {
     getUserLatestNovels,
-    saveNovelToUserCookie,
-    removeNovelFromUserCookie,
+    saveNovelToUserStorage,
+    removeNovelFromUserStorage,
 }
 
 export default UserLatestNovelGetter;
