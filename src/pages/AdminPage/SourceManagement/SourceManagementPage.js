@@ -1,0 +1,242 @@
+import React, { useState, useEffect } from 'react';
+import PluginSourceService from '../../../services/pluginSource.s'
+import CustomModal from '../../../Components/Modal/CustomModal';
+import { toast } from 'react-toastify';
+import {
+    CForm,
+    CFormInput,
+    CButton,
+    CTable,
+    CTableHead,
+    CTableRow,
+    CTableHeaderCell,
+    CTableBody,
+    CTableDataCell,
+    CBadge,
+    CContainer,
+    CRow,
+    CCol,
+    CImage,
+    CFormSwitch
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import {
+    cilTrash
+} from '@coreui/icons'
+
+import './SourceManagementPage.css';
+import { set } from 'lodash';
+const SourceManagementPage = () => {
+    const [listSources, setListSources] = useState([]);
+    const [unloadSource, setUnloadSource] = useState(null);
+    const [reloadSource, setReloadSource] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [isHandlingUnload, setIsHandlingUnload] = useState(null);
+    const getAllSources = async () => {
+        try {
+            const response = await PluginSourceService.fetchPluginSources();
+            if (response.statusCode === 200) {
+                setListSources(response.data);
+            } else {
+                console.log("Error fetching plugin sources: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error fetching plugin sources: " + error.message);
+        }
+    };
+
+    useEffect(() => {
+        getAllSources();
+    }, []);
+
+    const unloadNovelSource = async (source) => {
+
+        try {
+            const response = await PluginSourceService.unloadPluginSource(source.name);
+            if (response.statusCode === 200) {
+            } else {
+                console.log("Error unloading source: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error unloading source: " + error.message);
+        }
+    };
+    const reloadNovelSource = async (source) => {
+        try {
+            const response = await PluginSourceService.reloadPluginSource(source.name);
+            if (response.statusCode === 200) {
+                console.log("Reloaded source: " + source.name);
+            } else {
+                console.log("Error reloading source: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error reloading source: " + error.message);
+        }
+    };
+
+
+    const handleConfirmUnload = async () => {
+        try {
+            await unloadNovelSource(unloadSource);
+            setListSources(listSources.map(source =>
+                source.name === unloadSource.name ? { ...source, isLoaded: false } : source
+            ));
+            toast.success(`Đã tạm ngưng nguồn truyện ${unloadSource.name} thành công!`);
+            setIsHandlingUnload(true);
+        } catch (error) {
+            console.log("Error during unload operation: " + error.message);
+            toast.error(`Lỗi! tạm ngưng nguồn truyện ${unloadSource.name} không thành công!`);
+        } finally {
+            setUnloadSource(null);
+            setShowModal(false);
+        }
+    };
+
+    const handleConfirmReload = async () => {
+        try {
+            await reloadNovelSource(reloadSource);
+            setListSources(listSources.map(source =>
+                source.name === reloadSource.name ? { ...source, isLoaded: true } : source
+            ));
+            toast.success(`Đã tải lại nguồn truyện ${reloadSource.name} thành công!`);
+            setIsHandlingUnload(false);
+        } catch (error) {
+            console.log("Error during reload operation: " + error.message);
+            toast.error(`Lỗi! Tải lại nguồn truyện ${reloadSource.name} không thành công!`);
+        } finally {
+            setReloadSource(null);
+            setShowModal(false);
+        }
+    };
+    const handleSwitchChange = (source) => {
+        if (source.isLoaded) {
+            setModalContent(`Bạn có chắc chắn muốn tạm ngưng nguồn "${source.name}"?`);
+            setUnloadSource(source);
+            setIsHandlingUnload(true);
+            console.log("Unload source: " + source.name);
+        } else {
+            setModalContent(`Bạn có chắc chắn muốn tải lại nguồn "${source.name}"?`);
+            setReloadSource(source);
+            setIsHandlingUnload(false);
+            console.log("Reload source: " + source.name);
+        }
+        setShowModal(true);
+    };
+
+    const deleteNovelSource = async (source) => {
+        try {
+            const response = await PluginSourceService.deletePluginSource(source.name);
+            if (response.statusCode === 200) {
+                setListSources(listSources.filter(src => src.name !== source.name));
+                toast.success(`Đã xóa nguồn truyện ${source.name} thành công!`);
+            } else {
+                console.log("Error deleting source: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error deleting source: " + error.message);
+        }
+    };
+
+    const handleDeleteNovelSource = (source) => {
+
+        setModalContent(`Bạn có chắc chắn muốn xóa nguồn "${source.name}"?`);
+        setShowModal(true);
+    };
+
+    const handleCancelUnload = () => {
+        setUnloadSource(null);
+        setShowModal(false);
+    };
+
+    const handleCancelReload = () => {
+        setReloadSource(null);
+        setShowModal(false);
+    }
+
+
+    return (
+        <CContainer className="px-3 py-3 text-center">
+            <CCol className="align-self-end d-flex flex-column">
+                <CButton className="mb-3 align-self-end add-btn"><i className="fas fa-plus"></i>Thêm Nguồn Truyện mới</CButton>
+            </CCol>
+
+            <CTable align="middle" className="mb-0 border" hover responsive>
+                <CTableHead className="text-nowrap">
+                    <CTableRow>
+                        <CTableHeaderCell className="bg-body-tertiary">ID</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary">Logo</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary text-center">Nguồn Truyện</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary">Phiên bản</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary text-center">Tác giả</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary">Trạng thái</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary">Thao tác</CTableHeaderCell>
+                    </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                    {listSources.map((src, index) => (
+                        <CTableRow key={index}>
+                            <CTableDataCell>
+                                <div>{index + 1}</div>
+                            </CTableDataCell>
+                            <CTableDataCell className="text-center">
+                                <CImage src={src.icon} width={30} />
+                                <p className='text-muted mb-0'><a className='text-blue-50' href={src.url}>{src.url}</a></p>
+
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <div>{src.name}</div>
+                                <div className="small text-body-secondary text-nowrap">
+                                    <span>{src.description}</span>
+                                </div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <div>{src.version}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <div>{src.author}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                {src.isLoaded ? (
+                                    <CBadge color="success">
+                                        Đang hoạt động
+                                    </CBadge>
+                                ) : (
+                                    <CBadge color="warning">
+                                        Đã tạm ngưng
+                                    </CBadge>
+                                )}
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <div className="d-flex align-items-center">
+                                    <CFormSwitch
+                                        label=""
+                                        id={`isLoadedChecked${index}`}
+                                        className="ms-2"
+                                        defaultChecked={src.isLoaded}
+                                        onChange={() => handleSwitchChange(src)}
+                                    />
+                                    <CButton className="remove-btn" onClick={() => handleDeleteNovelSource(src)}>
+                                        <CIcon icon={cilTrash} className="remove-icon pb-1" size="lg" />
+                                    </CButton>
+                                </div>
+                            </CTableDataCell>
+                        </CTableRow>
+                    ))}
+                </CTableBody>
+            </CTable>
+            <CustomModal
+                show={showModal}
+                onHide={isHandlingUnload ? handleCancelUnload : handleCancelReload}
+                title="Xác nhận hành động"
+                content={modalContent}
+                onConfirm={isHandlingUnload ? handleConfirmUnload : handleConfirmReload}
+
+                onCancel={isHandlingUnload ? handleCancelUnload : handleCancelReload}
+            />
+        </CContainer >
+    )
+}
+
+export default SourceManagementPage;
+

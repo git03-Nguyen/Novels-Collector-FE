@@ -1,6 +1,46 @@
 import React from 'react';
 import classNames from 'classnames';
-
+import {
+    CAvatar,
+    CButton,
+    CButtonGroup,
+    CCard,
+    CCardBody,
+    CCardFooter,
+    CCardHeader,
+    CCol,
+    CProgress,
+    CRow,
+    CTable,
+    CTableBody,
+    CTableDataCell,
+    CTableHead,
+    CTableHeaderCell,
+    CTableRow,
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import {
+    cibCcAmex,
+    cibCcApplePay,
+    cibCcMastercard,
+    cibCcPaypal,
+    cibCcStripe,
+    cibCcVisa,
+    cibGoogle,
+    cibFacebook,
+    cibLinkedin,
+    cifBr,
+    cifEs,
+    cifFr,
+    cifIn,
+    cifPl,
+    cifUs,
+    cibTwitter,
+    cilCloudDownload,
+    cilPeople,
+    cilUser,
+    cilUserFemale,
+} from '@coreui/icons'
 import WidgetsBrand from './widgets/WidgetsBrand';
 import WidgetsDropdown from './widgets/WidgetsDropdown';
 import { AppSidebar, AppFooter, AppHeader } from './partial';
@@ -100,9 +140,9 @@ const AdminPage = () => {
 
     return (
 
-        <div>
+        <>
             <WidgetsDropdown className="mb-4" />
-            <div className="card mb-4">
+            {/* <div className="card mb-4">
                 <div className="card-body">
                     <div className="row">
                         <div className="col-sm-5">
@@ -154,64 +194,196 @@ const AdminPage = () => {
                         ))}
                     </div>
                 </div>
-            </div>
-            <WidgetsBrand className="mb-4" withCharts />
-            <div className="row">
+            </div> */}
+            {/* <WidgetsBrand className="mb-4" withCharts /> */}
+            {/* <div className="row">
                 <div className="col">
-                    <table className="table table-hover table-responsive mb-0 border">
-                        <thead className="text-nowrap bg-light">
-                            <tr>
-                                <th>User</th>
-                                <th className="text-center">Country</th>
-                                <th>Usage</th>
-                                <th className="text-center">Payment Method</th>
-                                <th>Activity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <CTable align="middle" className="mb-0 border" hover responsive>
+                        <CTableHead className="text-nowrap">
+                            <CTableRow>
+                                <CTableHeaderCell className="bg-body-tertiary text-center">
+                                    <CIcon icon={cilPeople} />
+                                </CTableHeaderCell>
+                                <CTableHeaderCell className="bg-body-tertiary">User</CTableHeaderCell>
+                                <CTableHeaderCell className="bg-body-tertiary text-center">Country</CTableHeaderCell>
+                                <CTableHeaderCell className="bg-body-tertiary">Usage</CTableHeaderCell>
+                                <CTableHeaderCell className="bg-body-tertiary text-center">Payment Method</CTableHeaderCell>
+                                <CTableHeaderCell className="bg-body-tertiary">Activity</CTableHeaderCell>
+                            </CTableRow>
+                        </CTableHead>
+                        <CTableBody>
                             {tableExample.map((item, index) => (
-                                <tr key={index}>
-                                    <td>
+                                <CTableRow key={index}>
+                                    <CTableDataCell>
                                         <div>{item.user.name}</div>
-                                        <div className="small text-muted text-nowrap">
+                                        <div className="small text-body-secondary text-nowrap">
                                             <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered: {item.user.registered}
                                         </div>
-                                    </td>
-                                    <td className="text-center">
-                                        <i className={item.country.flag} title={item.country.name}></i>
-                                    </td>
-                                    <td>
+                                    </CTableDataCell>
+                                    <CTableDataCell className="text-center">
+                                        <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
                                         <div className="d-flex justify-content-between text-nowrap">
                                             <div className="fw-semibold">{item.usage.value}%</div>
                                             <div className="ms-3">
-                                                <small className="text-muted">{item.usage.period}</small>
+                                                <small className="text-body-secondary">{item.usage.period}</small>
                                             </div>
                                         </div>
-                                        <div className="progress" style={{ height: '4px' }}>
-                                            <div
-                                                className={`progress-bar bg-${item.usage.color}`}
-                                                role="progressbar"
-                                                style={{ width: `${item.usage.value}%` }}
-                                                aria-valuenow={item.usage.value}
-                                                aria-valuemin="0"
-                                                aria-valuemax="100"
-                                            ></div>
-                                        </div>
-                                    </td>
-                                    <td className="text-center">
-                                        <i className={item.payment.icon}></i>
-                                    </td>
-                                    <td>
-                                        <div className="small text-muted text-nowrap">Last login</div>
+                                        <CProgress thin color={item.usage.color} value={item.usage.value} />
+                                    </CTableDataCell>
+                                    <CTableDataCell className="text-center">
+                                        <CIcon size="xl" icon={item.payment.icon} />
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <div className="small text-body-secondary text-nowrap">Last login</div>
                                         <div className="fw-semibold text-nowrap">{item.activity}</div>
-                                    </td>
-                                </tr>
+                                    </CTableDataCell>
+                                </CTableRow>
                             ))}
-                        </tbody>
-                    </table>
+                        </CTableBody>
+                    </CTable>
                 </div>
-            </div>
-        </div>
+            </div> */}
+            <CRow>
+                <CCol xs>
+                    <CCard className="mb-4">
+                        <CCardHeader>Traffic {' & '} Sales</CCardHeader>
+                        <CCardBody>
+                            {/* <CRow>
+                                <CCol xs={12} md={6} xl={6}>
+                                    <CRow>
+                                        <CCol xs={6}>
+                                            <div className="border-start border-start-4 border-start-info py-1 px-3">
+                                                <div className="text-body-secondary text-truncate small">New Clients</div>
+                                                <div className="fs-5 fw-semibold">9,123</div>
+                                            </div>
+                                        </CCol>
+                                        <CCol xs={6}>
+                                            <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
+                                                <div className="text-body-secondary text-truncate small">
+                                                    Recurring Clients
+                                                </div>
+                                                <div className="fs-5 fw-semibold">22,643</div>
+                                            </div>
+                                        </CCol>
+                                    </CRow>
+                                    <hr className="mt-0" />
+                                    {progressGroupExample1.map((item, index) => (
+                                        <div className="progress-group mb-4" key={index}>
+                                            <div className="progress-group-prepend">
+                                                <span className="text-body-secondary small">{item.title}</span>
+                                            </div>
+                                            <div className="progress-group-bars">
+                                                <CProgress thin color="info" value={item.value1} />
+                                                <CProgress thin color="danger" value={item.value2} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </CCol>
+                                <CCol xs={12} md={6} xl={6}>
+                                    <CRow>
+                                        <CCol xs={6}>
+                                            <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
+                                                <div className="text-body-secondary text-truncate small">Pageviews</div>
+                                                <div className="fs-5 fw-semibold">78,623</div>
+                                            </div>
+                                        </CCol>
+                                        <CCol xs={6}>
+                                            <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                                                <div className="text-body-secondary text-truncate small">Organic</div>
+                                                <div className="fs-5 fw-semibold">49,123</div>
+                                            </div>
+                                        </CCol>
+                                    </CRow>
+
+                                    <hr className="mt-0" />
+
+                                    {progressGroupExample2.map((item, index) => (
+                                        <div className="progress-group mb-4" key={index}>
+                                            <div className="progress-group-header">
+                                                <CIcon className="me-2" icon={item.icon} size="lg" />
+                                                <span>{item.title}</span>
+                                                <span className="ms-auto fw-semibold">{item.value}%</span>
+                                            </div>
+                                            <div className="progress-group-bars">
+                                                <CProgress thin color="warning" value={item.value} />
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                    <div className="mb-5"></div>
+
+                                    {progressGroupExample3.map((item, index) => (
+                                        <div className="progress-group" key={index}>
+                                            <div className="progress-group-header">
+                                                <CIcon className="me-2" icon={item.icon} size="lg" />
+                                                <span>{item.title}</span>
+                                                <span className="ms-auto fw-semibold">
+                                                    {item.value}{' '}
+                                                    <span className="text-body-secondary small">({item.percent}%)</span>
+                                                </span>
+                                            </div>
+                                            <div className="progress-group-bars">
+                                                <CProgress thin color="success" value={item.percent} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </CCol>
+                            </CRow> */}
+
+                            <br />
+
+                            <CTable align="middle" className="mb-0 border" hover responsive>
+                                <CTableHead className="text-nowrap">
+                                    <CTableRow>
+                                        <CTableHeaderCell className="bg-body-tertiary text-center">
+                                            <CIcon icon={cilPeople} />
+                                        </CTableHeaderCell>
+                                        <CTableHeaderCell className="bg-body-tertiary">User</CTableHeaderCell>
+                                        <CTableHeaderCell className="bg-body-tertiary text-center">Country</CTableHeaderCell>
+                                        <CTableHeaderCell className="bg-body-tertiary">Usage</CTableHeaderCell>
+                                        <CTableHeaderCell className="bg-body-tertiary text-center">Payment Method</CTableHeaderCell>
+                                        <CTableHeaderCell className="bg-body-tertiary">Activity</CTableHeaderCell>
+                                    </CTableRow>
+                                </CTableHead>
+                                <CTableBody>
+                                    {tableExample.map((item, index) => (
+                                        <CTableRow key={index}>
+                                            <CTableDataCell>
+                                                <div>{item.user.name}</div>
+                                                <div className="small text-body-secondary text-nowrap">
+                                                    <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered: {item.user.registered}
+                                                </div>
+                                            </CTableDataCell>
+                                            <CTableDataCell className="text-center">
+                                                <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                                <div className="d-flex justify-content-between text-nowrap">
+                                                    <div className="fw-semibold">{item.usage.value}%</div>
+                                                    <div className="ms-3">
+                                                        <small className="text-body-secondary">{item.usage.period}</small>
+                                                    </div>
+                                                </div>
+                                                <CProgress thin color={item.usage.color} value={item.usage.value} />
+                                            </CTableDataCell>
+                                            <CTableDataCell className="text-center">
+                                                <CIcon size="xl" icon={item.payment.icon} />
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                                <div className="small text-body-secondary text-nowrap">Last login</div>
+                                                <div className="fw-semibold text-nowrap">{item.activity}</div>
+                                            </CTableDataCell>
+                                        </CTableRow>
+                                    ))}
+                                </CTableBody>
+                            </CTable>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+            </CRow>
+        </>
 
     );
 };

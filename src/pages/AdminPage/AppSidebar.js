@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import {
   CCloseButton,
+  CImage,
   CSidebar,
   CSidebarBrand,
   CSidebarFooter,
@@ -13,6 +14,7 @@ import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
 
+import logo from '../../assets/brand/logo.png'
 //sidebar nav config
 import navigation from './_nav'
 
@@ -32,9 +34,9 @@ const AppSidebar = () => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
     >
-      <CSidebarHeader className="border-bottom">
-        <CSidebarBrand to="/">
-          {/* to add app logo */}
+      <CSidebarHeader className="align-self-center" >
+        <CSidebarBrand to="/" >
+          <CImage src={logo} width={80} />
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"
