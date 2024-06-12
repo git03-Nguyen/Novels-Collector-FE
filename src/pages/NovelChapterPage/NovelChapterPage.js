@@ -300,10 +300,19 @@ function NovelChapterPage(props) {
                         </button>
                     </div>
                 </Fragment>}
-            <ActionBar 
-             isDisabledSiblingChapter={isDisabledSiblingChapter} 
-             handleSiblingChapterClick={handleSiblingChapterClick} 
-            />
+                <ActionBar 
+            isDisabledSiblingChapter={isDisabledSiblingChapter} 
+            handleSiblingChapterClick={handleSiblingChapterClick} 
+            novelName={novelContext.title}
+            novelPoster={novelContext.authors[0].name}
+            novelAuthor={novelContext.authors[0]?.name}
+            chapterList={novelContext.chapters}
+            sourceSlug={sourceSlug}
+            novelSlug={novelSlug}
+            
+
+        />
+
 
         </div >
     );

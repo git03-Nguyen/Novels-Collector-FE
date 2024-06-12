@@ -7,7 +7,6 @@ import { NovelContext } from '../../context/NovelContext';
 import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
-import HTMLToReactParser from '../../utils/htmlToReactParser';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 
 function NovelPage(props) {

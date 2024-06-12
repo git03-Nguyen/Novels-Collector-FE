@@ -2,25 +2,30 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 
-export default function ChapterPageSideBar({novelName, novelPoster, novelAuthor, chapterList}) {
+export default function ChapterPageSideBar({novelName, novelPoster, novelAuthor, chapterList,sourceSlug, novelSlug }) {
 
     return (
-        <div class="fixed flex flex-col left-0 bg-gray-200 justify-center">
-            <div class="flex flex-row">
+        <div class="fixed flex flex-col left-0 top-0 w-48 justify-center max-h-[1000px]">
+            <div class="flex flex-row bg-slate-900 text-white ">
                 <div>{novelPoster}</div>
                 <div class="flex flex-col">
                     <div>{novelName}</div>
                     <div>{novelAuthor}</div>
                 </div>    
             </div>
-            <div>
-                {chapterList.map((chapter, index) => {
+            <div class="text-left overflow-y-auto whitespace-normal text-black  bg-white border-black">
+                {chapterList && chapterList.length > 0 && chapterList.map((chapter, index) => {
                     return (
-                        <Link to={`/chapter/${chapter.id}`} key={`chapter-${index}`} class="py-3 px-3 bg-gray-800 hover:bg-gray-300 cursor-pointer border border-gray-200" style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <div>{chapter.name}</div>
-                        </Link>
-                    );
-                })}
+                        <div class="px-2 py-1 hover:bg-gray-500">
+                            <Link
+                                to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
+                                style={{ textDecoration: 'none', color: 'inherit' }}
+                                key={`novel-chapter-${index}`}>
+                                <div>{chapter.title}</div>
+                            </Link>
+                        </div>
+                   );
+                })}      
             </div>
         </div>
     );
