@@ -12,6 +12,7 @@ import { UserContext } from '../../context/UserContext';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 import ActionBar from '../../Components/ActionBar/ActionBar';
 import ChapterPageSideBar from '../../Components/ChapterPageSideBar/ChapterPageSideBar';
+import { LoadingContext } from '../../context/LoadingContext';
 function NovelChapterPage(props) {
     const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ function NovelChapterPage(props) {
 
     const { novelContext, setNovelContext, chapterContext, setChapterContext } = useContext(NovelContext);
     const { setUserLatestNovels } = useContext(UserContext);
+    const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
 
     const defaultPerpage = PluginSourcePerpageGetter.getChaptersPerpageByPluginSource(sourceSlug);
     const [perpage, setPerpage] = useState(defaultPerpage);
@@ -39,6 +41,10 @@ function NovelChapterPage(props) {
 
     const [novelChapter, setChapterContent] = useState({});
     const [isLoadingNovelChapterPage, setIsLoadingNovelChapterPage] = useState(true);
+
+
+
+
 
     const fetchNovelInfo = async (source, slug) => {
         try {
@@ -108,7 +114,7 @@ function NovelChapterPage(props) {
         if (parseInt(newPage) !== parseInt(currentPage)) {
             setCurrentPage(newNovelInfo?.page);
         }
-        setIsLoadingNovelChapterPage(false);
+        setIsLoadingContext(false);
         saveNovelToUserLatestNovels(newNovelInfo);
 
 
@@ -171,7 +177,7 @@ function NovelChapterPage(props) {
                 }
                 setChapterContext(newChapterData);
 
-
+                setIsLoadingContext(false);
                 saveNovelToUserLatestNovels(novelContext);
                 setDisabledStatusForSiblingChapters(newChapterID, novelContext, newPage);
             } else {
@@ -249,58 +255,70 @@ function NovelChapterPage(props) {
         }
     }
 
-    useEffect(() => {
-        console.log(`Calling fetching chapter content for id ${chapterID} and slug: ${curChapterSlug}`);
-        fetchChapterContent();
 
+    const handleUpdateChapterContent = async () => {
+        console.log(`Calling fetching chapter content for id ${chapterID} and slug: ${curChapterSlug}`);
         scrollToFrontList();
+        await fetchChapterContent();
+
         setIsChapterIDFetched(true);
+    }
+
+    const handleChangeNovelPageList = async () => {
+        scrollToFrontList();
+        if (isChapterIDFetched === true) {
+            await fetchNovelInfo(sourceSlug, novelSlug);
+        }
+        setIsLoadingContext(false);
+    }
+
+    useEffect(() => {
+        setIsLoadingContext(true);
+        handleUpdateChapterContent();
     }, [chapterID, curChapterSlug])
 
     useEffect(() => {
-        if (isChapterIDFetched === true) {
-            fetchNovelInfo(sourceSlug, novelSlug);
-        }
+        setIsLoadingContext(true);
+        handleChangeNovelPageList();
     }, [currentPage, isChapterIDFetched])
 
     return (
         <div className='novel-chapter-page-container'>
-            {isLoadingNovelChapterPage === true
-                ? <h1 className='loading-message'>... Loading Data ...</h1>
-                : <Fragment >
-                    <h3 id='novel-chapter-container  dark:bg-black dark:text-white'>{novelContext?.title}</h3>
-                    <h5 >Chương {novelChapter?.number} {novelChapter?.title}</h5>
-                    <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
-                        <span> - </span>
-                        Tác giả: {novelContext?.authors[0]?.name}
-                        <span> - </span>
-                        Trạng thái: {novelContext?.status}</h5>
-                    <span className='d-none'>Trang: {currentPage} / {totalPage}</span>
-                    <div className='novel-chapter-content-container'>
+            <Fragment >
+                <h3 id='novel-chapter-container' className='dark:bg-black dark:text-white'>{novelContext?.title}</h3>
+                <h5 >Chương {novelChapter?.number} {novelChapter?.title}</h5>
+                <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
+                    <span> - </span>
+                    Tác giả:{(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                    <span> - </span>
+                    Trạng thái: {novelContext?.status}</h5>
+                <span className='d-none'>Trang: {currentPage} / {totalPage}</span>
+                <div className='novel-chapter-content-container'>
 
-                        {novelChapter?.content && novelChapter?.content.length > 0 &&
-                            <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
-                        }
-                    </div>
+                    {novelChapter?.content && novelChapter?.content.length > 0 &&
+                        <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
+                    }
+                </div>
 
-                    <div className='novel-chapter-footer-navigator'>
-                        <button className='btn btn-secondary previous-chapter-btn'
-                            disabled={isDisabledSiblingChapter.previous} onClick={() => handleSiblingChapterClick(-1)}>
-                            <i className="fa-solid fa-arrow-left-long"></i>
-                            <span className='ps-3'>Trước</span>
-                        </button>
-                        <button className='btn btn-secondary home-btn'>
-                            <i className="fa-solid fa-house-user"></i>
-                            <span className='ps-3'>Trang chủ</span>
-                        </button>
-                        <button className='btn btn-secondary next-chapter-btn'
-                            disabled={isDisabledSiblingChapter.next} onClick={() => handleSiblingChapterClick(1)}>
-                            <span className='pe-3'>Sau</span>
-                            <i className="fa-solid fa-arrow-right-long"></i>
-                        </button>
-                    </div>
-                </Fragment>}
-            <ActionBar
+                <div className='novel-chapter-footer-navigator'>
+                    <button className='btn btn-secondary previous-chapter-btn'
+                        disabled={isDisabledSiblingChapter.previous} onClick={() => handleSiblingChapterClick(-1)}>
+                        <i className="fa-solid fa-arrow-left-long"></i>
+                        <span className='ps-3'>Trước</span>
+                    </button>
+                    <button className='btn btn-secondary home-btn'>
+                        <i className="fa-solid fa-house-user"></i>
+                        <span className='ps-3'>Trang chủ</span>
+                    </button>
+                    <button className='btn btn-secondary next-chapter-btn'
+                        disabled={isDisabledSiblingChapter.next} onClick={() => handleSiblingChapterClick(1)}>
+                        <span className='pe-3'>Sau</span>
+                        <i className="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+            </Fragment>
+
+            {isLoadingContext === false && <ActionBar
                 isDisabledSiblingChapter={isDisabledSiblingChapter}
                 handleSiblingChapterClick={handleSiblingChapterClick}
                 novelName={novelContext?.title ? novelContext.title : ''}
@@ -310,6 +328,8 @@ function NovelChapterPage(props) {
                 sourceSlug={sourceSlug}
                 novelSlug={novelSlug}
             />
+            }
+
 
 
         </div >

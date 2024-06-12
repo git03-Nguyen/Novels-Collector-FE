@@ -21,6 +21,8 @@ function MainApp() {
     useEffect(() => {
         if (isLoadingContext === true) {
             console.log("loading ... ");
+        } else {
+            console.log('Loaded !');
         }
         setIsLoadingApp(isLoadingContext);
     }, [isLoadingContext])
