@@ -52,9 +52,9 @@ const fetchCategories = async (source) => {
     }
 }
 
-const fetchNovelListByCategory = async (source, categorySlug) => {
+const fetchNovelListByCategory = async (source, categorySlug, page) => {
     try {
-        const response = await axios.get(`/api/v1/category/${source}/${categorySlug}`);
+        const response = await axios.get(`/api/v1/category/${source}/${categorySlug}?page=${page}`);
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,
