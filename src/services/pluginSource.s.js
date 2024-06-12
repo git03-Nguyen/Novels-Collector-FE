@@ -81,6 +81,25 @@ const reloadAllSources = async () => {
     }
 }
 
+const deletePluginSource = async (sourceName) => {
+    try {
+        const response = await axios.delete(`/api/v1/source/delete/${sourceName}`);
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error while removing source: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
 
 const uploadPluginSource = async (url) => {
     try {
@@ -109,6 +128,7 @@ const PluginSourceService = {
     unloadPluginSource,
     reloadPluginSource,
     reloadAllSources,
+    deletePluginSource,
     uploadPluginSource
 }
 
