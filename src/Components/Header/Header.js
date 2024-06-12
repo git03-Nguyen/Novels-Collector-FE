@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
 import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
-function Header({setdarkMode, darkMode}) {
+function Header({ setdarkMode, darkMode }) {
     const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
     const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
 
@@ -33,7 +33,7 @@ function Header({setdarkMode, darkMode}) {
     }
 
     const handleSearch = () => {
-        navigate(`/novel-list?keyword=${searchValue}`);
+        navigate(`/novel-list?${searchTarget}=${searchValue}`);
     }
 
     const handleChangeSource = (e) => {
@@ -87,7 +87,8 @@ function Header({setdarkMode, darkMode}) {
                 <div className="form-floating">
                     <select className="form-select " id="source"
                         value={searchTarget} onChange={(e) => handleChangeSearchTarget(e)}>
-                        <option name="Tên truyện" value="keyword">Tên truyện</option>
+                        <option name="Tất cả" value="keyword">Tất cả</option>
+                        <option name="Tên truyện" value="title">Tên truyện</option>
                         <option name="Tác giả" value="author">Tác giả</option>
                     </select>
                     <label htmlFor="floatingSelectGrid">Tìm kiếm theo</label>
@@ -142,8 +143,9 @@ function Header({setdarkMode, darkMode}) {
                 </ul>
 
             </div>
-            
-            <button onClick={()=>{setdarkMode(!darkMode)
+
+            <button onClick={() => {
+                setdarkMode(!darkMode)
 
             }} className="absolute dark:bg-white dark:text-black right-5 top-5 bg-black text-white px-2 py-2 rounded hover:bg-stone-700">
                 {!darkMode ? "Light" : "Dark"} Mode

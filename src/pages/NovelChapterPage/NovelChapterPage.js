@@ -268,18 +268,18 @@ function NovelChapterPage(props) {
             {isLoadingNovelChapterPage === true
                 ? <h1 className='loading-message'>... Loading Data ...</h1>
                 : <Fragment >
-                    <h3 id='novel-chapter-container  dark:bg-black dark:text-white'>{novelContext.title}</h3>
-                    <h5 >Chương {novelChapter.number} {novelChapter.title}</h5>
-                    <h5>Đánh giá: {novelContext.rating} / {novelContext.maxRating}
+                    <h3 id='novel-chapter-container  dark:bg-black dark:text-white'>{novelContext?.title}</h3>
+                    <h5 >Chương {novelChapter?.number} {novelChapter?.title}</h5>
+                    <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
                         <span> - </span>
-                        Tác giả: {novelContext.authors[0]?.name}
+                        Tác giả: {novelContext?.authors[0]?.name}
                         <span> - </span>
-                        Trạng thái: {novelContext.status}</h5>
+                        Trạng thái: {novelContext?.status}</h5>
                     <span className='d-none'>Trang: {currentPage} / {totalPage}</span>
                     <div className='novel-chapter-content-container'>
 
-                        {novelChapter.content && novelChapter.content.length > 0 &&
-                            <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter.content }}></div>
+                        {novelChapter?.content && novelChapter?.content.length > 0 &&
+                            <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
                         }
                     </div>
 
@@ -300,16 +300,16 @@ function NovelChapterPage(props) {
                         </button>
                     </div>
                 </Fragment>}
-                <ActionBar 
-            isDisabledSiblingChapter={isDisabledSiblingChapter} 
-            handleSiblingChapterClick={handleSiblingChapterClick} 
-            novelName={novelContext.title}
-            novelPoster={novelContext.authors[0].name}
-            novelAuthor={novelContext.authors[0]?.name}
-            chapterList={novelContext.chapters}
-            sourceSlug={sourceSlug}
-            novelSlug={novelSlug}
-        />
+            <ActionBar
+                isDisabledSiblingChapter={isDisabledSiblingChapter}
+                handleSiblingChapterClick={handleSiblingChapterClick}
+                novelName={novelContext?.title ? novelContext.title : ''}
+                novelPoster={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                novelAuthor={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                chapterList={novelContext?.chapters || []}
+                sourceSlug={sourceSlug}
+                novelSlug={novelSlug}
+            />
 
 
         </div >

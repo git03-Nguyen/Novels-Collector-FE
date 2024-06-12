@@ -10,9 +10,8 @@ import { toast } from 'react-toastify';
 import CategoryService from '../../services/category.s';
 
 
-
 function ListNovelPage(props) {
-    const { pluginSources, searchValue, searchTarget } = useContext(NovelContext);
+    const { pluginSources, searchTarget } = useContext(NovelContext);
 
     const [totalPage, setTotalPage] = useState(1);
     const [isLoadingListNovelPage, setIsLoadingListNovelPage] = useState(true);
@@ -22,6 +21,7 @@ function ListNovelPage(props) {
     const [searchParams, setSearchParams] = useSearchParams();
     const [curPage, setCurPage] = useState(1);
     const [curCategory, setCurCategory] = useState('');
+    const [curSearchTarget, setCurSearchTarget] = useState(searchTarget);
     const [curSearchValue, setCurSearchValue] = useState();
     const [isHandlingSearchParams, setIsHandlingSearchParams] = useState(true);
 
@@ -37,7 +37,7 @@ function ListNovelPage(props) {
                 console.log("Cur search value is empty");
                 return;
             }
-            const response = await ListNovelService.fetchNovelListData(pluginSources[0].name, curSearchValue, searchTarget, curPage);
+            const response = await ListNovelService.fetchNovelListData(pluginSources[0].name, curSearchValue, curSearchTarget, curPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setNovels(response.data);
                 setTotalPage(response?.meta?.totalPage);
@@ -88,20 +88,22 @@ function ListNovelPage(props) {
     }
 
     const handleChangeByParams = () => {
+        const searchParamsObj = Object.fromEntries(searchParams);
+        const searchParamMap = Object.entries(searchParamsObj);
+        searchParamMap?.forEach((pair, index) => {
+            setCurSearchTarget(pair[0]);
+            setCurSearchValue(pair[1]);
+        })
+
         setCurPage(searchParams.get('page') ?? 1);
         setCurCategory(searchParams.get('category') ?? '');
-
-        console.log("searchValue: " + searchValue);
-        if (searchValue && searchValue !== '') {
-            setCurSearchValue(searchParams.get(searchTarget) ?? searchValue)
-        }
 
         setIsHandlingSearchParams(false)
     }
 
     useEffect(() => {
         console.log("Search params: ");
-        console.log(searchParams.get('category'));
+        console.log(Object.entries(Object.fromEntries(searchParams)));
         setIsHandlingSearchParams(true)
         handleChangeByParams();
 

@@ -12,21 +12,22 @@ import { NovelContext } from './context/NovelContext';
 function MainApp() {
     const { isLoadingNovel } = useContext(NovelContext);
 
-    let [darkMode, setdarkMode] = useState('light');
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
-        if (darkMode) {
+        if (isDarkMode) {
             document.documentElement.classList.add('dark')
         } else {
             document.documentElement.classList.remove('dark')
         }
-    }, [darkMode])
+    }, [isDarkMode])
 
     return (
         <div className="App dark:bg-black dark:text-white">
-            <Header 
-                darkMode={darkMode}
-                setdarkMode={setdarkMode}/>
+            <Header
+                darkMode={isDarkMode}
+                setdarkMode={setIsDarkMode}
+            />
             <BreadCrumb />
             <div className="app-container">
                 {isLoadingNovel === true ?

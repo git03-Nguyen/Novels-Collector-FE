@@ -44,7 +44,7 @@ function DnDSourceModal(props) {
         <div className='dnd-source-modal-container  dark:bg-black dark:text-white'>
             <Modal show={show} onHide={onCancel} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Sắp xếp thứ tự ưu tiên sử dụng nguồn truyện</Modal.Title>
+                    <Modal.Title>Sắp xếp thứ tự sử dụng nguồn truyện</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <DragDropContext onDragEnd={handleOnDragEnd}>
