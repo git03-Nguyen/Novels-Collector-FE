@@ -8,11 +8,22 @@ import Footer from './Components/Footer/Footer';
 import BreadCrumb from './Components/BreadCrumb/BreadCrumb';
 import IndexRoute from './routes/IndexRoute';
 import { NovelContext } from './context/NovelContext';
+import LoadingLayer from './Components/LoadingLayer/LoadingLayer';
+import { LoadingContext } from './context/LoadingContext';
 
 function MainApp() {
-    const { isLoadingNovel } = useContext(NovelContext);
-
+    const { isLoadingContext } = useContext(LoadingContext);
     const [isDarkMode, setIsDarkMode] = useState(false);
+
+    const [isLoadingApp, setIsLoadingApp] = useState(isLoadingContext);
+
+
+    useEffect(() => {
+        if (isLoadingContext === true) {
+            console.log("loading ... ");
+        }
+        setIsLoadingApp(isLoadingContext);
+    }, [isLoadingContext])
 
     useEffect(() => {
         if (isDarkMode) {
@@ -30,9 +41,8 @@ function MainApp() {
             />
             <BreadCrumb />
             <div className="app-container">
-                {isLoadingNovel === true ?
-                    <h1 className='loading-message'>... Loading Data ...</h1>
-                    : <IndexRoute />}
+                {isLoadingApp === true && <LoadingLayer />}
+                <IndexRoute />
             </div>
             <Footer />
             <ToastContainer
