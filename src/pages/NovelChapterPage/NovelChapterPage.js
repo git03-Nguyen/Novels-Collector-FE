@@ -11,7 +11,7 @@ import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 import ActionBar from '../../Components/ActionBar/ActionBar';
-
+import ChapterPageSideBar from '../../Components/ChapterPageSideBar/ChapterPageSideBar';
 function NovelChapterPage(props) {
     const navigate = useNavigate();
 
