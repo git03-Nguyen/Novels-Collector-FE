@@ -1,3 +1,4 @@
+
 import axios from '../configs/axios'
 
 const fetchPluginSources = async () => {
@@ -101,26 +102,28 @@ const deletePluginSource = async (sourceName) => {
     }
 }
 
-const uploadPluginSource = async (url) => {
+const uploadPluginSource = async (formData) => {
     try {
-        console.log("Uploading plugin source: " + url);
-        const response = await axios.post(`/api/v1/source/add`, { url }
-        );
+        const response = await axios.post('/api/v1/source/add', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,
                 message: response.message,
                 data: response?.data ?? {},
                 meta: response?.meta ?? {}
-            };
+            }
         }
     } catch (error) {
-        console.log("Error uploading plugin source: " + error.message);
+        console.log("Error while uploading source: " + error.message);
         return {
             statusCode: 500,
             data: null,
             message: "Cannot connect to server!"
-        };
+        }
     }
 };
 const PluginSourceService = {

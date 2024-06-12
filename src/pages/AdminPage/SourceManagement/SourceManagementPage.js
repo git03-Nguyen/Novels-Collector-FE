@@ -17,7 +17,12 @@ import {
     CRow,
     CCol,
     CImage,
-    CFormSwitch
+    CFormSwitch,
+    CModal,
+    CModalHeader,
+    CModalTitle,
+    CModalBody,
+    CModalFooter
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
@@ -30,7 +35,8 @@ const SourceManagementPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
     const [actionType, setActionType] = useState('');
-
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
     const getAllSources = async () => {
         try {
             const response = await PluginSourceService.fetchPluginSources();
@@ -134,11 +140,43 @@ const SourceManagementPage = () => {
         setCurrentSource(null);
         setShowModal(false);
     };
+    const handleAddNewSource = async () => {
+        if (!selectedFile) {
+            toast.error("Vui lòng chọn một tệp.");
+            return;
+        }
 
+        if (selectedFile.size > 150 * 1024 * 1024) {
+            toast.error("Tệp phải có kích thước nhỏ hơn 150MB.");
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const response = await PluginSourceService.uploadPluginSource(formData);
+            if (response.statusCode === 200) {
+                toast.success(`Đã thêm nguồn truyện mới: ${response.meta.added}  thành công!`);
+                getAllSources();
+                setShowAddModal(false);
+                setSelectedFile(null);
+            } else {
+                toast.error("Lỗi! Thêm nguồn truyện mới không thành công!");
+                console.log("Error uploading source: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error uploading source: " + error.message);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
     return (
         <CContainer className="px-3 py-3 text-center">
             <CCol className="align-self-end d-flex flex-column">
-                <CButton className="mb-3 align-self-end add-btn"><i className="fas fa-plus"></i>Thêm Nguồn Truyện mới</CButton>
+                <CButton className="mb-3 align-self-end add-btn" onClick={() => setShowAddModal(true)}><i className="fas fa-plus"></i>Thêm Nguồn Truyện mới</CButton>
             </CCol>
 
             <CTable align="middle" className="mb-0 border" hover responsive>
@@ -212,6 +250,24 @@ const SourceManagementPage = () => {
                 onConfirm={handleConfirmAction}
                 onCancel={handleCancelAction}
             />
+            <CModal alignment="center" visible={showAddModal} onClose={() => setShowAddModal(false)}>
+                <CModalHeader>
+                    <CModalTitle>Thêm Nguồn Truyện Mới</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <CForm>
+                        <CFormInput
+                            type="file"
+                            accept=".zip"
+                            onChange={handleFileChange}
+                        />
+                    </CForm>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={() => setShowAddModal(false)}>Đóng</CButton>
+                    <CButton color="primary" onClick={handleAddNewSource}>Tải lên</CButton>
+                </CModalFooter>
+            </CModal>
         </CContainer>
     );
 };
