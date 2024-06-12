@@ -8,7 +8,7 @@ export default function ChapterPageSideBar({novelName, novelPoster, novelAuthor,
             <div class="flex flex-row bg-blue-900 text-white whitespace-normal">
                 <img class='object-scale-down w-24 h-24 p-1' src={novelPoster} alt={`${novelPoster} thumbnail`} />
                 <div class="flex flex-col text-left">
-                    <div class="text-base py-1 line-clamp-2 overflow-hidden h-14 mb-2">{novelName}</div>
+                    <div class="text-base py-1 line-clamp-2 overflow-hidden h-14 mb-1">{novelName}</div>
                     <div class="text-xs">{novelAuthor}</div>
                 </div>    
             </div>
