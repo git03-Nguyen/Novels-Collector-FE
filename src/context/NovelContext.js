@@ -15,7 +15,7 @@ function NovelProvider(props) {
     const [isLoadingNovel, setIsLoadingNovel] = useState(true);
     const [novelContext, setNovelContext] = useState({});
     const [chapterContext, setChapterContext] = useState({});
-    const [pluginSources, setPluginSources] = useState([{ name: 'TruyenFullVn' }]);
+    const [pluginSources, setPluginSources] = useState(UserPluginSourcesManager.getUserPluginSources() ?? []);
 
     const [searchValue, setSearchValue] = useState('');
     const [searchTarget, setSearchTarget] = useState('keyword');

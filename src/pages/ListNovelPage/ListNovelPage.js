@@ -91,6 +91,9 @@ function ListNovelPage(props) {
         const searchParamsObj = Object.fromEntries(searchParams);
         const searchParamMap = Object.entries(searchParamsObj);
         searchParamMap?.forEach((pair, index) => {
+            if (pair[0] === 'category') {
+                return;
+            }
             setCurSearchTarget(pair[0]);
             setCurSearchValue(pair[1]);
         })

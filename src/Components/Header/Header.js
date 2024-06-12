@@ -9,7 +9,7 @@ import UserPluginSourcesManager from '../../utils/localStorage/userPluginSources
 
 function Header({ setdarkMode, darkMode }) {
     const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
-    const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
+    const [selectedSource, setSelectedSource] = useState(pluginSources[0]?.name);
 
     const [isShowModal, setIsShowModal] = useState(false);
 
@@ -49,7 +49,7 @@ function Header({ setdarkMode, darkMode }) {
         setSelectedSource(e.target.value);
         let newPluginSources = pluginSources.map(src => {
             let newSrc = src;
-            if (src.name === e.target.value) {
+            if (src?.name === e.target.value) {
                 newSrc.prior = 2;
             } else {
                 newSrc.prior = 1;
@@ -60,6 +60,7 @@ function Header({ setdarkMode, darkMode }) {
 
         newPluginSources.sort((a, b) => b.prior - a.prior);
         setPluginSources(newPluginSources);
+        navigate(`/source/${e.target.value}`)
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
 
@@ -74,7 +75,7 @@ function Header({ setdarkMode, darkMode }) {
     }
 
     useEffect(() => {
-        setSelectedSource(pluginSources[0].name);
+        setSelectedSource(pluginSources[0]?.name);
     }, [pluginSources])
 
     return (
@@ -112,9 +113,9 @@ function Header({ setdarkMode, darkMode }) {
                         <select className="form-select " id="result"
                             value={selectedSource}
                             onChange={(e) => handleChangeSource(e)}>
-                            {pluginSources && pluginSources.length > 0 && pluginSources.map((source, index) => (
-                                <option key={index} value={source.name}>
-                                    {source.name}
+                            {pluginSources && pluginSources?.length > 0 && pluginSources?.map((source, index) => (
+                                <option key={index} value={source?.name}>
+                                    {source?.name}
                                 </option>
                             ))}
                             <option disabled>──────────</option>
