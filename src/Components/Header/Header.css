@@ -1,8 +1,6 @@
 .app-header {
     width: 100%;
     padding: 0 5%;
-
-    color: white;
     background-color: var(--dark-blue);
     display: grid;
     grid-template-columns: 15% auto 10%;

@@ -304,7 +304,7 @@ function NovelChapterPage(props) {
             isDisabledSiblingChapter={isDisabledSiblingChapter} 
             handleSiblingChapterClick={handleSiblingChapterClick} 
             novelName={novelContext.title}
-            novelPoster={novelContext.authors[0].name}
+            novelPoster={novelContext.cover}
             novelAuthor={novelContext.authors[0]?.name}
             chapterList={novelContext.chapters}
             sourceSlug={sourceSlug}
