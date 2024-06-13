@@ -1,10 +1,7 @@
 import React from 'react'
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../partial'
-import AdminRoutes from '../AdminRoutes'
+import { AppContent, AppSidebar, AppFooter, AppHeader } from '../Partials/index'
 
-import { useSelector } from 'react-redux'
 
-import { CSpinner, useColorModes } from '@coreui/react'
 const DefaultLayout = () => {
   return (
     <>
