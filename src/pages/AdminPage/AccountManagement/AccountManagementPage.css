@@ -1,0 +1,21 @@
+.add-btn {
+    background: green !important;
+    border: none;
+    color: #fff !important;
+}
+
+.remove-btn {
+    background: none !important;
+    border: none;
+}
+
+.remove-icon {
+    color: red;
+}
+
+.center-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

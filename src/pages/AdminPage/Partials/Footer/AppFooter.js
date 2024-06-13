@@ -5,7 +5,7 @@ const AppFooter = () => {
   return (
     <CFooter className="px-4">
       <div>
-        <span className="ms-1">Quản trị &copy; Novel Collector</span>
+        <span className="ms-1">Quản trị &copy;  <strong>Novel Collector</strong> </span>
       </div>
       <div className="ms-auto">
         <span className="me-1">Phát triển bởi &copy;</span>

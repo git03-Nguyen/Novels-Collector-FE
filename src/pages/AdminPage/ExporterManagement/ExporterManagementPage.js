@@ -178,7 +178,7 @@ const ExporterManagementPage = () => {
     return (
         <CContainer className="px-3 py-3 text-center">
             <CCol className="align-self-end d-flex flex-column">
-                <CButton className="mb-3 align-self-end add-btn" onClick={() => setShowAddModal(true)}><i className="fas fa-plus"></i>Thêm Exporter mới</CButton>
+                <CButton className="mb-3 align-self-end add-btn" onClick={() => setShowAddModal(true)}><i className="fas fa-plus"></i>Thêm mới</CButton>
             </CCol>
 
             <CTable align="middle" className="mb-0 border" hover responsive>

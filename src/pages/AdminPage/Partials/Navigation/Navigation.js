@@ -10,7 +10,7 @@ import { CNavItem } from '@coreui/react'
 const _nav = [
   {
     component: CNavItem,
-    name: 'Dashboard',
+    name: 'Tổng quan',
     to: '/admin/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
 
@@ -25,6 +25,12 @@ const _nav = [
     component: CNavItem,
     name: 'Quản lý nguồn xuất bản',
     to: '/admin/exportermanagement',
+    icon: <CIcon icon={cilDataTransferDown} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Quản lý tài khoản',
+    to: '/admin/accountmanagement',
     icon: <CIcon icon={cilDataTransferDown} customClassName="nav-icon" />,
   },
 

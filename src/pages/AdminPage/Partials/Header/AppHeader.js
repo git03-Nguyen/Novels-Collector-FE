@@ -19,7 +19,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
             <CNavLink to="/admin/dashboard" as={NavLink}>
-              Dashboard
+              Tổng quan
             </CNavLink>
           </CNavItem>
           <CNavLink to="/admin/sourcemanagement" as={NavLink}>
@@ -27,6 +27,9 @@ const AppHeader = () => {
           </CNavLink>
           <CNavLink to="/admin/exportermanagement" as={NavLink}>
             Quản lý xuất bản
+          </CNavLink>
+          <CNavLink to="/admin/accountmanagement" as={NavLink}>
+            Quản lý tài khoản
           </CNavLink>
         </CHeaderNav>
         <CHeaderNav className="ms-auto">
