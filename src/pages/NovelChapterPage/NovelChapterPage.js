@@ -190,6 +190,17 @@ function NovelChapterPage(props) {
 
     }
 
+    const getChapterTitleBySourceSlug = () => {
+        if (sourceSlug === "TruyenTangThuVienVn") {
+            const chapterInList = novelContext?.chapters?.find((chapter) => chapter?.slug === curChapterSlug);
+            if (chapterInList) {
+                return chapterInList?.title;
+            }
+
+        }
+        return novelChapter?.title;
+    }
+
     const setDisabledStatusForSiblingChapters = (chapterIndex = chapterID, newNovelInfo = novelContext, curPage = currentPage) => {
 
         const totalpage = newNovelInfo?.totalPage ?? totalPage;
@@ -286,7 +297,9 @@ function NovelChapterPage(props) {
         <div className='novel-chapter-page-container'>
             <Fragment >
                 <h3 id='novel-chapter-container' className='dark:bg-black dark:text-white'>{novelContext?.title}</h3>
-                <h5 >Chương {novelChapter?.number} {novelChapter?.title}</h5>
+                <h5 >
+                    {`Chương ${novelChapter?.number}: ${getChapterTitleBySourceSlug()}`}
+                </h5>
                 <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
                     <span> - </span>
                     Tác giả:{(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
@@ -318,16 +331,18 @@ function NovelChapterPage(props) {
                 </div>
             </Fragment>
 
-            {isLoadingContext === false && <ActionBar
-                isDisabledSiblingChapter={isDisabledSiblingChapter}
-                handleSiblingChapterClick={handleSiblingChapterClick}
-                novelName={novelContext?.title ? novelContext.title : ''}
-                novelPoster={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
-                novelAuthor={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
-                chapterList={novelContext?.chapters || []}
-                sourceSlug={sourceSlug}
-                novelSlug={novelSlug}
-            />
+            {isLoadingContext === false &&
+                <ActionBar
+                    isDisabledSiblingChapter={isDisabledSiblingChapter}
+                    handleSiblingChapterClick={handleSiblingChapterClick}
+                    novelName={novelContext?.title ? novelContext.title : ''}
+                    novelPoster={novelContext?.cover ?? ''}
+                    novelAuthor={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                    chapterList={novelContext?.chapters || []}
+                    sourceSlug={sourceSlug}
+                    novelSlug={novelSlug}
+                    curChapterSlug={curChapterSlug}
+                />
             }
 
         </div >

@@ -1,0 +1,38 @@
+.offcanvas-chapter-pages {
+    background-color: var(--light-blue) !important;
+
+    &  .novel-card-mini {
+        width: 100%;
+        margin: 15px 0;
+        display: flex;
+        flex-flow: row wrap;
+        
+        justify-content: center;
+        align-items: center;
+
+        padding: 10px 0;
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+    }
+
+
+    & .offcanvas-novel-card-mini {
+        width: 90%;
+        min-height: 40px;
+        font-size: 13px !important;
+        margin: 0 0 2px 0;
+
+        background: linear-gradient(90deg, var(--dark-blue), black) !important;
+        box-shadow: 1.5px 1px var(--light-blue);
+
+        & > span {
+            text-align: start !important;
+        }
+
+        &:hover,
+        &.active {
+            background: linear-gradient(90deg, #3b66f5, #163bcd) !important;
+            color: greenyellow;
+        }
+    }
+}
