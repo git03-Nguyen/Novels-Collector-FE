@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
 import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
-function Header({setdarkMode, darkMode}) {
+function Header({ setdarkMode, darkMode }) {
     const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
     const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
 
@@ -60,6 +60,7 @@ function Header({setdarkMode, darkMode}) {
 
         newPluginSources.sort((a, b) => b.prior - a.prior);
         setPluginSources(newPluginSources);
+        UserPluginSourcesManager.savePluginSources(newPluginSources);
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
 
@@ -135,25 +136,22 @@ function Header({setdarkMode, darkMode}) {
                 </button>
                 <ul className="dropdown-menu">
                     <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
-                    <li><Link className='dropdown-item' to='/login'>Tài khoản</Link></li>
-                    <li><hr className="dropdown-divider" /></li>
-                    <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
-                    <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
+                    <li><Link className='dropdown-item' to='/login'>Đăng nhập</Link></li>
                 </ul>
 
+                <button onClick={() => { setdarkMode(!darkMode) }} className='btn btn-secondary'>
+                    {!darkMode ?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-8">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                        </svg>
+                        :
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-8">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                        </svg>
+                    }
+                </button>
             </div>
-            
-            <button onClick={()=>{setdarkMode(!darkMode)}} class="absolute border-white dark:text-black right-4 top-6  text-white px-2 py-2 rounded hover:bg-gray-700">
-                {!darkMode ? 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-                </svg>
-                : 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-                </svg>
-                }
-            </button>
+
 
         </header>
     );

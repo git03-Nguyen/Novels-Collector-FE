@@ -90,17 +90,23 @@ function ListNovelPage(props) {
     const handleChangeByParams = () => {
         const searchParamsObj = Object.fromEntries(searchParams);
         const searchParamMap = Object.entries(searchParamsObj);
-        searchParamMap?.forEach((pair, index) => {
-            if (pair[0] === 'category') {
-                return;
-            }
-            setCurSearchTarget(pair[0]);
-            setCurSearchValue(pair[1]);
-        })
-
+        if (searchParamMap && searchParamMap?.length > 0) {
+            searchParamMap?.forEach((pair, index) => {
+                if (pair[0] === 'category') {
+                    return;
+                }
+                setCurSearchTarget(pair[0]);
+                setCurSearchValue(pair[1]);
+            })
+        } else {
+            console.log("Loading all novels from source");
+            handleUpdateSearchTargetAndValue();
+            return;
+        }
+        console.log("Set related states");
         setCurCategory(searchParams.get('category') ?? '');
-
-        setIsHandlingSearchParams(false)
+        setCurPage(1);
+        setIsHandlingSearchParams(false);
     }
 
     useEffect(() => {
@@ -110,10 +116,13 @@ function ListNovelPage(props) {
         setIsHandlingSearchParams(true)
         handleChangeByParams();
 
+
+
     }, [searchTarget, searchParams, pluginSources[0]])
 
 
     const handleUpdateCategory = async () => {
+        console.log("cur page: " + curPage);
         await fetchNovelListByCategory();
         scrollToFrontList();
         setIsLoadingContext(false);
@@ -229,6 +238,7 @@ function ListNovelPage(props) {
                     nextClassName='page-item'
                     nextLinkClassName='page-link'
                     renderOnZeroPageCount={null}
+                    forcePage={curPage - 1}
                 />
             </div>
 
