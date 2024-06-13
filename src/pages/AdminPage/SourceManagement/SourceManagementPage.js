@@ -14,7 +14,6 @@ import {
     CTableDataCell,
     CBadge,
     CContainer,
-    CRow,
     CCol,
     CImage,
     CFormSwitch,

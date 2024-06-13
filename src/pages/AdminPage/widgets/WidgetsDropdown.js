@@ -4,10 +4,6 @@ import PropTypes from 'prop-types'
 import {
   CRow,
   CCol,
-  CDropdown,
-  CDropdownMenu,
-  CDropdownItem,
-  CDropdownToggle,
   CWidgetStatsA,
 } from '@coreui/react'
 import { getStyle } from '@coreui/utils'
@@ -285,13 +281,6 @@ const WidgetsDropdown = (props) => {
             </>
           }
           title="Sessions"
-          // action={
-          //   <CDropdown alignment="end">
-          //     <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
-          //       <CIcon icon={cilOptions} />
-          //     </CDropdownToggle>
-          //   </CDropdown>
-          // }
           chart={
             <CChartBar
               className="mt-3 mx-3"

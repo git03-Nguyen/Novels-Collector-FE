@@ -2,17 +2,14 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import {
   CContainer,
-
   CHeader,
   CHeaderNav,
-
   CNavLink,
   CNavItem,
-
 } from '@coreui/react'
 
-import { AppBreadcrumb } from './partial'
-import { AppHeaderDropdown } from './header/index'
+import AppBreadcrumb from '../BreadCrumb/AppBreadcrumb'
+import AppHeaderDropdown from '../HeaderDropdown/AppHeaderDropdown'
 
 const AppHeader = () => {
 

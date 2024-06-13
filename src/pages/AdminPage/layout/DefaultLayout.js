@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../partial'
+import { AppContent, AppSidebar, AppFooter, AppHeader } from '../Partials/index'
 
 
 const DefaultLayout = () => {

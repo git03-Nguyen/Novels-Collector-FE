@@ -9,11 +9,11 @@ import {
   CSidebarHeader,
 } from '@coreui/react'
 
-import { AppSidebarNav } from './AppSidebarNav'
+import { AppSidebarNav } from '../SidebarNavigation/AppSidebarNav'
 
-import logo from '../../assets/brand/logo.png'
+import logo from '../../../../assets/images/logo.png'
 //sidebar nav config
-import navigation from './_nav'
+import navigation from '../Navigation/Navigation'
 
 const AppSidebar = () => {
 

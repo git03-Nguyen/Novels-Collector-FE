@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import '../SourceManagement/SourceManagementPage.css';
 import {
   CCard,
@@ -11,8 +10,7 @@ import {
   CListGroup,
   CListGroupItem,
 } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import logo from '../../../assets/brand/logo.png';
+import logo from '../../../assets/images/logo.png';
 import WidgetsDropdown from '../widgets/WidgetsDropdown';
 
 const Dashboard = () => {
