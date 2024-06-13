@@ -46,11 +46,11 @@
 }
 
 .btn {
-  background: linear-gradient(90deg,#3b66f5,#163bcd);
+  background: linear-gradient(90deg, #3b66f5, #163bcd);
   color: white;
 }
 
-.btn > a {
+.btn>a {
   color: white;
   text-decoration: none;
 }
@@ -68,6 +68,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

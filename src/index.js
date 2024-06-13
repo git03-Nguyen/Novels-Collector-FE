@@ -12,6 +12,8 @@ import 'font-awesome/css/font-awesome.min.css';
 import { UserProvider } from './context/UserContext';
 import { NovelProvider } from './context/NovelContext';
 import { LoadingProvider } from './context/LoadingContext';
+import 'core-js'
+
 
 
 

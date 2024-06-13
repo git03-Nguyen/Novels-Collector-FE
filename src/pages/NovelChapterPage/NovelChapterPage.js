@@ -330,8 +330,6 @@ function NovelChapterPage(props) {
             />
             }
 
-
-
         </div >
     );
 }

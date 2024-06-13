@@ -1,11 +1,9 @@
 .app-header {
     width: 100%;
     padding: 0 5%;
-
-    color: white;
     background-color: var(--dark-blue);
     display: grid;
-    grid-template-columns: 15% auto 10%;
+    grid-template-columns: 10% auto 15%;
 }
 
 .app-logo {
@@ -41,7 +39,7 @@ button {
 }
 
 .settings-bar > button {
-    margin: 0 8px;
+    margin: 4px 8px;
     box-shadow: 1.5px 1px var(--light-blue);
     background: linear-gradient(90deg, var(--dark-blue), black) !important;
 }
