@@ -1,0 +1,14 @@
+.add-btn {
+    background: green !important;
+    border: none;
+    color: #fff !important;
+}
+
+.remove-btn {
+    background: none !important;
+    border: none;
+}
+
+.remove-icon {
+    color: red;
+}

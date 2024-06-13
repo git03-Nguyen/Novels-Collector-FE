@@ -1,10 +1,10 @@
 import React from 'react'
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../partial'
-import AdminRoutes from '../AdminRoutes'
+import { AppContent, AppSidebar, AppFooter, AppHeader } from '../Partials/index'
+
 
 const DefaultLayout = () => {
   return (
-    <div>
+    <>
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100">
         <AppHeader />
@@ -13,7 +13,7 @@ const DefaultLayout = () => {
         </div>
         <AppFooter />
       </div>
-    </div>
+    </>
   )
 }
 

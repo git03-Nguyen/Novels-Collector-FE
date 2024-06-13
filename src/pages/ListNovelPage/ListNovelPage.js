@@ -8,14 +8,14 @@ import { NovelContext } from '../../context/NovelContext';
 import ListNovelService from '../../services/listnovel.s';
 import { toast } from 'react-toastify';
 import CategoryService from '../../services/category.s';
+import { LoadingContext } from '../../context/LoadingContext';
 
 
 function ListNovelPage(props) {
     const { pluginSources, searchTarget } = useContext(NovelContext);
+    const { setIsLoadingContext } = useContext(LoadingContext);
 
     const [totalPage, setTotalPage] = useState(1);
-    const [isLoadingListNovelPage, setIsLoadingListNovelPage] = useState(true);
-
     const [novels, setNovels] = useState([]);
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -25,7 +25,7 @@ function ListNovelPage(props) {
     const [curSearchValue, setCurSearchValue] = useState();
     const [isHandlingSearchParams, setIsHandlingSearchParams] = useState(true);
 
-    const handlePageClick = async (e) => {
+    const handlePageClick = (e) => {
         let selectedPage = parseInt(e.selected) + 1;
         setCurPage(selectedPage);
     }
@@ -64,9 +64,9 @@ function ListNovelPage(props) {
     }
 
     const fetchNovelListByCategory = async () => {
-        setIsLoadingListNovelPage(true);
+        setIsLoadingContext(true);
         try {
-            const response = await CategoryService.fetchNovelListByCategory(pluginSources[0].name, curCategory);
+            const response = await CategoryService.fetchNovelListByCategory(pluginSources[0].name, curCategory, curPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setNovels(response.data);
                 setTotalPage(response?.meta?.totalPage);
@@ -77,7 +77,7 @@ function ListNovelPage(props) {
             console.error("Error fetching novel Info: " + error.message);
         }
 
-        setIsLoadingListNovelPage(false);
+        setIsLoadingContext(false);
     }
 
     const scrollToFrontList = () => {
@@ -90,51 +90,75 @@ function ListNovelPage(props) {
     const handleChangeByParams = () => {
         const searchParamsObj = Object.fromEntries(searchParams);
         const searchParamMap = Object.entries(searchParamsObj);
-        searchParamMap?.forEach((pair, index) => {
-            if (pair[0] === 'category') {
-                return;
-            }
-            setCurSearchTarget(pair[0]);
-            setCurSearchValue(pair[1]);
-        })
-
-        setCurPage(searchParams.get('page') ?? 1);
+        if (searchParamMap && searchParamMap?.length > 0) {
+            searchParamMap?.forEach((pair, index) => {
+                if (pair[0] === 'category') {
+                    return;
+                }
+                setCurSearchTarget(pair[0]);
+                setCurSearchValue(pair[1]);
+            })
+        } else {
+            console.log("Loading all novels from source");
+            handleUpdateSearchTargetAndValue();
+            return;
+        }
+        console.log("Set related states");
         setCurCategory(searchParams.get('category') ?? '');
-
-        setIsHandlingSearchParams(false)
+        setCurPage(1);
+        setIsHandlingSearchParams(false);
     }
 
     useEffect(() => {
+        setIsLoadingContext(true);
         console.log("Search params: ");
         console.log(Object.entries(Object.fromEntries(searchParams)));
         setIsHandlingSearchParams(true)
         handleChangeByParams();
 
+
+
     }, [searchTarget, searchParams, pluginSources[0]])
+
+
+    const handleUpdateCategory = async () => {
+        console.log("cur page: " + curPage);
+        await fetchNovelListByCategory();
+        scrollToFrontList();
+        setIsLoadingContext(false);
+    }
+
+    const handleUpdateSearchTargetAndValue = async () => {
+        if (curSearchValue) {
+            await fetchListNovelData();
+        } else {
+            await fetchHottestData();
+        }
+        scrollToFrontList();
+
+        setIsLoadingContext(false);
+    }
 
     useEffect(() => {
         if (curCategory && curCategory !== '') {
-            fetchNovelListByCategory();
+            handleUpdateCategory();
         }
-    }, [curCategory])
+    }, [curPage, curCategory])
 
     useEffect(() => {
-        if (isHandlingSearchParams === false) {
-            if (curSearchValue) {
-                fetchListNovelData();
-            } else {
-                fetchHottestData();
-            }
-            scrollToFrontList();
+        if (curCategory && curCategory !== '') {
+            console.log("Change page for category: " + curCategory);
+            return;
+        }
 
-            setIsLoadingListNovelPage(false);
+        if (isHandlingSearchParams === false) {
+            handleUpdateSearchTargetAndValue();
         }
     }, [isHandlingSearchParams, curPage, curSearchValue]);
 
     return (
-        <div className='list-novel-page-container'> {isLoadingListNovelPage === true
-            ? <h1 className='loading-message'>... Loading Data ...</h1>
-            : <div className='list-novel-page-content  dark:bg-black dark:text-white'>
+        <div className='list-novel-page-container'>
+            <div className='list-novel-page-content  dark:bg-black dark:text-white'>
                 <div className="filter-engine d-flex justify-content-between align-items-center my-3">
                     <div className="btn-group filter-button-list">
                         <div className="form-floating me-3">
@@ -178,20 +202,18 @@ function ListNovelPage(props) {
                         <div className='outstanding-sublist' id='outstanding-sublist'>
 
                             <div className='novel-sublist-row'>
-                                {novels && novels?.length > 0
-                                    ? novels.map((novel, index) => {
-                                        return <div key={`novel-list-card-${index}`} className='novel-card'>
-                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
-                                                <img className='' src={novel.cover} alt={`Ảnh bìa truyện ${novel.title}`} />
-                                                <h6>{novel.title.length <= 30
-                                                    ? novel.title
-                                                    : `${novel.title.slice(0, 31) + ' ...'}`
-                                                } </h6>
-                                                <span>{novel.authors[0].name}</span>
-                                            </Link>
-                                        </div>
-                                    })
-                                    : <h3 className='mt-3'>Không tìm thấy kết quả nào !</h3>}
+                                {novels && novels?.length > 0 && novels.map((novel, index) => {
+                                    return <div key={`novel-list-card-${index}`} className='novel-card'>
+                                        <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                            <img className='' src={novel.cover} alt={`Ảnh bìa truyện ${novel.title}`} />
+                                            <h6>{novel.title.length <= 30
+                                                ? novel.title
+                                                : `${novel.title.slice(0, 31) + ' ...'}`
+                                            } </h6>
+                                            <span>{novel.authors[0].name}</span>
+                                        </Link>
+                                    </div>
+                                })}
                             </div>
                         </div>
                     </div>
@@ -216,9 +238,9 @@ function ListNovelPage(props) {
                     nextClassName='page-item'
                     nextLinkClassName='page-link'
                     renderOnZeroPageCount={null}
+                    forcePage={curPage - 1}
                 />
             </div>
-        }
 
             <NovelSidebar />
         </div>

@@ -61,9 +61,9 @@ function HomePage(props) {
     }
 
     const handleSetupPluginSourceByParams = () => {
-        if (sourceSlug === "" || !sourceSlug) {
-            return;
-        } else if (sourceSlug === pluginSources[0].name) {
+        if (sourceSlug === "" || !sourceSlug || sourceSlug === pluginSources[0].name) {
+            console.log("NOT CHANGE PLUGIN SOURCES !!!");
+            setIsHomeContentFetched(true);
             return;
         }
 
@@ -107,7 +107,7 @@ function HomePage(props) {
             console.log(pluginSources);
             fetchHomePageContent();
         }
-    }, [pluginSources])
+    }, [isHomeContentFetched, pluginSources])
 
 
     return (
@@ -126,10 +126,11 @@ function HomePage(props) {
                                 return <div key={`hot-novel-card-${index}`} className='novel-card'>
                                     <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
                                         <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                        <h6>{novel.title.length <= 50
+                                        <h6>{novel.title.length <= 30
                                             ? novel.title
-                                            : `${novel.title.slice(0, 51) + ' ...'}`
+                                            : `${novel.title.slice(0, 31) + ' ...'}`
                                         } </h6>
+                                        <span>{novel.authors[0].name}</span>
                                     </Link>
                                 </div>
                             })}
@@ -148,10 +149,11 @@ function HomePage(props) {
                                 return <div key={`hot-novel-card-${index}`} className='novel-card'>
                                     <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
                                         <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                        <h6>{novel.title.length <= 50
+                                        <h6>{novel.title.length <= 30
                                             ? novel.title
-                                            : `${novel.title.slice(0, 51) + ' ...'}`
+                                            : `${novel.title.slice(0, 31) + ' ...'}`
                                         } </h6>
+                                        <span>{novel.authors[0].name}</span>
                                     </Link>
                                 </div>
                             })}
@@ -171,10 +173,11 @@ function HomePage(props) {
                                 return <div key={`hot-novel-card-${index}`} className='novel-card'>
                                     <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
                                         <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                        <h6>{novel.title.length <= 50
+                                        <h6>{novel.title.length <= 30
                                             ? novel.title
-                                            : `${novel.title.slice(0, 51) + ' ...'}`
+                                            : `${novel.title.slice(0, 31) + ' ...'}`
                                         } </h6>
+                                        <span>{novel.authors[0].name}</span>
                                     </Link>
                                 </div>
                             })}
