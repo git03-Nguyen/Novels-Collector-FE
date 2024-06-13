@@ -7,7 +7,6 @@ import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import NovelPage from '../pages/NovelPage/NovelPage';
 import NovelChapterPage from '../pages/NovelChapterPage/NovelChapterPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
-import SourceManagementPage from '../pages/SourceManagementPage/SourceManagementPage';
 import ExporterManagementPage from '../pages/ExporterManagementPage/ExporterManagementPage';
 import PrivateRoute from './PrivateRoute';
 function IndexRoute(props) {
@@ -26,8 +25,7 @@ function IndexRoute(props) {
 
             {/* Private */}
             <Route path='/login/' element={<LoginPage />} />
-            {/* <Route path='/admin/' element={<AdminPage />} /> */}
-            <Route path='/admin/source' element={<SourceManagementPage />} />
+
             <Route path='/admin/exporter' element={<ExporterManagementPage />} />
 
 
