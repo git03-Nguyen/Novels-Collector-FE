@@ -26,7 +26,6 @@ function NovelProvider(props) {
         const userPluginSources = UserPluginSourcesManager.getUserPluginSources();
         if (userPluginSources?.length > 0) {
             setIsLoadingNovel(false);
-
             setPluginSources(userPluginSources);
             return;
         }

@@ -6,7 +6,6 @@ import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import NovelPage from '../pages/NovelPage/NovelPage';
 import NovelChapterPage from '../pages/NovelChapterPage/NovelChapterPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
-import ExporterManagementPage from '../pages/ExporterManagementPage/ExporterManagementPage';
 import PrivateRoute from './PrivateRoute';
 function IndexRoute(props) {
     return (
@@ -24,8 +23,6 @@ function IndexRoute(props) {
 
             {/* Private */}
             <Route path='/login/' element={<LoginPage />} />
-
-            <Route path='/admin/exporter' element={<ExporterManagementPage />} />
 
 
             {/* TODO: Fix it when complete login feature
