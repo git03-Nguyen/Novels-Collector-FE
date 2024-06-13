@@ -3,11 +3,12 @@ import CIcon from '@coreui/icons-react'
 import {
   cilSpeedometer,
   cilLibrary,
-  cilDataTransferDown
+  cilDataTransferDown,
+  cilUserFollow
 } from '@coreui/icons'
 import { CNavItem } from '@coreui/react'
 
-const _nav = [
+const Navigation = [
   {
     component: CNavItem,
     name: 'Tổng quan',
@@ -31,9 +32,9 @@ const _nav = [
     component: CNavItem,
     name: 'Quản lý tài khoản',
     to: '/admin/accountmanagement',
-    icon: <CIcon icon={cilDataTransferDown} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
   },
 
 ]
 
-export default _nav
+export default Navigation

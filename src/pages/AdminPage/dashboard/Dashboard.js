@@ -38,7 +38,7 @@ const Dashboard = () => {
                 <CCol>
                   <h5 className="text-center" >Thành viên nhóm</h5>
                   <CListGroup className="list-member w-50">
-                    <CListGroupItem><strong>Nguyễn Tuấn Đạt</strong> - Quản lý dự án</CListGroupItem>
+                    <CListGroupItem><strong>Nguyễn Tuấn Đạt</strong> - Lập trình Backend</CListGroupItem>
                     <CListGroupItem><strong>Nguyễn Đình Ánh</strong> - Lập trình Backend</CListGroupItem>
                     <CListGroupItem><strong>Triệu Hoàng Thiên Ân</strong> - Thiết kế UI/UX</CListGroupItem>
                     <CListGroupItem><strong>Lê Minh Huy</strong> - Thiết kế UI/UX</CListGroupItem>
