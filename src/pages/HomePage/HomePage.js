@@ -5,16 +5,18 @@ import ListNovelService from '../../services/listnovel.s';
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 import NovelSidebar from '../../Components/NovelSidebar/NovelSidebar';
+import { LoadingContext } from '../../context/LoadingContext';
+import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
 function HomePage(props) {
     const { pluginSources, setPluginSources } = useContext(NovelContext);
+    const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
+    const [isHomeContentFetched, setIsHomeContentFetched] = useState(false);
 
     const { sourceSlug } = useParams();
     const [hotNovels, setHotNovels] = useState([]);
     const [latestNovels, setLatestNovels] = useState([]);
     const [completedNovels, setCompletedNovels] = useState([]);
-
-    const [isLoadingHomePage, setIsLoadingHomePage] = useState(false);
 
     // WARNING: ALWAYS TAKE THE DEFAULT PAGE = 1
     const defaultPage = 1;
@@ -59,12 +61,14 @@ function HomePage(props) {
     }
 
     const handleSetupPluginSourceByParams = () => {
-        if (sourceSlug === "" || !sourceSlug) {
-            return;
-        } else if (sourceSlug === pluginSources[0].name) {
+        if (sourceSlug === "" || !sourceSlug || sourceSlug === pluginSources[0].name) {
+            console.log("NOT CHANGE PLUGIN SOURCES !!!");
+            setIsHomeContentFetched(true);
             return;
         }
 
+        console.log("Old source: ");
+        console.log(pluginSources);
         const newPluginSource = pluginSources.map((src, index) => {
             return {
                 ...src,
@@ -73,114 +77,117 @@ function HomePage(props) {
         })
         newPluginSource.sort((a, b) => b.prior - a.prior)
 
+        console.log("New plugin source: ");
+        console.log(newPluginSource);
         setPluginSources(newPluginSource);
+        UserPluginSourcesManager.savePluginSources(newPluginSource);
     }
 
 
-    const fetchHomePageContent = () => {
-        fetchHotNovels();
-        fetchLatestNovels();
-        fetchCompletedNovels();
+    const fetchHomePageContent = async () => {
+        await fetchHotNovels();
+        await fetchLatestNovels();
+        await fetchCompletedNovels();
 
-        setIsLoadingHomePage(false);
+        setIsLoadingContext(false);
+        console.log("Change loading context to false !!!");
     }
 
     useEffect(() => {
-        window.setTimeout(() => {
-            handleSetupPluginSourceByParams();
-        }, 1000);
-        //WARNING: This delay is my effort to change pluginSource after setup sourceSlug
+        console.log("Set upppppp !!!!!");
+        handleSetupPluginSourceByParams();
+        setIsHomeContentFetched(true);
     }, [sourceSlug])
 
     useEffect(() => {
-        setIsLoadingHomePage(true);
-        fetchHomePageContent();
-    }, [pluginSources])
+        if (isHomeContentFetched === true) {
+            setIsLoadingContext(true);
+            console.log("Change loading context to true !!!");
+            console.log("Plugin sources: ");
+            console.log(pluginSources);
+            fetchHomePageContent();
+        }
+    }, [isHomeContentFetched, pluginSources])
 
 
     return (
-        <>
-            {isLoadingHomePage === true
-                ? <h1 className='loading-message'>... Loading data ...</h1>
-                : <div className='homepage-container'>
-                    <div className='homepage-content'>
-                        <div className='novel-sublists'>
-                            <div className='outstanding-sublist'>
-                                <div className='category-info-row'>
-                                    <strong className='sublist-label'>Truyện hot</strong>
-                                    <Link to='/novel-list'>
-                                        <strong className='sublist-label'>Xem thêm</strong>
+        <div className='homepage-container dark:bg-black dark:text-white'>
+            <div className='homepage-content'>
+                <div className='novel-sublists'>
+                    <div className='outstanding-sublist'>
+                        <div className='category-info-row'>
+                            <strong className='sublist-label'>Truyện hot</strong>
+                            <Link to='/novel-list'>
+                                <strong className='sublist-label'>Xem thêm</strong>
+                            </Link>
+                        </div>
+                        <div className='novel-sublist-row'>
+                            {hotNovels && hotNovels?.length > 0 && hotNovels.map((novel, index) => {
+                                return <div key={`hot-novel-card-${index}`} className='novel-card'>
+                                    <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                        <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
+                                        <h6>{novel.title.length <= 30
+                                            ? novel.title
+                                            : `${novel.title.slice(0, 31) + ' ...'}`
+                                        } </h6>
+                                        <span>{novel.authors[0].name}</span>
                                     </Link>
                                 </div>
-                                <div className='novel-sublist-row'>
-                                    {hotNovels && hotNovels?.length > 0 && hotNovels.map((novel, index) => {
-                                        return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
-                                                <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                                <h6>{novel.title.length <= 50
-                                                    ? novel.title
-                                                    : `${novel.title.slice(0, 51) + ' ...'}`
-                                                } </h6>
-                                            </Link>
-                                        </div>
-                                    })}
-                                </div>
-                            </div>
+                            })}
+                        </div>
+                    </div>
 
-                            <div className='latest-sublist'>
-                                <div className='category-info-row'>
-                                    <strong className='sublist-label'>Truyện mới nhất</strong>
-                                    <Link to='/novel-list'>
-                                        <strong className='sublist-label'>Xem thêm</strong>
+                    <div className='latest-sublist'>
+                        <div className='category-info-row'>
+                            <strong className='sublist-label'>Truyện mới nhất</strong>
+                            <Link to='/novel-list'>
+                                <strong className='sublist-label'>Xem thêm</strong>
+                            </Link>
+                        </div>
+                        <div className='novel-sublist-row'>
+                            {latestNovels && latestNovels?.length > 0 && latestNovels.map((novel, index) => {
+                                return <div key={`hot-novel-card-${index}`} className='novel-card'>
+                                    <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                        <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
+                                        <h6>{novel.title.length <= 50
+                                            ? novel.title
+                                            : `${novel.title.slice(0, 51) + ' ...'}`
+                                        } </h6>
                                     </Link>
                                 </div>
-                                <div className='novel-sublist-row'>
-                                    {latestNovels && latestNovels?.length > 0 && latestNovels.map((novel, index) => {
-                                        return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
-                                                <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                                <h6>{novel.title.length <= 50
-                                                    ? novel.title
-                                                    : `${novel.title.slice(0, 51) + ' ...'}`
-                                                } </h6>
-                                            </Link>
-                                        </div>
-                                    })}
-
-                                </div>
-                            </div>
-
-                            <div className='completed-sublist'>
-                                <div className='category-info-row'>
-                                    <strong className='sublist-label'>Truyện đã hoàn thành</strong>
-                                    <Link to='/novel-list'>
-                                        <strong className='sublist-label'>Xem thêm</strong>
-                                    </Link>
-                                </div>
-                                <div className='novel-sublist-row'>
-                                    {completedNovels && completedNovels?.length > 0 && completedNovels.map((novel, index) => {
-                                        return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                            <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
-                                                <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
-                                                <h6>{novel.title.length <= 50
-                                                    ? novel.title
-                                                    : `${novel.title.slice(0, 51) + ' ...'}`
-                                                } </h6>
-                                            </Link>
-                                        </div>
-                                    })}
-
-                                </div>
-                            </div>
+                            })}
 
                         </div>
                     </div>
 
-                    <NovelSidebar />
-                </div>}
+                    <div className='completed-sublist'>
+                        <div className='category-info-row'>
+                            <strong className='sublist-label'>Truyện đã hoàn thành</strong>
+                            <Link to='/novel-list'>
+                                <strong className='sublist-label'>Xem thêm</strong>
+                            </Link>
+                        </div>
+                        <div className='novel-sublist-row'>
+                            {completedNovels && completedNovels?.length > 0 && completedNovels.map((novel, index) => {
+                                return <div key={`hot-novel-card-${index}`} className='novel-card'>
+                                    <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                        <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
+                                        <h6>{novel.title.length <= 50
+                                            ? novel.title
+                                            : `${novel.title.slice(0, 51) + ' ...'}`
+                                        } </h6>
+                                    </Link>
+                                </div>
+                            })}
 
-        </>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
+
+            <NovelSidebar />
+        </div>
     );
 }
 

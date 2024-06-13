@@ -4,21 +4,33 @@ import ChapterService from '../../services/chapter.s';
 import './NovelChapterPage.css'
 import { toast } from 'react-toastify';
 import { NovelContext } from '../../context/NovelContext';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
+import { UserContext } from '../../context/UserContext';
+import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
+import ActionBar from '../../Components/ActionBar/ActionBar';
+import ChapterPageSideBar from '../../Components/ChapterPageSideBar/ChapterPageSideBar';
+import { LoadingContext } from '../../context/LoadingContext';
 function NovelChapterPage(props) {
+    const navigate = useNavigate();
+
     const { novelSlug, chapterSlug, sourceSlug } = useParams();
 
     const { novelContext, setNovelContext, chapterContext, setChapterContext } = useContext(NovelContext);
+    const { setUserLatestNovels } = useContext(UserContext);
+    const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
 
     const defaultPerpage = PluginSourcePerpageGetter.getChaptersPerpageByPluginSource(sourceSlug);
     const [perpage, setPerpage] = useState(defaultPerpage);
     const [totalPage, setTotalPage] = useState(1);
-    const [chapterID, setChapterID] = useState(chapterContext?.chapterId ?? 1);
-
     const [currentPage, setCurrentPage] = useState(parseInt(novelContext?.page ?? 1));
+
+    const [chapterID, setChapterID] = useState(chapterContext?.number ?? 0);
+    const [isChapterIDFetched, setIsChapterIDFetched] = useState(false);
+    const [curChapterSlug, setCurChapterSlug] = useState(chapterSlug);
+
 
 
     const defaultIsDisabledSiblingChapter = {
@@ -29,6 +41,10 @@ function NovelChapterPage(props) {
 
     const [novelChapter, setChapterContent] = useState({});
     const [isLoadingNovelChapterPage, setIsLoadingNovelChapterPage] = useState(true);
+
+
+
+
 
     const fetchNovelInfo = async (source, slug) => {
         try {
@@ -44,18 +60,19 @@ function NovelChapterPage(props) {
         }
     }
 
-    const fetchChapterList = async (source, slug) => {
+    const fetchChapterList = async (source = sourceSlug, slug = novelSlug, page = currentPage) => {
         try {
-            const response = await DetailNovelService.fetchChapterList(source, slug, currentPage);
+            const response = await DetailNovelService.fetchChapterList(source, slug, page);
             if (response && response.data && parseInt(response.statusCode) === 200) {
-                let newNovelContext = {
+                const newNovelInfo = {
                     ...novelContext,
                     chapters: response.data,
-                    page: response.meta?.page
+                    page: response.meta.page,
+                    totalPage: response.meta.totalPage,
                 }
 
-                setCurrentPage(newNovelContext.page)
-                setNovelContext(newNovelContext);
+                updateRelatedData(newNovelInfo);
+                return newNovelInfo;
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -64,14 +81,67 @@ function NovelChapterPage(props) {
         }
     }
 
+    const getChapterIDFromChapterListIndex = (index, newNovelInfo = novelContext) => {
+        return index += parseInt(parseInt(newNovelInfo.page) - 1) * parseInt(perpage);
+    }
+
+    const saveNovelToUserLatestNovels = (newNovel) => {
+        if (!newNovel || !newNovel?.slug) {
+            return;
+        }
+
+        let chapterNumber = newNovel?.chapters?.find(chapter => chapter.slug === curChapterSlug)?.number;
+        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage({
+            ...newNovel,
+            source: sourceSlug,
+            chapterID: chapterID,
+            chapterSlug: curChapterSlug,
+            chapterNumber: chapterNumber,
+        });
+        if (!newUserLatestNovels) {
+            toast.error('Số lượng truyện được lưu đã vượt quá cho phép !')
+            return;
+        }
+        setUserLatestNovels(newUserLatestNovels);
+    }
+
     const updateRelatedData = (newNovelInfo) => {
-        setTotalPage(parseInt(newNovelInfo.totalPage));
-
-        setIsLoadingNovelChapterPage(false);
-
-        setPerpage(parseInt(newNovelInfo?.chapters?.length))
+        // KEY UPDATE
         setNovelContext(newNovelInfo);
-        setDisabledStatusForSiblingChapters(newNovelInfo);
+
+        // NON-KEY UPDATE
+        const newPage = newNovelInfo?.page;
+        if (parseInt(newPage) !== parseInt(currentPage)) {
+            setCurrentPage(newNovelInfo?.page);
+        }
+        setIsLoadingContext(false);
+        saveNovelToUserLatestNovels(newNovelInfo);
+
+
+        if (!totalPage || parseInt(totalPage) !== parseInt(newNovelInfo?.chapters?.length)) {
+            setTotalPage(parseInt(newNovelInfo.totalPage));
+        }
+
+        let newChapterID = newNovelInfo?.chapters?.findIndex((chapter, index) => chapter.slug === chapterSlug);
+        if (newChapterID === -1) {
+            return;
+        }
+        newChapterID = getChapterIDFromChapterListIndex(newChapterID, newNovelInfo);
+
+        if (chapterID !== newChapterID) {
+            setChapterID(newChapterID);
+            saveNovelToUserLatestNovels(novelContext);
+        }
+
+        if (parseInt(newPage) !== parseInt(currentPage)) {
+            setCurrentPage(newPage);
+        }
+
+
+        if (!perpage || parseInt(perpage) !== parseInt(newNovelInfo?.chapters?.length)) {
+            setPerpage(parseInt(newNovelInfo?.chapters?.length))
+        }
+        setDisabledStatusForSiblingChapters(newChapterID, newNovelInfo, newPage);
     }
 
     const handleConvertNovelStatusCode = (newNovel) => {
@@ -83,22 +153,33 @@ function NovelChapterPage(props) {
 
     const fetchChapterContent = async () => {
         try {
-            const response = await ChapterService.fetchChapterContent(sourceSlug, novelSlug, chapterSlug);
+            const response = await ChapterService.fetchChapterContent(sourceSlug, novelSlug, curChapterSlug);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setChapterContent(response.data);
                 toast.success(response.message);
                 let newChapterData = {
                     ...response.data,
+                    ...response.meta,
                     content: '',
                 };
 
-                let newChapterID = parseInt(response.data?.number);
-                setChapterID(newChapterID);
+                let newChapterIndex = novelContext?.chapters?.findIndex(novel => novel.slug === response?.meta?.chapterSlug);
+                let newChapterID = response.data.number;
+                if (newChapterIndex !== undefined && newChapterIndex !== -1) {
+                    newChapterID = getChapterIDFromChapterListIndex(newChapterIndex, novelContext);
+                }
+
+                console.log("CHAPTER ID AFTER FETCH CHAPTER CONTENT: " + newChapterID);
+
                 const newPage = Math.floor(newChapterID / perpage + 1);
                 if (parseInt(newPage) !== parseInt(currentPage)) {
                     setCurrentPage(newPage);
                 }
                 setChapterContext(newChapterData);
+
+                setIsLoadingContext(false);
+                saveNovelToUserLatestNovels(novelContext);
+                setDisabledStatusForSiblingChapters(newChapterID, novelContext, newPage);
             } else {
                 toast.error("Error fetching chapter content: " + response?.message);
             }
@@ -109,89 +190,145 @@ function NovelChapterPage(props) {
 
     }
 
-    const setDisabledStatusForSiblingChapters = (newNovelInfo) => {
-        let currentPosition = chapterID % perpage;
-        switch (currentPosition) {
-            case 0: {
-                if (chapterID === totalPage) {
-                    return setDisabledSiblingChapter({ previous: false, next: true })
-                }
-                return setDisabledSiblingChapter({ previous: false, next: false })
+    const setDisabledStatusForSiblingChapters = (chapterIndex = chapterID, newNovelInfo = novelContext, curPage = currentPage) => {
+
+        const totalpage = newNovelInfo?.totalPage ?? totalPage;
+
+        const previousStatus = checkIfChapterIDInList(chapterIndex - 1, newNovelInfo);
+        const nextStatus = checkIfChapterIDInList(chapterIndex + 1, newNovelInfo);
+        const newDisabledStatusForSiblingChapters = {
+            previous: (curPage === 1 && previousStatus === false) ? true : false,
+            next: (curPage === totalpage && nextStatus === false) ? true : false,
+        }
+
+        setDisabledSiblingChapter(newDisabledStatusForSiblingChapters);
+    }
+
+    const checkIfChapterIDInList = (chapterID, novelInfo = novelContext) => {
+        if (!novelInfo?.chapters) {
+            return true;
+        }
+        const existingChapter = novelInfo?.chapters?.find((novel, index) => {
+            const novelChapterIndex = getChapterIDFromChapterListIndex(index, novelInfo);
+            return novelChapterIndex === parseInt(chapterID) ? true : false;
+        });
+
+        return existingChapter ? true : false;
+    }
+
+    const handleSiblingChapterClick = async (increment) => {
+
+        const siblingChapterID = parseInt(parseInt(chapterID) + increment);
+        try {
+            let newNovelContext = {
+                chapters: novelContext.chapters.map((novel => novel)),
+                page: novelContext.page,
             }
 
-            case 1: {
-                if (chapterID === 1) {
-                    return setDisabledSiblingChapter({ previous: true, next: false })
-                }
-                return setDisabledSiblingChapter({ previous: false, next: false })
+            if (checkIfChapterIDInList(siblingChapterID, newNovelContext) === false) {
+                console.log("Chapter not found in current page");
+                console.log("Fetch for page: " + parseInt(currentPage + increment));
+                newNovelContext = await fetchChapterList(sourceSlug, novelSlug, parseInt(currentPage + increment));
             }
 
-            case newNovelInfo.chapters.length: {
-                return setDisabledSiblingChapter({ previous: false, next: true })
-            }
+            const siblingChapter = newNovelContext?.chapters?.find((novel, index) => {
+                return getChapterIDFromChapterListIndex(index, newNovelContext) === parseInt(siblingChapterID);
+            });
+            console.log("Sibling chapter: ");
+            console.log(siblingChapter);
+            const newChapterSlug = siblingChapter?.slug;
 
-            default: setDisabledSiblingChapter({ previous: false, next: false })
+
+            setCurChapterSlug(newChapterSlug);
+            setChapterID(siblingChapterID);
+
+            navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${newChapterSlug}`)
+        } catch (error) {
+            console.error("Error fetching new chapter list: " + error.message);
         }
     }
 
-    const handleSiblingChapterClick = (increment) => {
-        const curChapter = novelContext?.chapters.map(novel => {
-            return parseInt(novel.id) === chapterID ? novel : undefined;
-        })
-        // navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`)
-        // window.location.replace(`/source/${sourceSlug}/novel/${novelSlug}/chapter/chuong-${parseInt(chapterID) + increment}`);
-        // TODO: replace this with more suitable solution
+    const scrollToFrontList = () => {
+        const frontList = document.querySelector('#novel-chapter-container');
+        if (frontList) {
+            frontList.scrollIntoView({ behavior: 'smooth' })
+        }
     }
 
 
+    const handleUpdateChapterContent = async () => {
+        console.log(`Calling fetching chapter content for id ${chapterID} and slug: ${curChapterSlug}`);
+        scrollToFrontList();
+        await fetchChapterContent();
+
+        setIsChapterIDFetched(true);
+    }
+
+    const handleChangeNovelPageList = async () => {
+        scrollToFrontList();
+        if (isChapterIDFetched === true) {
+            await fetchNovelInfo(sourceSlug, novelSlug);
+        }
+        setIsLoadingContext(false);
+    }
 
     useEffect(() => {
-        fetchChapterContent();
-    }, [])
+        setIsLoadingContext(true);
+        handleUpdateChapterContent();
+    }, [chapterID, curChapterSlug])
 
     useEffect(() => {
-        fetchNovelInfo(sourceSlug, novelSlug);
-    }, [currentPage])
+        setIsLoadingContext(true);
+        handleChangeNovelPageList();
+    }, [currentPage, isChapterIDFetched])
 
     return (
         <div className='novel-chapter-page-container'>
-            {isLoadingNovelChapterPage === true
-                ? <h1 className='loading-message'>... Loading Data ...</h1>
-                : <Fragment>
-                    <h3>{novelContext.title}</h3>
-                    <h5>Chương {novelChapter.number} {novelChapter.title}</h5>
-                    <h5>Đánh giá: {novelContext.rating} / {novelContext.maxRating}
-                        <span> - </span>
-                        Tác giả: {novelContext.authors[0]?.name}
-                        <span> - </span>
-                        Trạng thái: {novelContext.status}</h5>
-                    <span className='d-none'>Trang: {currentPage} / {totalPage}</span>
-                    <div className='novel-chapter-content-container'>
+            <Fragment >
+                <h3 id='novel-chapter-container' className='dark:bg-black dark:text-white'>{novelContext?.title}</h3>
+                <h5 >Chương {novelChapter?.number} {novelChapter?.title}</h5>
+                <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
+                    <span> - </span>
+                    Tác giả:{(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                    <span> - </span>
+                    Trạng thái: {novelContext?.status}</h5>
+                <span className='d-none'>Trang: {currentPage} / {totalPage}</span>
+                <div className='novel-chapter-content-container'>
 
-                        {novelChapter.content && novelChapter.content.length > 0 &&
-                            <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter.content }}></div>
-                        }
+                    {novelChapter?.content && novelChapter?.content.length > 0 &&
+                        <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
+                    }
+                </div>
 
-                    </div>
+                <div className='novel-chapter-footer-navigator'>
+                    <button className='btn btn-secondary previous-chapter-btn'
+                        disabled={isDisabledSiblingChapter.previous} onClick={() => handleSiblingChapterClick(-1)}>
+                        <i className="fa-solid fa-arrow-left-long"></i>
+                        <span className='ps-3'>Trước</span>
+                    </button>
+                    <button className='btn btn-secondary home-btn'>
+                        <i className="fa-solid fa-house-user"></i>
+                        <span className='ps-3'>Trang chủ</span>
+                    </button>
+                    <button className='btn btn-secondary next-chapter-btn'
+                        disabled={isDisabledSiblingChapter.next} onClick={() => handleSiblingChapterClick(1)}>
+                        <span className='pe-3'>Sau</span>
+                        <i className="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+            </Fragment>
 
-                    <div className='novel-chapter-footer-navigator'>
-                        <button className='btn btn-secondary previous-chapter-btn'
-                            disabled={isDisabledSiblingChapter.previous} onClick={() => handleSiblingChapterClick(-1)}>
-                            <i className="fa-solid fa-arrow-left-long"></i>
-                            <span className='ps-3'>Trước</span>
-                        </button>
-                        <button className='btn btn-secondary home-btn'>
-                            <i className="fa-solid fa-house-user"></i>
-                            <span className='ps-3'>Trang chủ</span>
-                        </button>
-                        <button className='btn btn-secondary next-chapter-btn'
-                            disabled={isDisabledSiblingChapter.next} onClick={() => handleSiblingChapterClick(1)}>
-                            <span className='pe-3'>Sau</span>
-                            <i className="fa-solid fa-arrow-right-long"></i>
-                        </button>
-                    </div>
-                </Fragment>}
-
+            {isLoadingContext === false && <ActionBar
+                isDisabledSiblingChapter={isDisabledSiblingChapter}
+                handleSiblingChapterClick={handleSiblingChapterClick}
+                novelName={novelContext?.title ? novelContext.title : ''}
+                novelPoster={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                novelAuthor={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                chapterList={novelContext?.chapters || []}
+                sourceSlug={sourceSlug}
+                novelSlug={novelSlug}
+            />
+            }
 
         </div >
     );
