@@ -2,9 +2,6 @@ import axios from 'axios';
 
 const instance = axios.create({
     baseURL: process.env.REACT_APP_SERVER_HTTPS_URL,
-    headers: {
-        'Accept-Encoding': 'br, gzip',
-    },
 });
 
 // Un-comment this in case you want to pass cookies to the server through req.headers
@@ -13,7 +10,6 @@ const instance = axios.create({
 
 //REQUEST
 instance.interceptors.request.use((config) => {
-    // config.headers['Accept-Encoding'] = 'br, gzip';
     return config;
 }, (err) => {
     return Promise.reject(err);
