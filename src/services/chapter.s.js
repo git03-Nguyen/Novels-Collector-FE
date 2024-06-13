@@ -307,6 +307,7 @@ const fetchChapterContent = async (source, novelSlug, chapterSlug) => {
                 statusCode: response.statusCode ?? 200,
                 message: response.message,
                 data: response?.data ?? {},
+                meta: response?.meta ?? {},
             }
         }
         return {

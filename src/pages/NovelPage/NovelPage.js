@@ -4,17 +4,21 @@ import DetailNovelService from '../../services/detailnovel.s';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { NovelContext } from '../../context/NovelContext';
+import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
-import HTMLToReactParser from '../../utils/htmlToReactParser';
+import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
+import { LoadingContext } from '../../context/LoadingContext';
 
 function NovelPage(props) {
     const navigate = useNavigate();
 
     const { novelSlug, sourceSlug } = useParams();
-    const { setNovelContext, setChapterContext } = useContext(NovelContext);
 
-    const [isLoadingNovelPage, setIsLoadingNovelPage] = useState(true);
+    const { setNovelContext, setChapterContext } = useContext(NovelContext);
+    const { setUserLatestNovels } = useContext(UserContext);
+    const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
+
     const [novel, setNovel] = useState({});
     const [totalPage, setTotalPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
@@ -26,9 +30,6 @@ function NovelPage(props) {
     const [rawNovelDescription, setRawNovelDescription] = useState('');
     const [novelDescription, setNovelDescription] = useState('');
     const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
-
-
-
 
 
 
@@ -66,12 +67,14 @@ function NovelPage(props) {
                 setNovel(newNovelInfo);
 
                 setTotalPage(parseInt(newNovelInfo.totalPage));
-                setIsLoadingNovelPage(false);
+                setIsLoadingContext(false);
 
                 handleSetRawNovelDescription(newNovelInfo.description);
 
                 handleSetReviewStars(newNovelInfo.rating, newNovelInfo.maxRating);
                 setNovelContext(newNovelInfo);
+
+                saveNovelToUserLatestNovels(newNovelInfo);
             } else {
                 toast.error("Error fetching novel Info: " + response?.message);
             }
@@ -95,7 +98,7 @@ function NovelPage(props) {
     const handleClickChapter = (chapter, index) => {
         let newChapterContext = {
             ...chapter,
-            chapterId: parseInt(index) + 1,
+            number: parseInt((parseInt(currentPage) - 1) * novel.chapters.length) + parseInt(index) + 1,
         };
         setChapterContext(newChapterContext);
         navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
@@ -109,9 +112,19 @@ function NovelPage(props) {
         setNovelDescription(description);
     }
 
-    useEffect(() => {
-        fetchNovelInfo(sourceSlug, novelSlug);
+    const saveNovelToUserLatestNovels = (newNovel) => {
+        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage(newNovel);
+        setUserLatestNovels(newUserLatestNovels);
+    }
+
+    const handleUpdatePage = async () => {
+        setIsLoadingContext(true);
+        await fetchNovelInfo(sourceSlug, novelSlug);
         getInnerTextOfDescription();
+    }
+
+    useEffect(() => {
+        handleUpdatePage();
     }, [currentPage]);
 
     useEffect(() => {
@@ -120,113 +133,107 @@ function NovelPage(props) {
 
 
     return (
-        <div className='novel-page-container'>
-            {isLoadingNovelPage ? (
-                <h1 className='loading-message'>... Loading Data ...</h1>
-            ) : (
+        <div className='novel-page-container  dark:bg-black dark:text-white'>
+            {novel && novel.cover && (
                 <>
-                    {novel && novel.cover && (
-                        <>
-                            <div className="row w-100">
-                                <div className="col-md-4 mt-2">
-                                    <img className='novel-img' src={novel?.cover} alt={`${novel?.title} thumbnail`} />
+                    <div className="row w-100">
+                        <div className="col-md-4 mt-2">
+                            <img className='novel-img' src={novel?.cover} alt={`${novel?.title} thumbnail`} />
+                        </div>
+                        <div className="col-md-8 text-start px-0">
+                            <div className="pb-4 border-bottom border-white-50">
+                                <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
+                                <div className="d-flex">
+                                    <div className="d-flex align-items-center mr-3">
+                                        <span className="text-white-50 me-1">Đánh giá: {novel?.rating}/{novel?.maxRating}</span>
+                                        <div className="d-flex align-items-center">
+                                            {reviewStars && reviewStars.length > 0 && reviewStars.map((ele, index) => (
+                                                <i
+                                                    key={`review-star-${index}`}
+                                                    className={ele.className}
+                                                    style={{ color: ele.color }}
+                                                ></i>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="col-md-8 text-start px-0">
-                                    <div className="pb-4 border-bottom border-white-50">
-                                        <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
-                                        <div className="d-flex">
-                                            <div className="d-flex align-items-center mr-3">
-                                                <span className="text-white-50 me-1">Đánh giá: {novel?.rating}/{novel?.maxRating}</span>
-                                                <div className="d-flex align-items-center">
-                                                    {reviewStars && reviewStars.length > 0 && reviewStars.map((ele, index) => (
-                                                        <i
-                                                            key={`review-star-${index}`}
-                                                            className={ele.className}
-                                                            style={{ color: ele.color }}
-                                                        ></i>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="mt-4 row">
-                                            <div className="col">
-                                                <p className="text-white fw-bold mb-1">Tác giả</p>
-                                                {novel.authors && novel.authors.length > 0 && novel.authors.map((author, index) => (
-                                                    <span key={index}>{author.name}{index < novel.authors.length - 1 ? ', ' : ''}</span>
-                                                ))}
-                                            </div>
-                                            <div className="col">
-                                                <p className="text-white fw-bold mb-1">Thể loại</p>
-                                                {novel.categories && novel.categories.length > 0 && novel.categories.map((category, index) => (
-                                                    <span key={index}>{category.title}{index < novel.categories.length - 1 ? ', ' : ''}</span>
-                                                ))}
-                                            </div>
-                                            <div className="col">
-                                                <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                                <span>{sourceSlug}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="mt-0">
-                                        <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
-
-                                        {(sourceSlug === "DTruyenCom" || sourceSlug === "TruyenTangThuVienVn")
-                                            ? <span className='d-none' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
-                                            : <span className='d-none' id='raw-novel-description' >{rawNovelDescription}</span>
-                                        }
-
-                                        <span className="text-white mt-0 novel-description">
-                                            {isSeeMoreDescription === true
-                                                ? novelDescription
-                                                : novelDescription?.slice(0, maxLengthTruncatedDescription) + ' ...'
-                                            }
-                                        </span>
-                                        <div></div>
-
-                                        <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
-                                            {isSeeMoreDescription ? "Thu gọn" : "Xem thêm"}
-                                        </button>
-                                    </div>
-                                    <h5 className="text-white fw-bold mt-3 mb-2">Danh sách chương</h5>
-                                    <div className="list-group scrollable-list-group mt-3 border border-dark border-4 mb-4 round-pill">
-                                        {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
-                                            <Link
-                                                to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
-                                                className="list-group-item list-group-item-action border border-double"
-                                                key={`novel-chapter-${index}`}
-                                            >
-                                                <strong>{chapter.title}</strong>
-                                            </Link>
+                                <div className="mt-4 row">
+                                    <div className="col">
+                                        <p className="text-white fw-bold mb-1">Tác giả</p>
+                                        {novel.authors && novel.authors.length > 0 && novel.authors.map((author, index) => (
+                                            <span key={index}>{author.name}{index < novel.authors.length - 1 ? ', ' : ''}</span>
                                         ))}
+                                    </div>
+                                    <div className="col">
+                                        <p className="text-white fw-bold mb-1">Thể loại</p>
+                                        {novel.categories && novel.categories.length > 0 && novel.categories.map((category, index) => (
+                                            <span key={index}>{category.title}{index < novel.categories.length - 1 ? ', ' : ''}</span>
+                                        ))}
+                                    </div>
+                                    <div className="col">
+                                        <p className="text-white fw-bold mb-1">Nguồn truyện</p>
+                                        <span>{sourceSlug}</span>
                                     </div>
                                 </div>
                             </div>
+                            <div className="mt-0">
+                                <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
 
-                        </>
-                    )}
+                                {(sourceSlug === "DTruyenCom" || sourceSlug === "TruyenTangThuVienVn")
+                                    ? <span className='d-none' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
+                                    : <span className='d-none' id='raw-novel-description' >{rawNovelDescription}</span>
+                                }
 
-                    <ReactPaginate
-                        containerClassName='pagination justify-content-center'
-                        activeClassName='active'
-                        breakLabel="..."
-                        nextLabel="Sau >"
-                        onPageChange={handlePageClick}
-                        pageRangeDisplayed={5}
-                        marginPagesDisplayed={2}
-                        pageCount={totalPage}
-                        previousLabel="< Trước"
-                        pageClassName='page-item'
-                        pageLinkClassName='page-link'
-                        breakClassName='page-item'
-                        breakLinkClassName='page-link'
-                        previousClassName='page-item'
-                        previousLinkClassName='page-link'
-                        nextClassName='page-item'
-                        nextLinkClassName='page-link'
-                        renderOnZeroPageCount={null}
-                    />
+                                <span className="text-white mt-0 novel-description">
+                                    {isSeeMoreDescription === true
+                                        ? novelDescription
+                                        : novelDescription?.slice(0, maxLengthTruncatedDescription) + ' ...'
+                                    }
+                                </span>
+                                <div></div>
+
+                                <button className='btn btn-secondary my-2' onClick={() => setIsSeeMoreDescription(!isSeeMoreDescription)}>
+                                    {isSeeMoreDescription ? "Thu gọn" : "Xem thêm"}
+                                </button>
+                            </div>
+                            <h5 className="text-white fw-bold mt-3 mb-2">Danh sách chương</h5>
+                            <div className="list-group scrollable-list-group mt-3 border border-dark border-4 mb-4 round-pill">
+                                {novel.chapters && novel.chapters.length > 0 && novel.chapters.map((chapter, index) => (
+                                    <Link
+                                        to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
+                                        className="list-group-item list-group-item-action border border-double"
+                                        key={`novel-chapter-${index}`}
+                                    >
+                                        <strong>{chapter.title}</strong>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
                 </>
             )}
+
+            {isLoadingContext === false && <ReactPaginate
+                containerClassName='pagination justify-content-center'
+                activeClassName='active'
+                breakLabel="..."
+                nextLabel="Sau >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                marginPagesDisplayed={2}
+                pageCount={totalPage}
+                previousLabel="< Trước"
+                pageClassName='page-item'
+                pageLinkClassName='page-link'
+                breakClassName='page-item'
+                breakLinkClassName='page-link'
+                previousClassName='page-item'
+                previousLinkClassName='page-link'
+                nextClassName='page-item'
+                nextLinkClassName='page-link'
+                renderOnZeroPageCount={null}
+            />}
         </div>
     )
 }

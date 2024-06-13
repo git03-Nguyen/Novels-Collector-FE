@@ -78,20 +78,18 @@ const fetchCompletedNovels = async (source, page) => {
     }
 }
 
-const fetchNovelListData = async (source, searchValue, searchTarget, page = 1, filter) => {
-    let APIUrl = `/api/v1/search/${source}?page=${page}`;
-    const defaultKeyword = 'anh';
-    console.log("Search value from service: " + searchValue);
-    if (searchTarget === 'keyword') {
-        let keywordValue = (searchValue === '') ? defaultKeyword : searchValue;
-        APIUrl += `&keyword=${keywordValue}`
-    } else {
-        APIUrl += `&keyword=${defaultKeyword}&${searchTarget}=${searchValue}`
-    }
-    // TODO: ask for filter in server's API
+const fetchNovelListData = async (source, searchValue, searchTarget, page = 1) => {
+    // let APIUrl = `/api/v1/search/${source}?${searchTarget}=${searchValue}&page=${page}`;
+
+    // if (searchTarget === 'keyword') {
+    //     let keywordValue = (searchValue === '') ? defaultKeyword : searchValue;
+    //     APIUrl += `&keyword=${keywordValue}`
+    // } else {
+    //     APIUrl += `&keyword=${defaultKeyword}&${searchTarget}=${searchValue}`
+    // }
 
     try {
-        const response = await axios.get(APIUrl);
+        const response = await axios.get(`/api/v1/search/${source}?${searchTarget}=${searchValue}&page=${page}`);
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,

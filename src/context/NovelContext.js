@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PluginSourceService from '../services/pluginSource.s';
 import _ from 'lodash';
+import UserPluginSourcesManager from '../utils/localStorage/userPluginSourcesManager';
 
 const NovelContext = React.createContext({
     searchValue: '',
@@ -14,7 +15,7 @@ function NovelProvider(props) {
     const [isLoadingNovel, setIsLoadingNovel] = useState(true);
     const [novelContext, setNovelContext] = useState({});
     const [chapterContext, setChapterContext] = useState({});
-    const [pluginSources, setPluginSources] = useState([{ name: 'TruyenFullVn' }]);
+    const [pluginSources, setPluginSources] = useState(UserPluginSourcesManager.getUserPluginSources() ?? []);
 
     const [searchValue, setSearchValue] = useState('');
     const [searchTarget, setSearchTarget] = useState('keyword');
@@ -22,6 +23,14 @@ function NovelProvider(props) {
 
     // PLUGIN
     const fetchPluginSources = async () => {
+        const userPluginSources = UserPluginSourcesManager.getUserPluginSources();
+        if (userPluginSources?.length > 0) {
+            setIsLoadingNovel(false);
+
+            setPluginSources(userPluginSources);
+            return;
+        }
+
         try {
             let response = await PluginSourceService.fetchPluginSources();
             if (response && response.data && parseInt(response.statusCode) === 200) {
@@ -37,6 +46,8 @@ function NovelProvider(props) {
                 console.log("Plugin source: ");
                 console.log(sourceList);
                 setIsLoadingNovel(false);
+
+                UserPluginSourcesManager.savePluginSources(sourceList);
             } else {
                 console.log("Error fetching plugin sources: " + response?.message);
             }
@@ -45,9 +56,6 @@ function NovelProvider(props) {
         }
     }
 
-    const addNewPluginSource = () => {
-        // TODO: Calling API from server here 
-    }
 
     useEffect(() => {
         fetchPluginSources()
@@ -56,7 +64,7 @@ function NovelProvider(props) {
     return (
         <NovelContext.Provider value={{
             searchValue, novelContext, chapterContext, pluginSources, isLoadingNovel, searchTarget,
-            setSearchValue, setNovelContext, setChapterContext, setPluginSources, addNewPluginSource, setIsLoadingNovel, setSearchTarget
+            setSearchValue, setNovelContext, setChapterContext, setPluginSources, setIsLoadingNovel, setSearchTarget
         }}>
             {children}
         </NovelContext.Provider>
