@@ -55,7 +55,7 @@
 .latest-sublist,
 .completed-sublist {
     width: 70vw;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 
     display: flex;
     flex-flow: column nowrap;
@@ -65,7 +65,7 @@
 
 
 .novel-sublist-row {
-    width: 90%;
+    width: 100%;
 
     display: flex;
     flex-flow: row wrap;
@@ -73,9 +73,9 @@
     align-items: start;
 }
 
-.novel-sublist-row>.novel-card {
-    width: 18%;
-    min-height: 20vw !important;
+.novel-sublist-row > .novel-card {
+    width: 19%;
+    min-height: 21vw !important;
     margin: 8px 0;
     padding: 12px 4px 8px;
 
@@ -98,9 +98,9 @@
 }
 
 .novel-card img {
-    width: 10vw;
+    width: 11vw;
     height: 15vw;
-    /* height: 30vh; */
+    margin: 0 auto;
 
     border-radius: 4px;
     padding-bottom: 4px;
