@@ -49,8 +49,7 @@ function ExportNovelFileModal(props) {
         try {
             const response = await DetailNovelService.exportChapters(curNovel?.source, curNovel?.slug, selectedExporterPlugins, dataForRequesting);
             if (response && response?.data && parseInt(response?.statusCode) === 200) {
-                // window.open(response?.data?.path, '_blank', 'noopener,noreferrer');
-                window.open('https://docln.net/', '_blank', 'noopener,noreferrer')
+                window.open(response?.data?.path, '_blank', 'noopener,noreferrer');
                 onConfirm();
 
             } else {
@@ -92,8 +91,9 @@ function ExportNovelFileModal(props) {
 
     useEffect(() => {
         setCurNovel(novelContext);
-        setTopExportedChapter(novelContext?.chapters[0]?.slug);
-        setBottomExportedChapter(novelContext?.chapters[0]?.slug);
+        const defaultChapter = (novelContext?.chapters && novelContext?.chapters?.length > 0) ? novelContext?.chapters[0]?.slug : '';
+        setTopExportedChapter(defaultChapter);
+        setBottomExportedChapter(defaultChapter);
     }, [novelContext])
 
     return (

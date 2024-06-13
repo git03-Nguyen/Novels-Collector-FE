@@ -34,15 +34,41 @@ function NovelPage(props) {
 
     const [isShowExportFileModal, setIsShowExportFileModal] = useState(false);
 
+    const [isNovelInfoFetched, setIsNovelInfoFetched] = useState(false);
+    const [otherSources, setOtherSources] = useState([]);
+    const [selectedSource, setSelectedSource] = useState(sourceSlug);
+
     const handleCancelExportFile = () => {
         setIsShowExportFileModal(false);
     }
 
     const handleConfirmExportFile = async () => {
-        console.log("Call API for export file");
         handleCancelExportFile();
     }
 
+    const buildPersistDataForOtherSources = () => {
+        const bodyRequest = {
+            title: novel?.title,
+            authors: novel?.authors?.map(author => author),
+        };
+        return bodyRequest;
+    }
+
+    const handleChangeSelectedSource = async (e) => {
+        const newSelectedSource = e.target.value;
+        setSelectedSource(newSelectedSource);
+        if (newSelectedSource === sourceSlug) {
+            return;
+        }
+
+        console.log("other sources: ");
+        console.log(otherSources);
+        const newNovelSlug = otherSources?.find(src => src?.name === newSelectedSource)?.slug;
+        console.log("new novel slug: ");
+        console.log(newNovelSlug);
+
+        navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}`)
+    }
 
     const handleSetRawNovelDescription = (description) => {
         let newRawNovelDescription = description;
@@ -78,7 +104,7 @@ function NovelPage(props) {
                 setNovel(newNovelInfo);
 
                 setTotalPage(parseInt(newNovelInfo.totalPage));
-                setIsLoadingContext(false);
+                setIsNovelInfoFetched(true);
 
                 handleSetRawNovelDescription(newNovelInfo.description);
 
@@ -123,10 +149,47 @@ function NovelPage(props) {
         setIsLoadingContext(true);
         await fetchNovelInfo(sourceSlug, novelSlug);
         getInnerTextOfDescription();
+        setIsLoadingContext(false);
     }
 
+    const fetchOtherSources = async () => {
+        const requestingData = buildPersistDataForOtherSources();
+        console.log("Requesting data: ");
+        console.log(requestingData);
+        try {
+            const response = await DetailNovelService.fetchOtherSources(sourceSlug, novelSlug, requestingData);
+            if (response && response?.data && parseInt(response?.statusCode) === 200) {
 
+                const otherSourceData = Object.keys(response?.data)?.map(src => {
+                    const srcName = response?.data[src];
+                    return {
+                        ...srcName,
+                        name: src,
+                    }
+                });
 
+                setOtherSources(otherSourceData);
+            } else {
+                toast.error("Error fetching other sources: " + response?.message);
+            }
+        } catch (error) {
+            console.log("Error fetch other sources: " + error.message);
+        }
+    }
+
+    useEffect(() => {
+        setIsLoadingContext(true);
+        setIsNovelInfoFetched(false);
+        setSelectedSource(sourceSlug);
+        handleUpdatePage();
+    }, [sourceSlug, novelSlug])
+
+    useEffect(() => {
+        setIsLoadingContext(false);
+        if (isNovelInfoFetched === true) {
+            fetchOtherSources();
+        }
+    }, [isNovelInfoFetched])
 
     useEffect(() => {
         handleUpdatePage();
@@ -182,8 +245,20 @@ function NovelPage(props) {
                                         ))}
                                     </div>
                                     <div className="col">
-                                        <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                        <span>{sourceSlug}</span>
+                                        <p className="text-white fw-bold mb-1">Nguồn dùng cho truyện</p>
+                                        <select className="form-select " id="source-selection"
+                                            value={selectedSource} onChange={(e) => handleChangeSelectedSource(e)}
+                                        >
+                                            <option value={sourceSlug} name={sourceSlug}>{sourceSlug}</option>
+                                            <option disabled>──────────</option>
+
+                                            {otherSources && otherSources?.length > 0 && otherSources.map((src, index) => {
+
+                                                return <option key={`other-source-${src?.name}`} value={src?.name} name={src?.name}>
+                                                    {src?.name}
+                                                </option>
+                                            })}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
