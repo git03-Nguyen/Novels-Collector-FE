@@ -60,6 +60,7 @@ function Header({ setdarkMode, darkMode }) {
 
         newPluginSources.sort((a, b) => b.prior - a.prior);
         setPluginSources(newPluginSources);
+        UserPluginSourcesManager.savePluginSources(newPluginSources);
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
 
@@ -135,10 +136,7 @@ function Header({ setdarkMode, darkMode }) {
                 </button>
                 <ul className="dropdown-menu">
                     <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
-                    <li><Link className='dropdown-item' to='/login'>Tài khoản</Link></li>
-                    <li><hr className="dropdown-divider" /></li>
-                    <li><Link className='dropdown-item' to='#'>FAQs</Link></li>
-                    <li><Link className='dropdown-item' to='#'>Liên hệ</Link></li>
+                    <li><Link className='dropdown-item' to='/login'>Đăng nhập</Link></li>
                 </ul>
 
                 <button onClick={() => { setdarkMode(!darkMode) }} className='btn btn-secondary'>
