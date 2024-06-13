@@ -5,12 +5,14 @@ import { Badge, Button, Table, Form } from 'react-bootstrap';
 import './SourceManagementPage.css';
 import { toast } from 'react-toastify';
 
+import CustomModal from '../../Components/Modal/CustomModal';
+
 const SourceManagementPage = () => {
     const [listSources, setListSources] = useState([]);
     const [unloadSource, setUnloadSource] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [url, setUrl] = useState('');
-
+    const [modalContent, setModalContent] = useState('');
     const getAllSources = async () => {
         try {
             const response = await PluginSourceService.fetchPluginSources();
@@ -40,11 +42,33 @@ const SourceManagementPage = () => {
             console.log("Error unloading source: " + error.message);
         }
     };
+    const reloadNovelSource = async (source) => {
+        try {
+            const response = await PluginSourceService.reloadPluginSource(source.name);
+            if (response.statusCode === 200) {
+                console.log("Reloaded source: " + source.name);
+            } else {
+                console.log("Error reloading source: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error reloading source: " + error.message);
+        }
+    };
 
     const handleUnloadSource = (source) => {
         setUnloadSource(source);
         setShowModal(true);
     };
+    const handleSwitchChange = (source) => {
+        setUnloadSource(source);
+        if (source.isLoaded) {
+            setModalContent(`Bạn có chắc chắn muốn gỡ bỏ nguồn "${source.name}"?`);
+        } else {
+            setModalContent(`Bạn có chắc chắn muốn tải lại nguồn "${source.name}"?`);
+        }
+        setShowModal(true);
+    };
+
 
     const handleConfirmUnload = async () => {
         await unloadNovelSource(unloadSource);
@@ -108,7 +132,7 @@ const SourceManagementPage = () => {
                         <Form.Group controlId="formUrl" className="mb-3">
                             <Form.Control type="text" placeholder="Nhập URL của nguồn truyện" value={url} onChange={handleUrlChange} />
                         </Form.Group>
-                        <Button variant="success" type="submit" className="ms-2">
+                        <Button variant="success" type="button" className="ms-2">
                             <i className="fas fa-plus"></i>
                             <span className="ms-1">Thêm Nguồn Truyện Mới</span>
                         </Button>
@@ -172,6 +196,14 @@ const SourceManagementPage = () => {
                             ))}
                         </tbody>
                     </Table>
+                    <CustomModal
+                        show={showModal}
+                        onHide={handleCancelUnload}
+                        title="Xác nhận hành động"
+                        content={modalContent}
+                        onConfirm={handleConfirmUnload}
+                        onCancel={handleCancelUnload}
+                    />
                 </div>
             </div>
             {unloadSource && (

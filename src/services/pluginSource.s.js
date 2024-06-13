@@ -1,3 +1,4 @@
+
 import axios from '../configs/axios'
 
 const fetchPluginSources = async () => {
@@ -23,6 +24,7 @@ const fetchPluginSources = async () => {
 const unloadPluginSource = async (sourceName) => {
     try {
         const response = await axios.get(`/api/v1/source/unload/${sourceName}`);
+        console.log("Response: " + response.message);
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,
@@ -30,6 +32,7 @@ const unloadPluginSource = async (sourceName) => {
                 data: response?.data ?? {},
             }
         }
+
     } catch (error) {
         console.log("Error while unloading source: " + error.message);
         return {
@@ -40,6 +43,25 @@ const unloadPluginSource = async (sourceName) => {
     }
 }
 
+const reloadPluginSource = async (sourceName) => {
+    try {
+        const response = await axios.get(`/api/v1/source/load/${sourceName}`);
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error while reloading source: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
 const reloadAllSources = async () => {
     try {
         const response = await axios.get('/api/v1/source/reload');
@@ -60,33 +82,56 @@ const reloadAllSources = async () => {
     }
 }
 
-
-const uploadPluginSource = async (url) => {
+const deletePluginSource = async (sourceName) => {
     try {
-        console.log("Uploading plugin source: " + url);
-        const response = await axios.post(`/api/v1/source/add`, { url }
-        );
+        const response = await axios.delete(`/api/v1/source/delete/${sourceName}`);
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error while removing source: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
+
+const uploadPluginSource = async (formData) => {
+    try {
+        const response = await axios.post('/api/v1/source/add', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,
                 message: response.message,
                 data: response?.data ?? {},
                 meta: response?.meta ?? {}
-            };
+            }
         }
     } catch (error) {
-        console.log("Error uploading plugin source: " + error.message);
+        console.log("Error while uploading source: " + error.message);
         return {
             statusCode: 500,
             data: null,
             message: "Cannot connect to server!"
-        };
+        }
     }
 };
 const PluginSourceService = {
     fetchPluginSources,
     unloadPluginSource,
+    reloadPluginSource,
     reloadAllSources,
+    deletePluginSource,
     uploadPluginSource
 }
 

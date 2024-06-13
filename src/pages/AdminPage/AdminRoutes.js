@@ -1,6 +1,9 @@
+import React from 'react';
 import { Route, Routes } from "react-router-dom"
-import AdminPage from "./AdminPage";
-import Dashboard from "../AdminPage/dashboard/Dashboard";
+
+
+const Dashboard = React.lazy(() => import('./dashboard/Dashboard'))
+
 
 function AdminRoutes(props) {
     return (
