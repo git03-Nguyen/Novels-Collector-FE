@@ -69,9 +69,35 @@ const fetchChapterList = async (source, novelSlug, page) => {
     }
 }
 
+
+const exportChapters = async (source, novelSlug, exporterPluginName, dataForRequesting) => {
+    try {
+        const response = await axios.post(`/api/v1/novel/${source}/${novelSlug}/export/${exporterPluginName}`,
+            dataForRequesting,
+        );
+
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response?.message ?? '',
+                data: response?.data ?? {},
+                meta: response?.meta ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error exporting chapters data: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
+
 const DetailNovelService = {
     fetchDetailNovel,
     fetchChapterList,
+    exportChapters,
 }
 
 export default DetailNovelService;

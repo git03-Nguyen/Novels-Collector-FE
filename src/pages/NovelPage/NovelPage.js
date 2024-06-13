@@ -9,6 +9,7 @@ import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 import { LoadingContext } from '../../context/LoadingContext';
+import ExportNovelFileModal from '../../Components/ExportNovelFileModal/ExportNovelFileModal';
 
 function NovelPage(props) {
     const navigate = useNavigate();
@@ -31,6 +32,16 @@ function NovelPage(props) {
     const [novelDescription, setNovelDescription] = useState('');
     const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
 
+    const [isShowExportFileModal, setIsShowExportFileModal] = useState(false);
+
+    const handleCancelExportFile = () => {
+        setIsShowExportFileModal(false);
+    }
+
+    const handleConfirmExportFile = async () => {
+        console.log("Call API for export file");
+        handleCancelExportFile();
+    }
 
 
     const handleSetRawNovelDescription = (description) => {
@@ -95,15 +106,6 @@ function NovelPage(props) {
         setCurrentPage(selectedPage);
     }
 
-    const handleClickChapter = (chapter, index) => {
-        let newChapterContext = {
-            ...chapter,
-            number: parseInt((parseInt(currentPage) - 1) * novel.chapters.length) + parseInt(index) + 1,
-        };
-        setChapterContext(newChapterContext);
-        navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
-    }
-
 
     const getInnerTextOfDescription = () => {
         const descriptionText = window.document.querySelector('#raw-novel-description');
@@ -122,6 +124,9 @@ function NovelPage(props) {
         await fetchNovelInfo(sourceSlug, novelSlug);
         getInnerTextOfDescription();
     }
+
+
+
 
     useEffect(() => {
         handleUpdatePage();
@@ -142,7 +147,13 @@ function NovelPage(props) {
                         </div>
                         <div className="col-md-8 text-start px-0">
                             <div className="pb-4 border-bottom border-white-50">
-                                <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
+                                <div className='title-and-export-row'>
+                                    <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
+                                    <button className='btn btn-secondary' onClick={() => setIsShowExportFileModal(true)}>
+                                        <span className='pe-3'>Xuất file</span>
+                                        <i className="fa-solid fa-file-export"></i>
+                                    </button>
+                                </div>
                                 <div className="d-flex">
                                     <div className="d-flex align-items-center mr-3">
                                         <span className="text-white-50 me-1">Đánh giá: {novel?.rating}/{novel?.maxRating}</span>
@@ -234,6 +245,8 @@ function NovelPage(props) {
                 nextLinkClassName='page-link'
                 renderOnZeroPageCount={null}
             />}
+
+            <ExportNovelFileModal show={isShowExportFileModal} onCancel={handleCancelExportFile} onConfirm={handleConfirmExportFile} />
         </div>
     )
 }

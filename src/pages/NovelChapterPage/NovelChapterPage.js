@@ -31,7 +31,7 @@ function NovelChapterPage(props) {
     const [isChapterIDFetched, setIsChapterIDFetched] = useState(false);
     const [curChapterSlug, setCurChapterSlug] = useState(chapterSlug);
 
-
+    const [otherSources, setOtherSources] = useState([]);
 
     const defaultIsDisabledSiblingChapter = {
         previous: false,
@@ -43,7 +43,13 @@ function NovelChapterPage(props) {
     const [isLoadingNovelChapterPage, setIsLoadingNovelChapterPage] = useState(true);
 
 
-
+    const persistDataForOtherSources = () => {
+        const bodyRequest = {
+            title: novelContext?.title,
+            authors: novelContext?.authors,
+        };
+        return bodyRequest;
+    }
 
 
     const fetchNovelInfo = async (source, slug) => {
@@ -302,7 +308,7 @@ function NovelChapterPage(props) {
                 </h5>
                 <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
                     <span> - </span>
-                    Tác giả:{(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                    Tác giả: {(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
                     <span> - </span>
                     Trạng thái: {novelContext?.status}</h5>
                 <span className='d-none'>Trang: {currentPage} / {totalPage}</span>

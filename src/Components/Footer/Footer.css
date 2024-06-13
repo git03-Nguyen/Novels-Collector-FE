@@ -1,5 +1,7 @@
 .app-footer {
     background-color: var(--dark-blue);
+    width: 100%;
+    padding: 16px 5%;
 
     color: white;
     display: grid;
