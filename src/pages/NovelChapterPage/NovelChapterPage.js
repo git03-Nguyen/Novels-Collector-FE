@@ -11,8 +11,8 @@ import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 import ActionBar from '../../Components/ActionBar/ActionBar';
-import ChapterPageSideBar from '../../Components/ChapterPageSideBar/ChapterPageSideBar';
 import { LoadingContext } from '../../context/LoadingContext';
+
 function NovelChapterPage(props) {
     const navigate = useNavigate();
 
@@ -31,7 +31,6 @@ function NovelChapterPage(props) {
     const [isChapterIDFetched, setIsChapterIDFetched] = useState(false);
     const [curChapterSlug, setCurChapterSlug] = useState(chapterSlug);
 
-    const [otherSources, setOtherSources] = useState([]);
 
     const defaultIsDisabledSiblingChapter = {
         previous: false,
@@ -40,20 +39,11 @@ function NovelChapterPage(props) {
     const [isDisabledSiblingChapter, setDisabledSiblingChapter] = useState(defaultIsDisabledSiblingChapter);
 
     const [novelChapter, setChapterContent] = useState({});
-    const [isLoadingNovelChapterPage, setIsLoadingNovelChapterPage] = useState(true);
-
-
-    const persistDataForOtherSources = () => {
-        const bodyRequest = {
-            title: novelContext?.title,
-            authors: novelContext?.authors,
-        };
-        return bodyRequest;
-    }
 
 
     const fetchNovelInfo = async (source, slug) => {
         try {
+            console.log("Current page: " + currentPage);
             const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
@@ -139,10 +129,6 @@ function NovelChapterPage(props) {
             saveNovelToUserLatestNovels(novelContext);
         }
 
-        if (parseInt(newPage) !== parseInt(currentPage)) {
-            setCurrentPage(newPage);
-        }
-
 
         if (!perpage || parseInt(perpage) !== parseInt(newNovelInfo?.chapters?.length)) {
             setPerpage(parseInt(newNovelInfo?.chapters?.length))
@@ -161,6 +147,8 @@ function NovelChapterPage(props) {
         try {
             const response = await ChapterService.fetchChapterContent(sourceSlug, novelSlug, curChapterSlug);
             if (response && response.data && parseInt(response.statusCode) === 200) {
+                console.log("@@@ NEW CHAPTER CONTENT: ");
+                console.log(response.data);
                 setChapterContent(response.data);
                 toast.success(response.message);
                 let newChapterData = {
@@ -178,6 +166,7 @@ function NovelChapterPage(props) {
                 console.log("CHAPTER ID AFTER FETCH CHAPTER CONTENT: " + newChapterID);
 
                 const newPage = Math.floor(newChapterID / perpage + 1);
+                console.log("new page: " + newPage);
                 if (parseInt(newPage) !== parseInt(currentPage)) {
                     setCurrentPage(newPage);
                 }
@@ -273,8 +262,8 @@ function NovelChapterPage(props) {
     }
 
 
-    const handleUpdateChapterContent = async () => {
-        console.log(`Calling fetching chapter content for id ${chapterID} and slug: ${curChapterSlug}`);
+    const handleUpdateChapterContent = async (newChapterSlug = curChapterSlug) => {
+        console.log(`Calling fetching chapter content for id ${chapterID} and slug: ${newChapterSlug}`);
         scrollToFrontList();
         await fetchChapterContent();
 
@@ -290,8 +279,12 @@ function NovelChapterPage(props) {
     }
 
     useEffect(() => {
+        setCurChapterSlug(chapterSlug)
+    }, [sourceSlug])
+
+    useEffect(() => {
         setIsLoadingContext(true);
-        handleUpdateChapterContent();
+        handleUpdateChapterContent(chapterSlug);
     }, [chapterID, curChapterSlug])
 
     useEffect(() => {
