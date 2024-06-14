@@ -6,10 +6,9 @@ import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 import NovelSidebar from '../../Components/NovelSidebar/NovelSidebar';
 import { LoadingContext } from '../../context/LoadingContext';
-import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
 function HomePage(props) {
-    const { pluginSources, setPluginSources } = useContext(NovelContext);
+    const { pluginSources, handleSetPluginSources } = useContext(NovelContext);
     const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
     const [isHomeContentFetched, setIsHomeContentFetched] = useState(false);
 
@@ -23,7 +22,7 @@ function HomePage(props) {
 
     const fetchHotNovels = async () => {
         try {
-            const response = await ListNovelService.fetchHotNovels(pluginSources[0].name, defaultPage);
+            const response = await ListNovelService.fetchHotNovels(pluginSources[0]?.name, defaultPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setHotNovels(response.data);
             } else {
@@ -36,7 +35,7 @@ function HomePage(props) {
 
     const fetchLatestNovels = async () => {
         try {
-            const response = await ListNovelService.fetchLatestNovels(pluginSources[0].name, defaultPage);
+            const response = await ListNovelService.fetchLatestNovels(pluginSources[0]?.name, defaultPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setLatestNovels(response.data);
             } else {
@@ -49,7 +48,7 @@ function HomePage(props) {
 
     const fetchCompletedNovels = async () => {
         try {
-            const response = await ListNovelService.fetchCompletedNovels(pluginSources[0].name, defaultPage);
+            const response = await ListNovelService.fetchCompletedNovels(pluginSources[0]?.name, defaultPage);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setCompletedNovels(response.data);
             } else {
@@ -60,9 +59,14 @@ function HomePage(props) {
         }
     }
 
-    const handleSetupPluginSourceByParams = () => {
-        if (sourceSlug === "" || !sourceSlug || sourceSlug === pluginSources[0].name) {
-            console.log("NOT CHANGE PLUGIN SOURCES !!!");
+    const handleSetupPluginSourceByParams = async () => {
+        if (!pluginSources || pluginSources.length <= 0 || pluginSources[0]?.name?.length <= 0) {
+            console.log("Plugin sources not found !")
+            return;
+        }
+
+        if (sourceSlug === "" || !sourceSlug || sourceSlug === pluginSources[0]?.name) {
+            console.log("NOT CHANGE PLUGIN SOURCES SLUG !!!");
             setIsHomeContentFetched(true);
             return;
         }
@@ -79,8 +83,8 @@ function HomePage(props) {
 
         console.log("New plugin source: ");
         console.log(newPluginSource);
-        setPluginSources(newPluginSource);
-        UserPluginSourcesManager.savePluginSources(newPluginSource);
+        handleSetPluginSources(newPluginSource);
+        setIsHomeContentFetched(true);
     }
 
 
@@ -93,13 +97,19 @@ function HomePage(props) {
         console.log("Change loading context to false !!!");
     }
 
-    useEffect(() => {
-        console.log("Set upppppp !!!!!");
-        handleSetupPluginSourceByParams();
-        setIsHomeContentFetched(true);
-    }, [sourceSlug])
 
     useEffect(() => {
+        setIsHomeContentFetched(false);
+        console.log("Change isHomeContentFetched to false !!!");
+        console.log("Set upppppp !!!!!");
+        handleSetupPluginSourceByParams();
+        if (!pluginSources || pluginSources.length <= 0 || pluginSources[0]?.name?.length <= 0) {
+            return;
+        }
+    }, [sourceSlug, pluginSources])
+
+    useEffect(() => {
+        console.log("Is home content fetched: " + isHomeContentFetched);
         if (isHomeContentFetched === true) {
             setIsLoadingContext(true);
             console.log("Change loading context to true !!!");
@@ -124,7 +134,7 @@ function HomePage(props) {
                         <div className='novel-sublist-row'>
                             {hotNovels && hotNovels?.length > 0 && hotNovels.map((novel, index) => {
                                 return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                    <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                    <Link to={`/source/${pluginSources[0]?.name}/novel/${novel.slug}`}>
                                         <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
                                         <h6>{novel.title.length <= 30
                                             ? novel.title
@@ -147,7 +157,7 @@ function HomePage(props) {
                         <div className='novel-sublist-row'>
                             {latestNovels && latestNovels?.length > 0 && latestNovels.map((novel, index) => {
                                 return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                    <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                    <Link to={`/source/${pluginSources[0]?.name}/novel/${novel.slug}`}>
                                         <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
                                         <h6>{novel.title.length <= 30
                                             ? novel.title
@@ -171,7 +181,7 @@ function HomePage(props) {
                         <div className='novel-sublist-row'>
                             {completedNovels && completedNovels?.length > 0 && completedNovels.map((novel, index) => {
                                 return <div key={`hot-novel-card-${index}`} className='novel-card'>
-                                    <Link to={`/source/${pluginSources[0].name}/novel/${novel.slug}`}>
+                                    <Link to={`/source/${pluginSources[0]?.name}/novel/${novel.slug}`}>
                                         <img src={novel.cover} alt={`Ảnh minh họa truyện ${novel.title}`} />
                                         <h6>{novel.title.length <= 30
                                             ? novel.title

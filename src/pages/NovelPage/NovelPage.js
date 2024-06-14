@@ -9,6 +9,7 @@ import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.css';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 import { LoadingContext } from '../../context/LoadingContext';
+import ExportNovelFileModal from '../../Components/ExportNovelFileModal/ExportNovelFileModal';
 
 function NovelPage(props) {
     const navigate = useNavigate();
@@ -31,7 +32,43 @@ function NovelPage(props) {
     const [novelDescription, setNovelDescription] = useState('');
     const [isSeeMoreDescription, setIsSeeMoreDescription] = useState(false);
 
+    const [isShowExportFileModal, setIsShowExportFileModal] = useState(false);
 
+    const [isNovelInfoFetched, setIsNovelInfoFetched] = useState(false);
+    const [otherSources, setOtherSources] = useState([]);
+    const [selectedSource, setSelectedSource] = useState(sourceSlug);
+
+    const handleCancelExportFile = () => {
+        setIsShowExportFileModal(false);
+    }
+
+    const handleConfirmExportFile = async () => {
+        handleCancelExportFile();
+    }
+
+    const buildPersistDataForOtherSources = () => {
+        const bodyRequest = {
+            title: novel?.title,
+            authors: novel?.authors?.map(author => author),
+        };
+        return bodyRequest;
+    }
+
+    const handleChangeSelectedSource = async (e) => {
+        const newSelectedSource = e.target.value;
+        setSelectedSource(newSelectedSource);
+        if (newSelectedSource === sourceSlug) {
+            return;
+        }
+
+        console.log("other sources: ");
+        console.log(otherSources);
+        const newNovelSlug = otherSources?.find(src => src?.name === newSelectedSource)?.slug;
+        console.log("new novel slug: ");
+        console.log(newNovelSlug);
+
+        navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}`)
+    }
 
     const handleSetRawNovelDescription = (description) => {
         let newRawNovelDescription = description;
@@ -67,7 +104,7 @@ function NovelPage(props) {
                 setNovel(newNovelInfo);
 
                 setTotalPage(parseInt(newNovelInfo.totalPage));
-                setIsLoadingContext(false);
+                setIsNovelInfoFetched(true);
 
                 handleSetRawNovelDescription(newNovelInfo.description);
 
@@ -95,15 +132,6 @@ function NovelPage(props) {
         setCurrentPage(selectedPage);
     }
 
-    const handleClickChapter = (chapter, index) => {
-        let newChapterContext = {
-            ...chapter,
-            number: parseInt((parseInt(currentPage) - 1) * novel.chapters.length) + parseInt(index) + 1,
-        };
-        setChapterContext(newChapterContext);
-        navigate(`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`);
-    }
-
 
     const getInnerTextOfDescription = () => {
         const descriptionText = window.document.querySelector('#raw-novel-description');
@@ -121,7 +149,47 @@ function NovelPage(props) {
         setIsLoadingContext(true);
         await fetchNovelInfo(sourceSlug, novelSlug);
         getInnerTextOfDescription();
+        setIsLoadingContext(false);
     }
+
+    const fetchOtherSources = async () => {
+        const requestingData = buildPersistDataForOtherSources();
+        console.log("Requesting data: ");
+        console.log(requestingData);
+        try {
+            const response = await DetailNovelService.fetchOtherSources(sourceSlug, novelSlug, requestingData);
+            if (response && response?.data && parseInt(response?.statusCode) === 200) {
+
+                const otherSourceData = Object.keys(response?.data)?.map(src => {
+                    const srcName = response?.data[src];
+                    return {
+                        ...srcName,
+                        name: src,
+                    }
+                });
+
+                setOtherSources(otherSourceData);
+            } else {
+                toast.error("Error fetching other sources: " + response?.message);
+            }
+        } catch (error) {
+            console.log("Error fetch other sources: " + error.message);
+        }
+    }
+
+    useEffect(() => {
+        setIsLoadingContext(true);
+        setIsNovelInfoFetched(false);
+        setSelectedSource(sourceSlug);
+        handleUpdatePage();
+    }, [sourceSlug, novelSlug])
+
+    useEffect(() => {
+        setIsLoadingContext(false);
+        if (isNovelInfoFetched === true) {
+            fetchOtherSources();
+        }
+    }, [isNovelInfoFetched])
 
     useEffect(() => {
         handleUpdatePage();
@@ -141,8 +209,15 @@ function NovelPage(props) {
                             <img className='novel-img' src={novel?.cover} alt={`${novel?.title} thumbnail`} />
                         </div>
                         <div className="col-md-8 text-start px-0">
-                            <div className="pb-4 border-bottom border-white-50 basic-info">
-                                <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
+
+                            <div className="pb-4 border-bottom border-white-50">
+                                <div className='title-and-export-row'>
+                                    <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
+                                    <button className='btn btn-secondary' onClick={() => setIsShowExportFileModal(true)}>
+                                        <span className='pe-3'>Xuất file</span>
+                                        <i className="fa-solid fa-file-export"></i>
+                                    </button>
+                                </div>
                                 <div className="d-flex">
                                     <div className="d-flex align-items-center mr-3">
                                         <span className="text-white-50 me-1">Đánh giá: {novel?.rating}/{novel?.maxRating}</span>
@@ -171,8 +246,20 @@ function NovelPage(props) {
                                         ))}
                                     </div>
                                     <div className="col">
-                                        <p className="text-white fw-bold mb-1">Nguồn truyện</p>
-                                        <span>{sourceSlug}</span>
+                                        <p className="text-white fw-bold mb-1">Nguồn dùng cho truyện</p>
+                                        <select className="form-select " id="source-selection"
+                                            value={selectedSource} onChange={(e) => handleChangeSelectedSource(e)}
+                                        >
+                                            <option value={sourceSlug} name={sourceSlug}>{sourceSlug}</option>
+                                            <option disabled>──────────</option>
+
+                                            {otherSources && otherSources?.length > 0 && otherSources.map((src, index) => {
+
+                                                return <option key={`other-source-${src?.name}`} value={src?.name} name={src?.name}>
+                                                    {src?.name}
+                                                </option>
+                                            })}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -234,6 +321,8 @@ function NovelPage(props) {
                 nextLinkClassName='page-link'
                 renderOnZeroPageCount={null}
             />}
+
+            <ExportNovelFileModal show={isShowExportFileModal} onCancel={handleCancelExportFile} onConfirm={handleConfirmExportFile} />
         </div>
     )
 }

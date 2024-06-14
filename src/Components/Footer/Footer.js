@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 
 import './Footer.css'
+import { NovelContext } from '../../context/NovelContext';
 
 function Footer(props) {
+
+    const { pluginSources } = useContext(NovelContext);
+    const [curPluginSources, setCurPluginSources] = useState(pluginSources);
+
+    useEffect(() => {
+        console.log("Footer plugin source: ");
+        console.log(pluginSources);
+        setCurPluginSources(pluginSources);
+    }, [pluginSources])
+
     return (
         <footer className='app-footer dark:bg-black dark:text-white border-t-2'>
             <Link to='/'>
@@ -27,8 +38,11 @@ function Footer(props) {
 
             <div className='footer-credit'>
                 <strong>Nguồn truyện</strong>
-                <img alt='sponsor-img' src='https://static.8cache.com/favicon.ico' />
-                <img alt='sponsor-img' src='https://www.nettruyenmck.com/images/logo-nettruyen.png' />
+                {curPluginSources && curPluginSources?.length > 0 && curPluginSources?.map((src, index) => {
+                    return <a key={`footer-plugin-source-${index}`} href={src?.url}>
+                        {src?.name}
+                    </a>
+                })}
             </div>
 
             <div className='footer-contact'>
