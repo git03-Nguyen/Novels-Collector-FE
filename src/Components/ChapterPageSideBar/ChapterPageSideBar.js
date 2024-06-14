@@ -70,7 +70,8 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
 
         const newChapterSlug = otherChapterSources?.find(chap => chap?.source === newSelectedSource && chap?.novelSlug === newNovelSlug)?.slug;
         if (newChapterSlug && newChapterSlug?.length > 0) {
-            navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`)
+            // navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`)
+            window.location.replace(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`);
         }
     }
 

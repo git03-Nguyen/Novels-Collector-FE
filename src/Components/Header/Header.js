@@ -5,11 +5,10 @@ import './Header.css'
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
-import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
 function Header({ setdarkMode, darkMode }) {
-    const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
-    const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
+    const { searchValue, setSearchValue, pluginSources, handleSetPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
+    const [selectedSource, setSelectedSource] = useState(pluginSources[0]?.name);
 
     const [isShowModal, setIsShowModal] = useState(false);
 
@@ -49,7 +48,7 @@ function Header({ setdarkMode, darkMode }) {
         setSelectedSource(e.target.value);
         let newPluginSources = pluginSources.map(src => {
             let newSrc = src;
-            if (src.name === e.target.value) {
+            if (src?.name === e.target.value) {
                 newSrc.prior = 2;
             } else {
                 newSrc.prior = 1;
@@ -59,8 +58,7 @@ function Header({ setdarkMode, darkMode }) {
         })
 
         newPluginSources.sort((a, b) => b.prior - a.prior);
-        setPluginSources(newPluginSources);
-        UserPluginSourcesManager.savePluginSources(newPluginSources);
+        handleSetPluginSources(newPluginSources);
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
 
@@ -69,13 +67,12 @@ function Header({ setdarkMode, darkMode }) {
     }
 
     const handleConfirmDnDSourceModal = (userPluginSources) => {
-        UserPluginSourcesManager.savePluginSources(userPluginSources);
-        setPluginSources(userPluginSources);
+        handleSetPluginSources(userPluginSources);
         handleCancelDnDSourceModal();
     }
 
     useEffect(() => {
-        setSelectedSource(pluginSources[0].name);
+        setSelectedSource(pluginSources[0]?.name);
     }, [pluginSources])
 
     return (
@@ -88,7 +85,8 @@ function Header({ setdarkMode, darkMode }) {
                 <div className="form-floating">
                     <select className="form-select " id="source"
                         value={searchTarget} onChange={(e) => handleChangeSearchTarget(e)}>
-                        <option name="Tên truyện" value="keyword">Tên truyện</option>
+                        <option name="Tất cả" value="keyword">Tất cả</option>
+                        <option name="Tên truyện" value="title">Tên truyện</option>
                         <option name="Tác giả" value="author">Tác giả</option>
                     </select>
                     <label htmlFor="floatingSelectGrid">Tìm kiếm theo</label>
@@ -113,8 +111,8 @@ function Header({ setdarkMode, darkMode }) {
                             value={selectedSource}
                             onChange={(e) => handleChangeSource(e)}>
                             {pluginSources && pluginSources.length > 0 && pluginSources.map((source, index) => (
-                                <option key={index} value={source.name}>
-                                    {source.name}
+                                <option key={index} value={source?.name}>
+                                    {source?.name}
                                 </option>
                             ))}
                             <option disabled>──────────</option>

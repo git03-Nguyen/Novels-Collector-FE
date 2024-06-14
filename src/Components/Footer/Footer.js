@@ -12,7 +12,7 @@ function Footer(props) {
     useEffect(() => {
         console.log("Footer plugin source: ");
         console.log(pluginSources);
-        setCurPluginSources(curPluginSources);
+        setCurPluginSources(pluginSources);
     }, [pluginSources])
 
     return (
@@ -40,7 +40,7 @@ function Footer(props) {
                 <strong>Nguồn truyện</strong>
                 {curPluginSources && curPluginSources?.length > 0 && curPluginSources?.map((src, index) => {
                     return <a key={`footer-plugin-source-${index}`} href={src?.url}>
-                        {src.name}
+                        {src?.name}
                     </a>
                 })}
             </div>
