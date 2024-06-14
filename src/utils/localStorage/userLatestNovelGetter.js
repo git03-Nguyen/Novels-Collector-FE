@@ -64,10 +64,16 @@ const removeNovelFromUserStorage = (novelSlug) => {
     return novels;
 }
 
+const resetUserNovelStorage = () => {
+    console.log("Rest user latest novels to empty array !");
+    setItemWithExpiration(USER_LOCAL_STORAGE_KEY, [], CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS)
+}
+
 const UserLatestNovelGetter = {
     getUserLatestNovels,
     saveNovelToUserStorage,
     removeNovelFromUserStorage,
+    resetUserNovelStorage
 }
 
 export default UserLatestNovelGetter;

@@ -10,11 +10,26 @@ import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
+import UserStyleSettingsGetter from '../../utils/localStorage/userStyleSettingsGetter';
 import ActionBar from '../../Components/ActionBar/ActionBar';
 import { LoadingContext } from '../../context/LoadingContext';
 
 function NovelChapterPage(props) {
     const navigate = useNavigate();
+
+    const defaultStyleSettings = UserStyleSettingsGetter.getUserStyleSettings() ?? {
+        fontSize: '16px',
+        fontColor: '#ffffff',
+        backgroundColor: '#066886',
+        fontFamily: 'Arial',
+        lineHeight: '1.5',
+        fontStyle: 'normal',
+    };
+
+    const [curStyleSettings, setCurStyleSettings] = useState(UserStyleSettingsGetter.getUserStyleSettings()?.fontSize
+        ? UserStyleSettingsGetter.getUserStyleSettings()
+        : defaultStyleSettings
+    );
 
     const { novelSlug, chapterSlug, sourceSlug } = useParams();
 
@@ -40,6 +55,10 @@ function NovelChapterPage(props) {
 
     const [novelChapter, setChapterContent] = useState({});
 
+    const handleConfirmToolbarModal = (newStyleSettings) => {
+        setCurStyleSettings(newStyleSettings);
+        toast.success('Thay đổi tùy chỉnh hiển thị nội dung truyện thành công !');
+    }
 
     const fetchNovelInfo = async (source, slug) => {
         try {
@@ -185,12 +204,11 @@ function NovelChapterPage(props) {
     }
 
     const getChapterTitleBySourceSlug = () => {
-        if (sourceSlug === "TruyenTangThuVienVn") {
+        if (sourceSlug === "TruyenTangThuVienVn" || sourceSlug === "SSTruyenVn") {
             const chapterInList = novelContext?.chapters?.find((chapter) => chapter?.slug === curChapterSlug);
             if (chapterInList) {
                 return chapterInList?.title;
             }
-
         }
         return novelChapter?.title;
     }
@@ -296,7 +314,7 @@ function NovelChapterPage(props) {
             <Fragment >
                 <h3 id='novel-chapter-container' className='dark:bg-black dark:text-white'>{novelContext?.title}</h3>
                 <h5 >
-                    {`Chương ${novelChapter?.number}: ${getChapterTitleBySourceSlug()}`}
+                    {`Chương ${novelChapter?.number ?? ''}: ${getChapterTitleBySourceSlug()}`}
                 </h5>
                 <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
                     <span> - </span>
@@ -307,7 +325,16 @@ function NovelChapterPage(props) {
                 <div className='novel-chapter-content-container'>
 
                     {novelChapter?.content && novelChapter?.content.length > 0 &&
-                        <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
+                        <div key={`content-chapter-${chapterSlug}`} className='chapter-content-text'
+                            style={{
+                                fontSize: curStyleSettings.fontSize,
+                                color: curStyleSettings.fontColor,
+                                fontFamily: curStyleSettings.fontFamily,
+                                lineHeight: curStyleSettings.lineHeight,
+                                fontStyle: curStyleSettings.fontStyle,
+                                backgroundColor: curStyleSettings.backgroundColor,
+                            }}
+                            dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
                     }
                 </div>
 
@@ -340,6 +367,7 @@ function NovelChapterPage(props) {
                     sourceSlug={sourceSlug}
                     novelSlug={novelSlug}
                     curChapterSlug={curChapterSlug}
+                    onConfirmToolbarModal={handleConfirmToolbarModal}
                 />
             }
 

@@ -63,6 +63,16 @@
     align-items: start;
 }
 
+.offcanvas-novel-brief-info {
+    width: calc(100% - 68px);
+    margin: 0 4px;
+    display: flex;
+    flex-flow: column nowrap;
+
+    justify-content: start;
+    align-items: start;
+}
+
 .novel-brief-info strong {
     text-align: start !important;
 }
@@ -95,18 +105,26 @@
 }
 
 .offcanvas-user-latest-novels {
-    max-width: 20vw !important;
+    max-width: 25vw !important;
     background-color: var(--light-blue) !important;
 }
 
+.offcanvas-description-container {
+    padding: 12px 0;
+
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+
 .offcanvas-novel-card-mini {
-    width: 90%;
+    width: 100%;
     margin: 15px 0;
-    display: flex;
-    flex-flow: row wrap;
-    
-    justify-content: center;
-    align-items: center;
+
+    display: grid;
+    grid-template-columns: 64px auto 64px;
+
+    place-items: center;
 }
 
 
@@ -126,3 +144,8 @@
     opacity: 0.7;
 }
 
+.offcanvas-description-container .delete-user-novel-btn,
+.offcanvas-novel-card-mini .delete-user-novel-btn {
+    color: red !important;
+    background: linear-gradient(90deg, white, whitesmoke) !important;
+}

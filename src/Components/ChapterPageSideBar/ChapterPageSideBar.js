@@ -191,7 +191,7 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
 
                 <div key={`novel-card-${novelSlug}`} className='novel-card-mini'>
                     <Link to={`/source/${sourceSlug}/novel/${novelSlug}`}>
-                        <img src={novelPoster} alt={`Ảnh bìa truyện ${novelName}`} />
+                        <img src={novelPoster || '/novel_cover_placeholder.png'} alt={`Ảnh bìa truyện ${novelName}`} />
                     </Link>
                     <div className='novel-brief-info'>
                         <Link to={`/source/${sourceSlug}/novel/${novelSlug}`}>
@@ -200,7 +200,6 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
                                 : <strong>{novelName?.slice(0, 30) + ' ...'}</strong>
                             }
                         </Link>
-                        <br />
                         <h6 className="text-white">{novelAuthor}</h6>
                         <i>{sourceSlug}</i>
                     </div>
