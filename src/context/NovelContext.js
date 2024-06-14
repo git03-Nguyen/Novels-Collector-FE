@@ -39,7 +39,25 @@ function NovelProvider(props) {
                 console.log("Plugin source after fetching API: ");
                 console.log(sourceList);
 
-                handleSetPluginSources(sourceList);
+                const isChangeSources = false;
+                const curUserSources = UserPluginSourcesManager.getUserPluginSources();
+
+                if (curUserSources?.length !== sourceList?.length) {
+                    isChangeSources = true;
+                } else {
+                    for (let i = 0; i < curUserSources?.length; i++) {
+                        const src = sourceList[i];
+                        const newSrcIndex = sourceList?.findIndex(newSrc => newSrc?.name === src?.name);
+                        if (newSrcIndex === -1 || (src?.isLoaded !== sourceList[newSrcIndex].isLoaded)) {
+                            isChangeSources = true;
+                            return;
+                        }
+                    }
+                }
+                if (isChangeSources === true) {
+                    handleSetPluginSources(sourceList);
+                }
+
                 setIsLoadingNovel(false);
             } else {
                 console.log("Error fetching plugin sources: " + response?.message);
@@ -50,6 +68,8 @@ function NovelProvider(props) {
     }
 
     const handleSetPluginSources = (newPluginSources) => {
+
+
         setPluginSources(newPluginSources);
         UserPluginSourcesManager.savePluginSources(newPluginSources);
     }

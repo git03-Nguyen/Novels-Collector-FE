@@ -81,12 +81,12 @@ function NovelChapterPage(props) {
         return index += parseInt(parseInt(newNovelInfo.page) - 1) * parseInt(perpage);
     }
 
-    const saveNovelToUserLatestNovels = (newNovel) => {
-        if (!newNovel || !newNovel?.slug) {
+    const saveNovelToUserLatestNovels = (newNovel = novelContext, chapterData = chapterContext) => {
+        if (!newNovel || !newNovel?.slug || newNovel?.slug !== novelSlug) {
             return;
         }
 
-        let chapterNumber = newNovel?.chapters?.find(chapter => chapter.slug === curChapterSlug)?.number;
+        let chapterNumber = newNovel?.chapters?.find(chapter => chapter.slug === curChapterSlug)?.number ?? chapterData?.number;
         const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage({
             ...newNovel,
             source: sourceSlug,
@@ -126,7 +126,6 @@ function NovelChapterPage(props) {
 
         if (chapterID !== newChapterID) {
             setChapterID(newChapterID);
-            saveNovelToUserLatestNovels(novelContext);
         }
 
 
@@ -173,7 +172,7 @@ function NovelChapterPage(props) {
                 setChapterContext(newChapterData);
 
                 setIsLoadingContext(false);
-                saveNovelToUserLatestNovels(novelContext);
+                saveNovelToUserLatestNovels(novelContext, newChapterData);
                 setDisabledStatusForSiblingChapters(newChapterID, novelContext, newPage);
             } else {
                 toast.error("Error fetching chapter content: " + response?.message);
