@@ -19,3 +19,10 @@
     align-items: center;
     justify-content: center;
 }
+
+.fixed-width {
+    width: 23rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

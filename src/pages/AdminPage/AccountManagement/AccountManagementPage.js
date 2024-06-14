@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import UserServices from '../../../services/user.s';
 import CustomModal from '../../../Components/Modal/CustomModal';
 import { toast } from 'react-toastify';
 import {
@@ -30,44 +31,76 @@ const AccountManagementPage = () => {
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
+    const [deletingAccount, setDeletingAccount] = useState(null);
 
+    const getAllUsers = async () => {
+        try {
+            const response = await UserServices.fetchListUsers();
+            if (response.statusCode === 200) {
+                setListAccounts(response.data);
+            } else {
+                console.log("Error fetching users: " + response.message);
+                toast.error('Lỗi khi lấy danh sách tài khoản');
+            }
+        } catch (error) {
+            console.log("Error fetching users: " + error.message);
+        }
+    };
+
+    useEffect(() => {
+        getAllUsers();
+    }, []);
 
     const handleRemoveAction = (acc) => {
-
-        setModalContent(`Bạn có chắc chắn muốn xoá tài khoản ${acc.email} không ?`);
+        setModalContent(`Chắc chắn muốn xoá tài khoản [ ${acc.email} ]?`);
+        setDeletingAccount(acc);
         setShowRemoveModal(true);
     }
 
-    const handleConfirmAction = () => {
-        toast.success('Xoá tài khoản thành công');
+    const handleConfirmAction = async () => {
+        if (!deletingAccount) {
+            toast.error('Lỗi khi xoá tài khoản');
+        } else {
+            const response = await UserServices.fetchDeleteUser(deletingAccount.id);
+            console.log(response);
+            if (response.statusCode !== 200) {
+                const message = response.message ?? 'Xoá tài khoản thất bại';
+                toast.error(message);
+            } else {
+                toast.success('Xoá tài khoản thành công');
+                getAllUsers();
+            }
+        }
+        setDeletingAccount(null);
         setShowRemoveModal(false);
     }
     const handleCancelAction = () => {
+        setDeletingAccount(null);
         setShowRemoveModal(false);
     }
 
-    const handleAddNewAccount = () => {
-        toast.success('Tạo tài khoản mới thành công');
+    const handleAddNewAccount = async () => {
+        const email = document.getElementById('floatingInputValid').value;
+        const password = document.getElementById('floatingInputInvalid').value;
+        const role = document.getElementById('floatingSelect').value;
+
+        if (!email || !password || !role) {
+            toast.error('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+
+        const response = await UserServices.fetchAddUser(email, password, role);
+        if (response.statusCode !== 200) {
+            console.log(response);
+            const message = response.message ?? 'Tạo tài khoản mới thất bại';
+            toast.error(message);
+        } else {
+            toast.success('Tạo tài khoản mới thành công');
+            // refresh the list
+            getAllUsers();
+        }
         setShowAddModal(false);
     }
-
-    const sampleData = [
-        {
-            id: '1',
-            email: 'user1@example.com',
-            role: 'Admin'
-        },
-        {
-            id: '2',
-            email: 'user2@example.com',
-            role: 'Người dùng'
-        },
-        {
-            id: '3',
-            email: 'user3@example.com',
-            role: 'Người dùng'
-        }
-    ];
 
 
     return (
@@ -79,25 +112,29 @@ const AccountManagementPage = () => {
             <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                     <CTableRow>
-                        <CTableHeaderCell className="bg-body-tertiary">ID</CTableHeaderCell>
-                        <CTableHeaderCell className="bg-body-tertiary">Email</CTableHeaderCell>
-                        <CTableHeaderCell className="bg-body-tertiary text-center">Vai trò</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary text=center">STT</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary text-start fixed-width">ID</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary text-start">Email</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary text-start">Vai trò</CTableHeaderCell>
                         <CTableHeaderCell className="bg-body-tertiary">Thao tác</CTableHeaderCell>
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {sampleData.map((acc, index) => (
-                        <CTableRow key={index}>
-                            <CTableDataCell>
+                    {listAccounts.map((acc, index) => (
+                        <CTableRow key={index} className='text-start'>
+                            <CTableDataCell className="text-center">
+                                <div>{index + 1}</div>
+                            </CTableDataCell>
+                            <CTableDataCell className="text-start fixed-width">
                                 <div>{acc.id}</div>
                             </CTableDataCell>
                             <CTableDataCell>
                                 <div>{acc.email}</div>
                             </CTableDataCell>
                             <CTableDataCell>
-                                <div>{acc.role}</div>
+                                <div>{"Quản trị viên"}</div>
                             </CTableDataCell>
-                            <CTableDataCell>
+                            <CTableDataCell className="text-center">
                                 <CButton className="remove-btn" onClick={() => handleRemoveAction(acc)}>
                                     <CIcon icon={cilTrash} className="remove-icon pb-1" size="lg" />
                                 </CButton>
@@ -123,7 +160,7 @@ const AccountManagementPage = () => {
                         type="email"
                         id="floatingInputValid"
                         floatingClassName="mb-3"
-                        floatingLabel="Email addresss"
+                        floatingLabel="Email"
                         placeholder="name@example.com"
                     />
                     <CFormInput
@@ -138,8 +175,8 @@ const AccountManagementPage = () => {
                         aria-label="Floating label select example"
                         className='mt-3'
                     >
-                        <option value="1">Quản trị viên</option>
-                        <option value="2">Người dùng</option>
+                        <option value="Quản trị viên">Quản trị viên</option>
+                        <option value="Người dùng">Người dùng</option>
                     </CFormSelect>
                 </CModalBody>
                 <CModalFooter>
