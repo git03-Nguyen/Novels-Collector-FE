@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react';
-import Login, { Email, Password, Title, Submit, Logo, Footer, Reset } from '@react-login-page/page4';
+import Login, { Email, Password, Title, Submit, Logo, Footer } from '@react-login-page/page4';
 
 import logo from '../../assets/images/logo.png';
 import './LoginPage.css'
-import axios from '../../configs/axios';
 import { UserContext } from '../../context/UserContext';
 import UserServices from '../../services/user.s';
 import { useNavigate } from 'react-router-dom';
@@ -35,31 +34,7 @@ function LoginPage(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const { user } = useContext(UserContext);
-    const fetchListhUsers = async () => {
-        try {
-            const response = await axios.get(`/api/v1/user/`, {
-                headers: {
-                    'Authorization': `Bearer ..`,
-                    'Content-Type': 'application/json',
-                }
-            });
-            if (response) {
-                return {
-                    statusCode: response.statusCode ?? 200,
-                    message: response.message,
-                    data: response?.data ?? {},
-                }
-            }
-        } catch (error) {
-            console.log("Error fetching list users: " + error.message);
-            return {
-                statusCode: 500,
-                data: null,
-                message: "Cannot connect to server!"
-            }
-        }
-    }
+
     const handleLogin = async (event) => {
         event.preventDefault();
         console.log('Email:', email);

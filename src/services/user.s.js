@@ -63,7 +63,6 @@ const fetchToLogin = async (email, password) => {
 
 
 const fetchAddUser = async (email, password, role) => {
-    const token = getUserToken();
 
     try {
         if (!email || !password || !role) {
