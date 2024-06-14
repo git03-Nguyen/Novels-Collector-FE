@@ -1,44 +1,37 @@
 import axios from '../configs/axios';
-import React, { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 
-const useFetchListUsers = () => {
-    const { user } = useContext(UserContext);
+// Helper function to get user token from context
+const getUserToken = () => {
+    // get user token from local storage
+    return localStorage.getItem('token') ?? '';
+};
 
-    const fetchListUsers = async () => {
-        try {
-            console.log('User:', user.token);
-            const response = await axios.get(`${process.env.REACT_APP_SERVER_HTTPS_URL}api/v1/user/`, {
-                headers: {
-                    'Authorization': `Bearer ${user.token}`,
-                    'Content-Type': 'application/json',
-                }
-            });
+const fetchListUsers = async () => {
+    try {
+        const token = getUserToken();
 
-            if (response?.statusCode === 200) {
-                return {
-                    statusCode: response.statu ?? 200,
-                    message: response.message,
-                    data: response?.data ?? {},
-                }
-            } else if (response?.statusCode === 401) {
-                return {
-                    statusCode: response.status,
-                    message: "Lỗi chưa đăng nhập",
-                    data: null,
-                }
+        const response = await axios.get(`/api/v1/user/`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
             }
-        } catch (error) {
-            console.log("Error fetching list users: " + error.message);
+        });
+        if (response) {
             return {
-                statusCode: 401,
-                data: null,
-                message: "Chưa đăng nhập!"
-            }
+                statusCode: response.status ?? 200,
+                message: response.message ?? "",
+                data: response.data ?? [],
+            };
         }
-    };
-
-    return fetchListUsers;
+    } catch (error) {
+        console.log("Error fetching list users: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        };
+    }
 };
 
 const fetchAPILogin = async (email, password) => {
@@ -63,14 +56,86 @@ const fetchAPILogin = async (email, password) => {
         return {
             statusCode: 500,
             data: null,
-            message: "Email hoặc mật khẩu không đúng!",
+            message: "Cannot connect to server!"
         }
     }
 }
 
+const fetchAddUser = async (email, password, role) => {
+    const token = getUserToken();
+
+    try {
+        if (!email || !password || !role) {
+            return {
+                statusCode: 400,
+                data: null,
+                message: "Missing required fields!"
+            };
+        }
+
+        const token = getUserToken();
+        const response = await axios.post(`/api/v1/auth/register`, { email, password, role }, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        return response;
+
+    } catch (error) {
+        console.log("Error adding user: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        };
+    }
+};
+
+const fetchDeleteUser = async (id) => {
+    const token = getUserToken();
+
+    try {
+        if (!id) {
+            return {
+                statusCode: 400,
+                data: null,
+                message: "Missing required fields!"
+            };
+        }
+
+        const response = await axios.delete(`/api/v1/user/delete/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        console.log('fetchDeleteUser::Response:', response);
+        if (response) {
+            return {
+                statusCode: response.status ?? 200,
+                message: response.message,
+                data: response.data,
+            };
+        }
+    } catch (error) {
+        console.log("Error deleting user: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        };
+    }
+};
+
+
 const UserServices = {
-    useFetchListUsers,
-    fetchAPILogin
+    fetchListUsers,
+    fetchToLogin,
+    fetchAddUser,
+    fetchDeleteUser
 }
 
 export default UserServices;

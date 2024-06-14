@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
 const UserContext = React.createContext({
-    token: '',
-    isAdmin: true,
-
-})
+    user: {
+        email: '',
+        token: '',
+        uid: '',
+        message: '',
+        auth: false
+    },
+    userLatestNovels: [],
+    loginContext: () => { },
+    logoutContext: () => { },
+    setUserLatestNovels: () => { },
+    getUserData: () => ({})
+});
 
 function UserProvider(props) {
-
     const { children } = props;
     const defaultUser = {
         email: '',
@@ -15,7 +23,7 @@ function UserProvider(props) {
         uid: '',
         message: '',
         auth: false
-    }
+    };
     const [user, setUser] = useState(defaultUser);
     const [userLatestNovels, setUserLatestNovels] = useState([]);
 
@@ -26,36 +34,49 @@ function UserProvider(props) {
             message: userData.message,
             uid: userData.uid,
             auth: true
-        }
-        localStorage.setItem('user', JSON.stringify(newData));
+        };
+
+        localStorage.setItem('token', newData.token);
         setUser(newData);
-    }
+    };
 
     const logoutContext = () => {
         let newData = {
             ...defaultUser,
-        }
+        };
         setUser(newData);
-        localStorage.removeItem('user');
-    }
+        localStorage.removeItem('token');
+    };
 
+    const getUserData = () => user;
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        const token = localStorage.getItem('token');
+        if (token) {
+            setUser({
+                ...user,
+                token: token,
+                auth: true
+            });
+        } else {
+            setUser({
+                ...user,
+                auth: false
+            });
         }
     }, []);
 
     return (
-        <div>
-            <UserContext.Provider value={{
-                user, userLatestNovels,
-                loginContext, logoutContext, setUserLatestNovels,
-            }}>
-                {children}
-            </UserContext.Provider>
-        </div>
+        <UserContext.Provider value={{
+            user,
+            userLatestNovels,
+            loginContext,
+            logoutContext,
+            setUserLatestNovels,
+            getUserData
+        }}>
+            {children}
+        </UserContext.Provider>
     );
 }
 
