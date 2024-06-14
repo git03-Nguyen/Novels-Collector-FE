@@ -70,6 +70,7 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
 
         const newChapterSlug = otherChapterSources?.find(chap => chap?.source === newSelectedSource && chap?.novelSlug === newNovelSlug)?.slug;
         if (newChapterSlug && newChapterSlug?.length > 0) {
+            console.log(`Change to: /source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`);
             // navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`)
             window.location.replace(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`);
         }
@@ -222,8 +223,8 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
                     </select>
                 </div>
 
-                {displayChapterList && displayChapterList?.length > 0 &&
-                    displayChapterList?.map((chapter, index) => {
+                {displayChapterList && displayChapterList?.length > 0
+                    ? displayChapterList?.map((chapter, index) => {
                         return <button key={`recent-novel-offcanva-card-${index}`} id={`recent-novel-offcanvas-card-${index}`}
                             className="btn btn-secondary offcanvas-novel-card-mini"
                             onClick={() => handleClickChapter(chapter.slug)}>
@@ -239,7 +240,9 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
 
 
                         </button>
-                    })}
+                    })
+                    : <h4 className="text-white">Có lỗi xảy ra khi tải danh sách chương, hãy thử lại sau</h4>}
+
 
                 <button className="btn btn-secondary my-3"
                     onClick={() => setIsDisplayFullList(!isDisplayFullList)}

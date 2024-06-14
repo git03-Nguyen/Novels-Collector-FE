@@ -16,7 +16,7 @@ function NovelPage(props) {
 
     const { novelSlug, sourceSlug } = useParams();
 
-    const { setNovelContext, setChapterContext } = useContext(NovelContext);
+    const { setNovelContext } = useContext(NovelContext);
     const { setUserLatestNovels } = useContext(UserContext);
     const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
 
@@ -103,6 +103,8 @@ function NovelPage(props) {
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
                 setNovel(newNovelInfo);
 
+                console.log("novel: ");
+                console.log(newNovelInfo);
                 setTotalPage(parseInt(newNovelInfo.totalPage));
                 setIsNovelInfoFetched(true);
 
@@ -178,6 +180,7 @@ function NovelPage(props) {
     }
 
     useEffect(() => {
+        console.log("Start use effect here ...");
         setIsLoadingContext(true);
         setIsNovelInfoFetched(false);
         setSelectedSource(sourceSlug);
@@ -202,11 +205,11 @@ function NovelPage(props) {
 
     return (
         <div className='novel-page-container  dark:bg-black dark:text-white'>
-            {novel && novel.cover && (
+            {novel && novel?.slug && (
                 <>
                     <div className="row w-100">
                         <div className="col-md-4 mt-2">
-                            <img className='novel-img' src={novel?.cover} alt={`${novel?.title} thumbnail`} />
+                            <img className='novel-img' src={novel?.cover} alt={`Ảnh bìa truyện ${novel?.title}`} />
                         </div>
                         <div className="col-md-8 text-start px-0">
 
@@ -266,9 +269,11 @@ function NovelPage(props) {
                             <div className="mt-0">
                                 <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
 
-                                {(sourceSlug === "DTruyenCom" || sourceSlug === "TruyenTangThuVienVn")
-                                    ? <span className='d-none novel-description' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
-                                    : <span className='d-none novel-description' id='raw-novel-description' >{rawNovelDescription}</span>
+                                {sourceSlug === "TruyenFullVn"
+                                    ? <span className='d-none novel-description' id='raw-novel-description' >{rawNovelDescription}</span>
+                                    : <span className='d-none novel-description' id='raw-novel-description'
+                                        dangerouslySetInnerHTML={{ __html: rawNovelDescription }}>
+                                    </span>
                                 }
 
                                 <span className="text-white mt-0 novel-description">

@@ -63,8 +63,8 @@ function NovelChapterPage(props) {
                 const newNovelInfo = {
                     ...novelContext,
                     chapters: response.data,
-                    page: response.meta.page,
-                    totalPage: response.meta.totalPage,
+                    page: response.meta?.page,
+                    totalPage: response.meta?.totalPage,
                 }
 
                 updateRelatedData(newNovelInfo);
@@ -157,7 +157,7 @@ function NovelChapterPage(props) {
                 };
 
                 let newChapterIndex = novelContext?.chapters?.findIndex(novel => novel.slug === response?.meta?.chapterSlug);
-                let newChapterID = response.data.number;
+                let newChapterID = response.data?.number;
                 if (newChapterIndex !== undefined && newChapterIndex !== -1) {
                     newChapterID = getChapterIDFromChapterListIndex(newChapterIndex, novelContext);
                 }
