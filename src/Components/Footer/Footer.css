@@ -1,5 +1,7 @@
 .app-footer {
     background-color: var(--dark-blue);
+    width: 100%;
+    padding: 16px 5%;
 
     color: white;
     display: grid;
@@ -22,14 +24,16 @@
 }
 
 .footer-navbar-link,
-.footer-contact > a {
+.footer-contact > a,
+.footer-credit > a {
     font-style: italic;
     margin: 4px 0;
     color: white;
 }
 
 .footer-navbar-link:hover,
-.footer-contact > a:hover {
+.footer-contact > a:hover,
+.footer-credit > a:hover {
     opacity: 0.7;
 }
 

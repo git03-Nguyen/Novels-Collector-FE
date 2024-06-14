@@ -28,8 +28,8 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
             const chapterListResponse = await fetchChapterList(source, novelSlug, page);
             if (chapterListResponse) {
                 returnedData.data.chapters = chapterListResponse.data;
-                returnedData.data.totalPage = chapterListResponse.meta.totalPage;
-                returnedData.data.page = chapterListResponse.meta.page;
+                returnedData.data.totalPage = chapterListResponse.meta?.totalPage;
+                returnedData.data.page = chapterListResponse.meta?.page;
             }
             return returnedData;
         }
@@ -38,7 +38,7 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
         return {
             statusCode: 500,
             data: null,
-            message: "Error fetching detail novel info: " + error.message
+            message: "Error fetching detail novel info: " + error.message,
         }
     }
 }
@@ -69,9 +69,60 @@ const fetchChapterList = async (source, novelSlug, page) => {
     }
 }
 
+
+const exportChapters = async (source, novelSlug, exporterPluginName, dataForRequesting) => {
+    try {
+        const response = await axios.post(`/api/v1/novel/${source}/${novelSlug}/export/${exporterPluginName}`,
+            dataForRequesting,
+        );
+
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response?.message ?? '',
+                data: response?.data ?? {},
+                meta: response?.meta ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error exporting chapters data: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
+
+const fetchOtherSources = async (sourceSlug, novelSlug, requestingData) => {
+    try {
+        const response = await axios.post(`/api/v1/novel/${sourceSlug}/${novelSlug}/others`,
+            requestingData,
+        );
+
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response?.message ?? '',
+                data: response?.data ?? {},
+                meta: response?.meta ?? {},
+            }
+        }
+    } catch (error) {
+        console.log("Error fetching other sources for novel: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
+
 const DetailNovelService = {
     fetchDetailNovel,
     fetchChapterList,
+    exportChapters,
+    fetchOtherSources,
 }
 
 export default DetailNovelService;

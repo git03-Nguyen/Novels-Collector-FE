@@ -23,30 +23,42 @@ function NovelProvider(props) {
 
     // PLUGIN
     const fetchPluginSources = async () => {
-        const userPluginSources = UserPluginSourcesManager.getUserPluginSources();
-        if (userPluginSources?.length > 0) {
-            setIsLoadingNovel(false);
-            setPluginSources(userPluginSources);
-            return;
-        }
-
         try {
             let response = await PluginSourceService.fetchPluginSources();
             if (response && response.data && parseInt(response.statusCode) === 200) {
-                let sourceList = response.data.map((source) => {
-                    return {
-                        ...source,
-                        prior: 1,
-                    }
+                let sourceList = response.data?.map((source) => {
+                    return source?.isLoaded === true
+                        ? {
+                            ...source,
+                            prior: 1,
+                        }
+                        : undefined;
                 });
                 sourceList.sort((a, b) => b.prior - a.prior)
 
-                setPluginSources(sourceList);
-                console.log("Plugin source: ");
+                console.log("Plugin source after fetching API: ");
                 console.log(sourceList);
-                setIsLoadingNovel(false);
 
-                UserPluginSourcesManager.savePluginSources(sourceList);
+                const isChangeSources = false;
+                const curUserSources = UserPluginSourcesManager.getUserPluginSources();
+
+                if (curUserSources?.length !== sourceList?.length) {
+                    isChangeSources = true;
+                } else {
+                    for (let i = 0; i < curUserSources?.length; i++) {
+                        const src = sourceList[i];
+                        const newSrcIndex = sourceList?.findIndex(newSrc => newSrc?.name === src?.name);
+                        if (newSrcIndex === -1 || (src?.isLoaded !== sourceList[newSrcIndex].isLoaded)) {
+                            isChangeSources = true;
+                            return;
+                        }
+                    }
+                }
+                if (isChangeSources === true) {
+                    handleSetPluginSources(sourceList);
+                }
+
+                setIsLoadingNovel(false);
             } else {
                 console.log("Error fetching plugin sources: " + response?.message);
             }
@@ -55,6 +67,12 @@ function NovelProvider(props) {
         }
     }
 
+    const handleSetPluginSources = (newPluginSources) => {
+
+
+        setPluginSources(newPluginSources);
+        UserPluginSourcesManager.savePluginSources(newPluginSources);
+    }
 
     useEffect(() => {
         fetchPluginSources()
@@ -63,7 +81,7 @@ function NovelProvider(props) {
     return (
         <NovelContext.Provider value={{
             searchValue, novelContext, chapterContext, pluginSources, isLoadingNovel, searchTarget,
-            setSearchValue, setNovelContext, setChapterContext, setPluginSources, setIsLoadingNovel, setSearchTarget
+            setSearchValue, setNovelContext, setChapterContext, handleSetPluginSources, setIsLoadingNovel, setSearchTarget
         }}>
             {children}
         </NovelContext.Provider>

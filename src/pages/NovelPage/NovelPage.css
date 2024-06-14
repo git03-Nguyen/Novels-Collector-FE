@@ -1,5 +1,6 @@
 .novel-page-container {
-    margin-top: 20px;
+    width: 90%;
+    margin: 20px auto 0 auto;
 }
 
 .chapter-table {
@@ -22,6 +23,15 @@
     border: solid 6px #000;
     border-radius: 10px;
     background-color: var(--light-blue)
+}
+
+.title-and-export-row {
+    width: 80%;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .novel-description {
