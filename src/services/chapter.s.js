@@ -326,8 +326,37 @@ const fetchChapterContent = async (source, novelSlug, chapterSlug) => {
 
 }
 
+const fetchChapterInOtherSource = async (source, novelSlug, chapterNumber, rawOtherSources) => {
+    try {
+        const response = await axios.post(`/api/v1/chapter/${source}/${novelSlug}/${chapterNumber}/others`,
+            rawOtherSources
+        );
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response.message,
+                data: response?.data ?? {},
+                meta: response?.meta ?? {},
+            }
+        }
+        return {
+            statusCode: 404,
+            data: null,
+            message: "Chapter content not found !"
+        }
+    } catch (error) {
+        console.log("Error fetching chapter content: " + error.message);
+        return {
+            statusCode: 500,
+            data: null,
+            message: "Cannot connect to server!"
+        }
+    }
+}
+
 const ChapterService = {
     fetchChapterContent,
+    fetchChapterInOtherSource,
 }
 
 
