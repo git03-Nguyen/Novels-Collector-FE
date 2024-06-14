@@ -185,12 +185,11 @@ function NovelChapterPage(props) {
     }
 
     const getChapterTitleBySourceSlug = () => {
-        if (sourceSlug === "TruyenTangThuVienVn") {
+        if (sourceSlug === "TruyenTangThuVienVn" || sourceSlug === "SSTruyenVn") {
             const chapterInList = novelContext?.chapters?.find((chapter) => chapter?.slug === curChapterSlug);
             if (chapterInList) {
                 return chapterInList?.title;
             }
-
         }
         return novelChapter?.title;
     }
@@ -296,7 +295,7 @@ function NovelChapterPage(props) {
             <Fragment >
                 <h3 id='novel-chapter-container' className='dark:bg-black dark:text-white'>{novelContext?.title}</h3>
                 <h5 >
-                    {`Chương ${novelChapter?.number}: ${getChapterTitleBySourceSlug()}`}
+                    {`Chương ${novelChapter?.number ?? ''}: ${getChapterTitleBySourceSlug()}`}
                 </h5>
                 <h5>Đánh giá: {novelContext?.rating} / {novelContext?.maxRating}
                     <span> - </span>

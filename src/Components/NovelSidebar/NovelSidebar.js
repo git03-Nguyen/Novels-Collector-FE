@@ -63,7 +63,7 @@ function NovelSidebar(props) {
                         ? <> {userLatestNovels?.slice(0, 5).map((novel, index) => {
                             return <div key={`recent-novel-card-${index}`} className='novel-card-mini'>
                                 <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
-                                    <img src={novel?.cover} />
+                                    <img src={novel?.cover ?? '/novel_cover_placeholder.png'} />
                                 </Link>
                                 <div className='novel-brief-info'>
                                     <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
@@ -97,7 +97,7 @@ function NovelSidebar(props) {
                                     {userLatestNovels.map((novel, index) => {
                                         return <div key={`recent-novel-offcanva-card-${index}`} className='offcanvas-novel-card-mini'>
                                             <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
-                                                <img src={novel?.cover} />
+                                                <img src={novel?.cover ?? '/novel_cover_placeholder.png'} />
                                             </Link>
                                             <div className='novel-brief-info'>
                                                 <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>

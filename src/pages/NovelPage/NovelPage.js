@@ -209,7 +209,7 @@ function NovelPage(props) {
                 <>
                     <div className="row w-100">
                         <div className="col-md-4 mt-2">
-                            <img className='novel-img' src={novel?.cover} alt={`Ảnh bìa truyện ${novel?.title}`} />
+                            <img className='novel-img' src={novel?.cover ?? '/novel_cover_placeholder.png'} alt={`Ảnh bìa truyện ${novel?.title}`} />
                         </div>
                         <div className="col-md-8 text-start px-0">
 
