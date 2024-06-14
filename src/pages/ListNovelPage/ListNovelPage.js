@@ -103,7 +103,6 @@ function ListNovelPage(props) {
             handleUpdateSearchTargetAndValue();
             return;
         }
-        console.log("Set related states");
         setCurCategory(searchParams.get('category') ?? '');
         setCurPage(1);
         setIsHandlingSearchParams(false);
@@ -153,8 +152,10 @@ function ListNovelPage(props) {
 
         if (isHandlingSearchParams === false) {
             handleUpdateSearchTargetAndValue();
+        } else {
+            setIsLoadingContext(false);
         }
-    }, [isHandlingSearchParams, curPage, curSearchValue]);
+    }, [isHandlingSearchParams, curPage, curSearchValue, pluginSources[0]]);
 
     return (
         <div className='list-novel-page-container'>

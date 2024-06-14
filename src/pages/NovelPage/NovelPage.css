@@ -1,5 +1,6 @@
 .novel-page-container {
-    margin-top: 20px;
+    width: 90%;
+    margin: 20px auto 0 auto;
 }
 
 .chapter-table {
@@ -9,7 +10,7 @@
 .novel-img {
     border: solid 4px #000;
     border-radius: 6px;
-
+    margin-left: 15%;
     max-width: 320px;
     width: 90%;
 }
@@ -22,6 +23,15 @@
     border: solid 6px #000;
     border-radius: 10px;
     background-color: var(--light-blue)
+}
+
+.title-and-export-row {
+    width: 80%;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .novel-description {
@@ -37,4 +47,13 @@
     max-height: 400px;
     overflow-y: auto;
     width: 70%;
+}
+
+.basic-info {
+    margin-right: 10%;
+}
+
+.novel-description {
+    display: block;
+    text-align: justify;
 }

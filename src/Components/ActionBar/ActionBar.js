@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom'
 import { React, useState } from 'react';
 import ChapterPageSideBar from '../ChapterPageSideBar/ChapterPageSideBar'
 import ModalEdit from '../ModalEdit/ModalEdit'
-export default function Action({ isDisabledSiblingChapter, handleSiblingChapterClick, novelName, novelPoster, novelAuthor, chapterList, sourceSlug, novelSlug }) {
+export default function Action({ isDisabledSiblingChapter, handleSiblingChapterClick, novelName, novelPoster, novelAuthor, chapterList, sourceSlug, novelSlug, curChapterSlug }) {
+
     const [showSideBar, setShowSideBar] = useState(false);
     const handleViewInformaton = () => {
         setShowSideBar(!showSideBar);
     }
+
     const [showModalEdit, setModalEdit] = useState(false);
     const handleModalEdit = () => {
         setModalEdit(!showModalEdit);
@@ -30,7 +32,10 @@ export default function Action({ isDisabledSiblingChapter, handleSiblingChapterC
                 </svg>
             </button>
 
-            <button className="py-3 px-3 bg-gray-800 hover:bg-gray-300 cursor-pointer border border-gray-200 " onClick={handleViewInformaton}>
+            <button className="py-3 px-3 bg-gray-800 hover:bg-gray-300 cursor-pointer border border-gray-200 "
+                data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeftLabel"
+                onClick={handleViewInformaton}
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                 </svg>
@@ -41,14 +46,16 @@ export default function Action({ isDisabledSiblingChapter, handleSiblingChapterC
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
                 </svg>
             </button>
-            {showSideBar && <ChapterPageSideBar
+            <ChapterPageSideBar
+                handleSiblingChapterClick={handleSiblingChapterClick}
                 novelName={novelName}
                 novelPoster={novelPoster}
                 novelAuthor={novelAuthor}
                 chapterList={chapterList}
                 sourceSlug={sourceSlug}
                 novelSlug={novelSlug}
-            />}
+                curChapterSlug={curChapterSlug}
+            />
             {showModalEdit && <ModalEdit closeModal={handleModalEdit} />}
 
         </div>

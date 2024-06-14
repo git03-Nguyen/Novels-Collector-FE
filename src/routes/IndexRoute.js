@@ -6,7 +6,6 @@ import PageNotFound from '../pages/PageNotFound/PageNotFound';
 import NovelPage from '../pages/NovelPage/NovelPage';
 import NovelChapterPage from '../pages/NovelChapterPage/NovelChapterPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
-import ExporterManagementPage from '../pages/ExporterManagementPage/ExporterManagementPage';
 import PrivateRoute from './PrivateRoute';
 function IndexRoute(props) {
     return (
@@ -23,9 +22,7 @@ function IndexRoute(props) {
             <Route path='/source/:sourceSlug/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage />} />
 
             {/* Private */}
-            <Route path='/login/' element={<LoginPage />} />
-
-            <Route path='/admin/exporter' element={<ExporterManagementPage />} />
+            {/* <Route path='/login/' element={<LoginPage />} /> */}
 
 
             {/* TODO: Fix it when complete login feature

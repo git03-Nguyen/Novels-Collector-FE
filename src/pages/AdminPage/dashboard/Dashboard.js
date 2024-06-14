@@ -12,7 +12,7 @@ import {
 } from '@coreui/react';
 import logo from '../../../assets/images/logo.png';
 import WidgetsDropdown from '../widgets/WidgetsDropdown';
-
+import './Dashboard.css';
 const Dashboard = () => {
   return (
     <>
@@ -25,24 +25,24 @@ const Dashboard = () => {
             <CCardBody>
               <CRow className="text-center">
                 <CCol>
-                  <CImage src={logo} fluid width={200} className="my-4" />
+                  <CImage src={logo} fluid width={200} className="my-4" align="center" />
                 </CCol>
               </CRow>
               <CRow className="text-center mb-4">
                 <CCol>
-                  <h5>Chào mừng đến với Trình Quản Lý Truyện!</h5>
+                  <h5>Trình Quản Lý Truyện</h5>
                   <p>Hỗ trợ việc thu thập và quản lý nguồn truyện và nguồn xuất bản</p>
                 </CCol>
               </CRow>
               <CRow>
                 <CCol>
-                  <h6>Thành viên nhóm:</h6>
-                  <CListGroup>
-                    <CListGroupItem>Thành viên 1: Nguyễn Tuấn Đạt - Quản lý dự án</CListGroupItem>
-                    <CListGroupItem>Thành viên 2: Nguyễn Đình Ánh - Lập trình Backend</CListGroupItem>
-                    <CListGroupItem>Thành viên 3: Triệu Hoàng Thiên Ân - Thiết kế UI/UX</CListGroupItem>
-                    <CListGroupItem>Thành viên 4: Lê Minh Huy - Thiết kế UI/UX</CListGroupItem>
-                    <CListGroupItem>Thành viên 5: Trương Thành Nhân - Thiết kế UI/UX + Kiểm thử</CListGroupItem>
+                  <h5 className="text-center" >Thành viên nhóm</h5>
+                  <CListGroup className="list-member w-50">
+                    <CListGroupItem><strong>Nguyễn Tuấn Đạt</strong> - Lập trình Backend</CListGroupItem>
+                    <CListGroupItem><strong>Nguyễn Đình Ánh</strong> - Lập trình Backend</CListGroupItem>
+                    <CListGroupItem><strong>Triệu Hoàng Thiên Ân</strong> - Thiết kế UI/UX</CListGroupItem>
+                    <CListGroupItem><strong>Lê Minh Huy</strong> - Thiết kế UI/UX</CListGroupItem>
+                    <CListGroupItem><strong>Trương Thành Nhân</strong> - Thiết kế UI/UX + Kiểm thử</CListGroupItem>
                   </CListGroup>
                 </CCol>
               </CRow>

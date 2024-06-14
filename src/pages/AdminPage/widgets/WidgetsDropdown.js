@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import {
@@ -11,9 +11,50 @@ import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 
+import PluginSourceService from '../../../services/pluginSource.s'
+import PluginExporterService from '../../../services/pluginExporter.s'
 const WidgetsDropdown = (props) => {
   const widgetChartRef1 = useRef(null)
   const widgetChartRef2 = useRef(null)
+
+  const [listSources, setListSources] = useState([]);
+  const [listExporters, setListExporters] = useState([]);
+
+  const fetchAllSources = async () => {
+    try {
+      let response = await PluginSourceService.fetchPluginSources();
+      if (response && response.data && parseInt(response.statusCode) === 200) {
+        setListSources(response.data);
+      } else {
+        console.log("Error fetching plugin sources: " + response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching plugin sources: " + error.message);
+    }
+  }
+
+  const fetchAllExporters = async () => {
+    try {
+      let response = await PluginExporterService.fetchPluginExporters()
+      if (response && response.data && parseInt(response.statusCode) === 200) {
+        setListExporters(response.data);
+      } else {
+        console.log("Error fetching plugin exportes: " + response?.message);
+      }
+    } catch (error) {
+      console.error("Error fetching plugin exporters: " + error.message);
+    }
+  }
+
+
+
+
+  useEffect(() => {
+    fetchAllSources();
+    fetchAllExporters();
+  }, [])
+  const activeSources = listSources.filter(source => source.isLoaded).length;
+  const inactiveSources = listSources.filter(source => !source.isLoaded).length;
 
   useEffect(() => {
     document.documentElement.addEventListener('ColorSchemeChange', () => {
@@ -40,20 +81,11 @@ const WidgetsDropdown = (props) => {
           color="primary"
           value={
             <>
-              26K{' '}
-              <span className="fs-6 fw-normal">
-                (-12.4% <CIcon icon={cilArrowBottom} />)
-              </span>
+              {listSources.length}+
             </>
           }
-          title="Users"
-          // action={
-          //   <CDropdown alignment="end">
-          //     <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
-          //       <CIcon icon={cilOptions} />
-          //     </CDropdownToggle>
-          //   </CDropdown>
-          // }
+          title="Nguồn Truyện"
+
           chart={
             <CChartLine
               ref={widgetChartRef1}
@@ -67,7 +99,7 @@ const WidgetsDropdown = (props) => {
                     backgroundColor: 'transparent',
                     borderColor: 'rgba(255,255,255,.55)',
                     pointBackgroundColor: getStyle('--cui-primary'),
-                    data: [65, 59, 84, 84, 51, 55, 40],
+                    data: [65, 59, 60, 65, 71, 75, 82],
                   },
                 ],
               }}
@@ -117,20 +149,19 @@ const WidgetsDropdown = (props) => {
               }}
             />
           }
+
         />
+
       </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="info"
           value={
             <>
-              $6.200{' '}
-              <span className="fs-6 fw-normal">
-                (40.9% <CIcon icon={cilArrowTop} />)
-              </span>
+              {listSources.length}+
             </>
           }
-          title="Income"
+          title="Plugins Truyện"
           // action={
           //   // <CDropdown alignment="end">
           //   //   {/* <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
@@ -151,7 +182,7 @@ const WidgetsDropdown = (props) => {
                     backgroundColor: 'transparent',
                     borderColor: 'rgba(255,255,255,.55)',
                     pointBackgroundColor: getStyle('--cui-info'),
-                    data: [1, 18, 9, 17, 34, 22, 11],
+                    data: [1, 18, 9, 17, 34, 48, 52],
                   },
                 ],
               }}
@@ -207,21 +238,11 @@ const WidgetsDropdown = (props) => {
           color="warning"
           value={
             <>
-              2.49%{' '}
-              <span className="fs-6 fw-normal">
-                (84.7% <CIcon icon={cilArrowTop} />)
-              </span>
+              {listExporters.length}+
             </>
           }
-          title="Conversion Rate"
-          // action={
-          //   <CDropdown alignment="end">
-          //     <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
-          //       <CIcon icon={cilOptions} />
-          //     </CDropdownToggle>
+          title="Nguồn xuất bản"
 
-          //   </CDropdown>
-          // }
           chart={
             <CChartLine
               className="mt-3"
@@ -233,7 +254,7 @@ const WidgetsDropdown = (props) => {
                     label: 'My First dataset',
                     backgroundColor: 'rgba(255,255,255,.2)',
                     borderColor: 'rgba(255,255,255,.55)',
-                    data: [78, 81, 80, 45, 34, 12, 40],
+                    data: [22, 40, 34, 45, 51, 65, 78],
                     fill: true,
                   },
                 ],
@@ -274,13 +295,10 @@ const WidgetsDropdown = (props) => {
           color="danger"
           value={
             <>
-              44K{' '}
-              <span className="fs-6 fw-normal">
-                (-23.6% <CIcon icon={cilArrowBottom} />)
-              </span>
+              500+
             </>
           }
-          title="Sessions"
+          title="Người dùng"
           chart={
             <CChartBar
               className="mt-3 mx-3"

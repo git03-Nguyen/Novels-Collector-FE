@@ -18,7 +18,7 @@ function NovelSidebar(props) {
 
     const fetchCategories = async () => {
         try {
-            const response = await CategoryService.fetchCategories(pluginSources[0].name);
+            const response = await CategoryService.fetchCategories(pluginSources[0]?.name);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 setCategories(response.data);
             } else {
@@ -46,7 +46,11 @@ function NovelSidebar(props) {
     }, [])
 
     useEffect(() => {
-        fetchCategories();
+        console.log("pluginSources: ");
+        console.log(pluginSources);
+        if (pluginSources && pluginSources?.length > 0 && pluginSources[0]?.name?.length > 0) {
+            fetchCategories();
+        }
     }, [pluginSources])
 
 
@@ -71,7 +75,7 @@ function NovelSidebar(props) {
                                     <i>{novel?.source}</i>
                                     {novel?.chapter?.slug &&
                                         <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}/chapter/${novel?.chapter?.slug}`}>
-                                            <span>Chương {novel?.chapter?.number}</span>
+                                            <span>Chương {novel?.chapter?.number ?? novel?.chapter?.id}</span>
                                         </Link>
                                     }
                                 </div>
