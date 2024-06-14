@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { NovelContext } from '../../context/NovelContext';
 import { Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import PluginExporterService from '../../services/pluginExporters.s';
+import PluginExporterService from '../../services/pluginExporter.s';
 
 
 import './ExportNovelFileModal.scss';

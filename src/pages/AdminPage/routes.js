@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Dashboard = React.lazy(() => import('./Dashboard/Dashboard'));
+const Dashboard = React.lazy(() => import('./dashboard/Dashboard'));
 const SourceManagement = React.lazy(() => import('./SourceManagement/SourceManagementPage'))
 const ExporterManagement = React.lazy(() => import('./ExporterManagement/ExporterManagementPage'))
 const AccountManagement = React.lazy(() => import('./AccountManagement/AccountManagementPage'))

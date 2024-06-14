@@ -28,8 +28,8 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
             const chapterListResponse = await fetchChapterList(source, novelSlug, page);
             if (chapterListResponse) {
                 returnedData.data.chapters = chapterListResponse.data;
-                returnedData.data.totalPage = chapterListResponse.meta.totalPage;
-                returnedData.data.page = chapterListResponse.meta.page;
+                returnedData.data.totalPage = chapterListResponse.meta?.totalPage;
+                returnedData.data.page = chapterListResponse.meta?.page;
             }
             return returnedData;
         }
@@ -38,7 +38,7 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
         return {
             statusCode: 500,
             data: null,
-            message: "Error fetching detail novel info: " + error.message
+            message: "Error fetching detail novel info: " + error.message,
         }
     }
 }
