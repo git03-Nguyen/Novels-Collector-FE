@@ -3,25 +3,31 @@ import React, { useEffect, useState } from 'react';
 const UserContext = React.createContext({
     token: '',
     isAdmin: true,
+
 })
 
 function UserProvider(props) {
 
     const { children } = props;
     const defaultUser = {
+        email: '',
         token: '',
-        account: {},
-        isAdmin: false,
+        uid: '',
+        message: '',
+        auth: false
     }
     const [user, setUser] = useState(defaultUser);
     const [userLatestNovels, setUserLatestNovels] = useState([]);
 
     const loginContext = (userData) => {
         let newData = {
-            isAdmin: true,
-            token: userData.token,
-            account: userData.account
+            email: userData.email,
+            token: userData.accesstoken,
+            message: userData.message,
+            uid: userData.uid,
+            auth: true
         }
+        localStorage.setItem('token', newData.token);
         setUser(newData);
     }
 
@@ -30,6 +36,7 @@ function UserProvider(props) {
             ...defaultUser,
         }
         setUser(newData);
+        localStorage.removeItem('token');
     }
 
 

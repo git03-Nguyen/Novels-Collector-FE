@@ -38,12 +38,12 @@ button {
     text-decoration: none;
 }
 
-.settings-bar > button {
+.settings-bar>button {
     margin: 4px 8px;
     box-shadow: 1.5px 1px var(--light-blue);
     background: linear-gradient(90deg, var(--dark-blue), black) !important;
 }
 
-.settings-bar > button:hover {
+.settings-bar>button:hover {
     background: linear-gradient(90deg, #3b66f5, #163bcd) !important;
 }
