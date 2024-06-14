@@ -16,6 +16,16 @@ import { LoadingContext } from '../../context/LoadingContext';
 function NovelChapterPage(props) {
     const navigate = useNavigate();
 
+    const defaultStyleSettings = {
+        fontSize: '16px',
+        fontColor: '#ffffff',
+        backgroundColor: '#066886',
+        fontFamily: 'Arial',
+        lineHeight: '1.5',
+        fontStyle: 'normal',
+    };
+    const [curStyleSettings, setCurStyleSettings] = useState(defaultStyleSettings);
+
     const { novelSlug, chapterSlug, sourceSlug } = useParams();
 
     const { novelContext, setNovelContext, chapterContext, setChapterContext } = useContext(NovelContext);
@@ -40,6 +50,11 @@ function NovelChapterPage(props) {
 
     const [novelChapter, setChapterContent] = useState({});
 
+    const handleConfirmToolbarModal = (newStyleSettings) => {
+        setCurStyleSettings(newStyleSettings);
+        // setCurStyleSettings((prevStyles) => ({ ...prevStyles, ...newStyleSettings }));
+        toast.success('Thay đổi tùy chỉnh hiển thị nội dung truyện thành công !');
+    }
 
     const fetchNovelInfo = async (source, slug) => {
         try {
@@ -306,7 +321,16 @@ function NovelChapterPage(props) {
                 <div className='novel-chapter-content-container'>
 
                     {novelChapter?.content && novelChapter?.content.length > 0 &&
-                        <div key={`content-chapter-${chapterSlug}`} dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
+                        <div key={`content-chapter-${chapterSlug}`} className='chapter-content-text'
+                            style={{
+                                fontSize: curStyleSettings.fontSize,
+                                color: curStyleSettings.fontColor,
+                                fontFamily: curStyleSettings.fontFamily,
+                                lineHeight: curStyleSettings.lineHeight,
+                                fontStyle: curStyleSettings.fontStyle,
+                                backgroundColor: curStyleSettings.backgroundColor,
+                            }}
+                            dangerouslySetInnerHTML={{ __html: novelChapter?.content }}></div>
                     }
                 </div>
 
@@ -339,6 +363,7 @@ function NovelChapterPage(props) {
                     sourceSlug={sourceSlug}
                     novelSlug={novelSlug}
                     curChapterSlug={curChapterSlug}
+                    onConfirmToolbarModal={handleConfirmToolbarModal}
                 />
             }
 

@@ -1,0 +1,47 @@
+.toolbar-container {
+    & > div {
+        padding: 8px 0;
+        border-top: 1px solid #888888;
+        border-bottom: 1px solid #888888;
+        border-radius: 8px;
+    }
+
+    & > .toolbar-introduction {
+        padding: 12px 0;
+    }
+    
+    & > .toolbar-settings {
+        width: 100%;
+        display: grid;
+    
+        text-align: center;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: 33.3% auto 33.3%;
+    
+        & > label {
+            margin: 12px auto;
+        }
+    }
+    
+    & > .demo-text-container {
+        display: flex;
+        flex-flow: column nowrap;
+    
+        justify-content: start;
+        align-items: center;
+    
+        & > span {
+            max-width: 150px;
+            border-radius: 4px;
+            padding: 0.5em;
+        }
+    }
+    
+    .reset-settings-container {
+        display: flex;
+        flex-flow: column nowrap;
+    
+        justify-content: start;
+        align-items: center;
+    }
+}
