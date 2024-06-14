@@ -10,13 +10,14 @@ import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
+import UserStyleSettingsGetter from '../../utils/localStorage/userStyleSettingsGetter';
 import ActionBar from '../../Components/ActionBar/ActionBar';
 import { LoadingContext } from '../../context/LoadingContext';
 
 function NovelChapterPage(props) {
     const navigate = useNavigate();
 
-    const defaultStyleSettings = {
+    const defaultStyleSettings = UserStyleSettingsGetter.getUserStyleSettings() ?? {
         fontSize: '16px',
         fontColor: '#ffffff',
         backgroundColor: '#066886',
@@ -24,7 +25,11 @@ function NovelChapterPage(props) {
         lineHeight: '1.5',
         fontStyle: 'normal',
     };
-    const [curStyleSettings, setCurStyleSettings] = useState(defaultStyleSettings);
+
+    const [curStyleSettings, setCurStyleSettings] = useState(UserStyleSettingsGetter.getUserStyleSettings()?.fontSize
+        ? UserStyleSettingsGetter.getUserStyleSettings()
+        : defaultStyleSettings
+    );
 
     const { novelSlug, chapterSlug, sourceSlug } = useParams();
 
@@ -52,7 +57,6 @@ function NovelChapterPage(props) {
 
     const handleConfirmToolbarModal = (newStyleSettings) => {
         setCurStyleSettings(newStyleSettings);
-        // setCurStyleSettings((prevStyles) => ({ ...prevStyles, ...newStyleSettings }));
         toast.success('Thay đổi tùy chỉnh hiển thị nội dung truyện thành công !');
     }
 

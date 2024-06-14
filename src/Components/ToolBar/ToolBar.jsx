@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import './ToolBar.scss';
+import UserStyleSettingsGetter from '../../utils/localStorage/userStyleSettingsGetter';
 
 function ToolBar(props) {
     const { onChange } = props;
@@ -13,50 +14,68 @@ function ToolBar(props) {
         fontStyle: 'normal',
     }
 
-    const [fontSize, setFontSize] = useState(defaultSettings.fontSize);
-    const [fontColor, setFontColor] = useState(defaultSettings.fontColor);
-    const [backgroundColor, setBackgroundColor] = useState(defaultSettings.backgroundColor)
-    const [fontFamily, setFontFamily] = useState(defaultSettings.fontFamily);
-    const [lineHeight, setLineHeight] = useState(defaultSettings.lineHeight);
-    const [fontStyle, setFontStyle] = useState(defaultSettings.fontStyle);
+    const [styleSettings, setStyleSettings] = useState(UserStyleSettingsGetter.getUserStyleSettings()?.fontSize
+        ? UserStyleSettingsGetter.getUserStyleSettings()
+        : defaultSettings
+    );
 
     const resetSettings = () => {
-        setFontSize(defaultSettings.fontSize);
-        setFontColor(defaultSettings.fontColor);
-        setBackgroundColor(defaultSettings.backgroundColor);
-        setFontFamily(defaultSettings.fontFamily);
-        setLineHeight(defaultSettings.lineHeight);
-        setFontStyle(defaultSettings.fontStyle);
+        setStyleSettings(defaultSettings);
+        onChange(defaultSettings);
     }
 
     const handleFontSizeChange = (e) => {
-        setFontSize(`${e.target.value}px`);
-        onChange({ fontSize: e.target.value });
+        const newStyleSettings = {
+            ...styleSettings,
+            fontSize: `${e.target.value}px`,
+        };
+        setStyleSettings(newStyleSettings)
+        onChange(newStyleSettings);
     };
 
     const handleFontColorChange = (e) => {
-        setFontColor(e.target.value);
-        onChange({ fontColor: e.target.value });
+        const newStyleSettings = {
+            ...styleSettings,
+            fontColor: e.target.value,
+        }
+        setStyleSettings(newStyleSettings)
+        onChange(newStyleSettings);
     };
 
     const handleBackgroundColorChange = (e) => {
-        setBackgroundColor(e.target.value);
-        onChange({ backgroundColor: e.target.value });
+        const newStyleSettings = {
+            ...styleSettings,
+            backgroundColor: e.target.value,
+        }
+        setStyleSettings(newStyleSettings)
+        onChange(newStyleSettings);
     }
 
     const handleFontFamilyChange = (e) => {
-        setFontFamily(e.target.value);
-        onChange({ fontFamily: e.target.value });
+        const newStyleSettings = {
+            ...styleSettings,
+            fontFamily: e.target.value,
+        }
+        setStyleSettings(newStyleSettings)
+        onChange(newStyleSettings);
     };
 
     const handleLineHeightChange = (e) => {
-        setLineHeight(e.target.value);
-        onChange({ lineHeight: e.target.value });
+        const newStyleSettings = {
+            ...styleSettings,
+            lineHeight: e.target.value,
+        }
+        setStyleSettings(newStyleSettings)
+        onChange(newStyleSettings);
     };
 
     const handleFontStyleChange = (e) => {
-        setFontStyle(e.target.value);
-        onChange({ fontStyle: e.target.value });
+        const newStyleSettings = {
+            ...styleSettings,
+            fontStyle: e.target.value,
+        }
+        setStyleSettings(newStyleSettings)
+        onChange(newStyleSettings);
     };
 
 
@@ -68,12 +87,12 @@ function ToolBar(props) {
             <div className='toolbar-settings'>
                 <label> Cỡ chữ:
                     <input type="number" className='form-select'
-                        value={fontSize.replace('px', '')} onChange={handleFontSizeChange} />
+                        value={styleSettings?.fontSize.replace('px', '')} onChange={handleFontSizeChange} />
                 </label>
 
                 <label> Font chữ:
                     <select className='form-select'
-                        value={fontFamily} onChange={handleFontFamilyChange}>
+                        value={styleSettings?.fontFamily} onChange={handleFontFamilyChange}>
                         <option value="Arial">Arial</option>
                         <option value="Times New Roman">Times New Roman</option>
                         <option value="Courier New">Courier New</option>
@@ -82,19 +101,19 @@ function ToolBar(props) {
                 </label>
                 <label> Màu chữ:
                     <input type="color" className='form-control'
-                        value={fontColor} onChange={handleFontColorChange} />
+                        value={styleSettings?.fontColor} onChange={handleFontColorChange} />
                 </label>
                 <label> Màu nền:
                     <input type="color" className='form-control'
-                        value={backgroundColor} onChange={handleBackgroundColorChange} />
+                        value={styleSettings?.backgroundColor} onChange={handleBackgroundColorChange} />
                 </label>
                 <label> Khoảng cách dòng:
                     <input type="number" step="0.1" className='form-control'
-                        value={lineHeight} onChange={handleLineHeightChange} />
+                        value={styleSettings?.lineHeight} onChange={handleLineHeightChange} />
                 </label>
                 <label> Kiểu chữ:
                     <select className='form-select'
-                        value={fontStyle} onChange={handleFontStyleChange}>
+                        value={styleSettings?.fontStyle} onChange={handleFontStyleChange}>
                         <option value="normal">Mặc định</option>
                         <option value="italic">In nghiêng</option>
                         <option value="oblique">In xiên</option>
@@ -106,12 +125,12 @@ function ToolBar(props) {
                 <i>Dưới đây là bản thử của những cài đặt trên</i>
                 <div className='mt-3'></div>
                 <span className='text-center' style={{
-                    fontSize: fontSize,
-                    color: fontColor,
-                    fontFamily: fontFamily,
-                    lineHeight: lineHeight,
-                    fontStyle: fontStyle,
-                    backgroundColor: backgroundColor,
+                    fontSize: styleSettings?.fontSize,
+                    color: styleSettings?.fontColor,
+                    fontFamily: styleSettings?.fontFamily,
+                    lineHeight: styleSettings?.lineHeight,
+                    fontStyle: styleSettings?.fontStyle,
+                    backgroundColor: styleSettings?.backgroundColor,
                 }}>
                     Novel Collector - Nhóm 12
                 </span>
