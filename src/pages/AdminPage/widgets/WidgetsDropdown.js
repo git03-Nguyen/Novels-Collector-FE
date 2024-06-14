@@ -295,7 +295,7 @@ const WidgetsDropdown = (props) => {
           color="danger"
           value={
             <>
-              500 +
+              500+
             </>
           }
           title="Người dùng"

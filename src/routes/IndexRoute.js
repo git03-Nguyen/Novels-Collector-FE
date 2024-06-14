@@ -22,7 +22,7 @@ function IndexRoute(props) {
             <Route path='/source/:sourceSlug/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage />} />
 
             {/* Private */}
-            <Route path='/login/' element={<LoginPage />} />
+            {/* <Route path='/login/' element={<LoginPage />} /> */}
 
 
             {/* TODO: Fix it when complete login feature

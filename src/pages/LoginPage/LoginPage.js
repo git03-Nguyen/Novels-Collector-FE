@@ -1,67 +1,42 @@
 import React from 'react';
-import './LoginPage.css';
+import Login, { Email, Password, Title, Submit, Logo, Reset } from '@react-login-page/page4';
 
-function LoginPage(props) {
+import logo from '../../assets/images/logo.png';
+// Check the imported components
+import './LoginPage.css'
+const css = {
+    '--login-bg': '#f3f2f2',
+    '--login-color': '#333',
+    '--login-logo': '#fff',
+    '--login-inner-bg': '#fff',
+    '--login-banner-bg': '#fbfbfb',
+    '--login-input': '#333',
+    '--login-input-icon': '#dddddd',
+    '--login-input-bg': 'transparent',
+    '--login-input-border': 'rgba(0, 0, 0, 0.13)',
+    '--login-input-placeholder': '#999999',
+    '--login-btn': '#fff',
+    '--login-btn-bg': '#b08bf8',
+    '--login-btn-bg-focus': '#b08bf8',
+    '--login-btn-bg-hover': '#b08bf8',
+    '--login-btn-bg-active': '#b08bf8',
+};
 
-    const handleLogin = async () => {
-        // Handle login logic here
-    };
+const LoginPage = () => (
+    <Login style={{ height: "100vh", ...css }}>
+        <Login.Password>
+            <div></div>
+        </Login.Password>
+        <Submit>Đăng nhập</Submit>
+        <Email name="Email" label="Email" />
+        <Password label="Mật khẩu" name="userPassword" />
+        <Logo>
+            <img src={logo} height={20} />
+        </Logo>
+        <Title label="Đăng nhập">Đăng nhập</Title>
 
-    return (
-        <div className="container">
-            <div className="row justify-content-center">
-                <div className="col-md-4">
-                    <div className="card p-4">
-                        <div className="card-body">
-                            <form>
-                                <h1>Đăng nhập</h1>
-                                <p className="text-secondary">Với vai trò Quản trị viên</p>
-                                <div className="input-group mb-3">
-                                    <div className="input-group-text">
-                                        <i className="fa-solid fa-user"></i>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Username"
-                                        autoComplete="username"
-                                    />
-                                </div>
-                                <div className="input-group mb-2">
-                                    <div className="input-group-text">
-                                        <i className="fa-solid fa-lock"></i>
-                                    </div>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        placeholder="Password"
-                                        autoComplete="current-password"
-                                    />
-                                </div>
-                                <div className="row mb-4 justify-content-center">
-                                    <div className="col-xs-6">
-                                        <a href="forgot-password">
-                                            Quên mật khẩu?
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="row justify-content-center">
-                                    <div className="col-xs-6">
-                                        <button
-                                            type="button"
-                                            className="btn btn-primary px-4 login-btn"
-                                            onClick={handleLogin}>
-                                            Đăng nhập
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
+    </Login>
+);
+
 
 export default LoginPage;
