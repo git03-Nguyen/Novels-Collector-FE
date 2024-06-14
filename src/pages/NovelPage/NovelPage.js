@@ -209,6 +209,7 @@ function NovelPage(props) {
                             <img className='novel-img' src={novel?.cover} alt={`${novel?.title} thumbnail`} />
                         </div>
                         <div className="col-md-8 text-start px-0">
+
                             <div className="pb-4 border-bottom border-white-50">
                                 <div className='title-and-export-row'>
                                     <h2 className="text-white fw-bold mb-1">{novel?.title}</h2>
@@ -266,8 +267,8 @@ function NovelPage(props) {
                                 <h5 className="text-white fw-bold mt-3 mb-2">Giới thiệu</h5>
 
                                 {(sourceSlug === "DTruyenCom" || sourceSlug === "TruyenTangThuVienVn")
-                                    ? <span className='d-none' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
-                                    : <span className='d-none' id='raw-novel-description' >{rawNovelDescription}</span>
+                                    ? <span className='d-none novel-description' id='raw-novel-description' dangerouslySetInnerHTML={{ __html: rawNovelDescription }}></span>
+                                    : <span className='d-none novel-description' id='raw-novel-description' >{rawNovelDescription}</span>
                                 }
 
                                 <span className="text-white mt-0 novel-description">

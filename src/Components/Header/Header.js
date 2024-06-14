@@ -4,7 +4,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import './Header.css'
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
+
+import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
+import UserServices from '../../services/user.s';
+
 
 function Header({ setdarkMode, darkMode }) {
     const { searchValue, setSearchValue, pluginSources, handleSetPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
@@ -13,6 +18,7 @@ function Header({ setdarkMode, darkMode }) {
     const [isShowModal, setIsShowModal] = useState(false);
 
     const navigate = useNavigate();
+
     const handleChangeSearchKeyword = (value) => {
         setSearchValue(value);
     }
@@ -75,6 +81,28 @@ function Header({ setdarkMode, darkMode }) {
         setSelectedSource(pluginSources[0]?.name);
     }, [pluginSources])
 
+
+    const handleGoToAdminPage = async () => {
+        try {
+            const response = await UserServices.fetchListUsers();
+            if (response.statusCode === 200) {
+                console.log('List users:', response.data);
+                navigate('/admin/dashboard');
+            }
+            else if (response.statusCode === 401) {
+                toast.error(response.message);
+                navigate('/login');
+            }
+            else {
+                toast.error(response.message);
+            }
+        }
+        catch (error) {
+            console.log('Error:', error);
+            toast.error(error);
+            navigate('/login');
+        }
+    }
     return (
         <header className='app-header dark:bg-black dark:text-white border-b-2'>
             <Link to='/'>
@@ -133,10 +161,9 @@ function Header({ setdarkMode, darkMode }) {
                     <span className='ps-2'>Cài đặt</span>
                 </button>
                 <ul className="dropdown-menu">
-                    <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
-                    <li><Link className='dropdown-item' to='/login'>Đăng nhập</Link></li>
-                </ul>
+                    <li><Link className='dropdown-item' onClick={() => handleGoToAdminPage()}>Trang Quản trị</Link></li>
 
+                </ul>
                 <button onClick={() => { setdarkMode(!darkMode) }} className='btn btn-secondary'>
                     {!darkMode ?
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-8">
@@ -148,10 +175,23 @@ function Header({ setdarkMode, darkMode }) {
                         </svg>
                     }
                 </button>
-            </div>
 
+            </div>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
         </header>
+
     );
 }
 

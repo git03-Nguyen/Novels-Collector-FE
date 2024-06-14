@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PluginSourceService from '../../../services/pluginSource.s';
+import PluginExporterService from '../../../services/pluginExporter.s';
 import CustomModal from '../../../Components/Modal/CustomModal';
 import { toast } from 'react-toastify';
 import {
@@ -26,109 +26,110 @@ import {
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
 
-import './SourceManagementPage.css';
+import './ExporterManagementPage.css';
 
-const SourceManagementPage = () => {
-    const [listSources, setListSources] = useState([]);
-    const [currentSource, setCurrentSource] = useState(null);
+const ExporterManagementPage = () => {
+    const [listExporters, setListExporters] = useState([]);
+    const [currentExporter, setCurrentExporter] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
     const [actionType, setActionType] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const getAllSources = async () => {
+
+    const getAllExporters = async () => {
         try {
-            const response = await PluginSourceService.fetchPluginSources();
+            const response = await PluginExporterService.fetchPluginExporters();
             if (response.statusCode === 200) {
-                setListSources(response.data);
+                setListExporters(response.data);
             } else {
-                console.log("Error fetching plugin sources: " + response.message);
+                console.log("Error fetching plugin exporters: " + response.message);
             }
         } catch (error) {
-            console.log("Error fetching plugin sources: " + error.message);
+            console.log("Error fetching plugin exporters: " + error.message);
         }
     };
 
     useEffect(() => {
-        getAllSources();
+        getAllExporters();
     }, []);
 
-    const unloadNovelSource = async (source) => {
+    const unloadExporter = async (exporter) => {
         try {
-            const response = await PluginSourceService.unloadPluginSource(source.name);
+            const response = await PluginExporterService.unloadPluginExporter(exporter.name);
             if (response.statusCode === 200) {
-                setListSources(listSources.map(src =>
-                    src.name === source.name ? { ...src, isLoaded: false } : src
+                setListExporters(listExporters.map(exp =>
+                    exp.name === exporter.name ? { ...exp, isLoaded: false } : exp
                 ));
-                toast.success(`Đã tạm ngưng nguồn truyện ${source.name} thành công!`);
+                toast.success(`Đã tạm ngưng nguồn xuất bản ${exporter.name} thành công!`);
             } else {
-                console.log("Error unloading source: " + response.message);
+                console.log("Error unloading exporter: " + response.message);
             }
         } catch (error) {
-            console.log("Error unloading source: " + error.message);
+            console.log("Error unloading exporter: " + error.message);
         }
     };
 
-    const reloadNovelSource = async (source) => {
+    const reloadExporter = async (exporter) => {
         try {
-            const response = await PluginSourceService.reloadPluginSource(source.name);
+            const response = await PluginExporterService.reloadPluginExporter(exporter.name);
             if (response.statusCode === 200) {
-                setListSources(listSources.map(src =>
-                    src.name === source.name ? { ...src, isLoaded: true } : src
+                setListExporters(listExporters.map(exp =>
+                    exp.name === exporter.name ? { ...exp, isLoaded: true } : exp
                 ));
-                toast.success(`Đã tải lại nguồn truyện ${source.name} thành công!`);
+                toast.success(`Đã tải lại nguồn xuất bản ${exporter.name} thành công!`);
             } else {
-                console.log("Error reloading source: " + response.message);
+                console.log("Error reloading exporter: " + response.message);
             }
         } catch (error) {
-            console.log("Error reloading source: " + error.message);
+            console.log("Error reloading exporter: " + error.message);
         }
     };
 
-    const deleteNovelSource = async (source) => {
+    const deleteExporter = async (exporter) => {
         try {
-            const response = await PluginSourceService.deletePluginSource(source.name);
+            const response = await PluginExporterService.deletePluginExporter(exporter.name);
             if (response.statusCode === 200) {
-                setListSources(listSources.filter(src => src.name !== source.name));
-                toast.success(`Đã xóa nguồn truyện ${source.name} thành công!`);
+                setListExporters(listExporters.filter(exp => exp.name !== exporter.name));
+                toast.success(`Đã xóa nguồn xuất bản ${exporter.name} thành công!`);
             } else {
-                toast.error(`Lỗi! Xóa nguồn truyện ${source.name} không thành công!`);
-                console.log("Error deleting source: " + response.message);
+                toast.error(`Lỗi! Xóa nguồn xuất bản ${exporter.name} không thành công!`);
+                console.log("Error deleting exporter: " + response.message);
             }
         } catch (error) {
-            console.log("Error deleting source: " + error.message);
+            console.log("Error deleting exporter: " + error.message);
         }
     };
 
     const handleConfirmAction = async () => {
         try {
             if (actionType === 'unload') {
-                await unloadNovelSource(currentSource);
+                await unloadExporter(currentExporter);
             } else if (actionType === 'reload') {
-                await reloadNovelSource(currentSource);
+                await reloadExporter(currentExporter);
             } else if (actionType === 'delete') {
-                await deleteNovelSource(currentSource);
+                await deleteExporter(currentExporter);
             }
         } catch (error) {
             console.log(`Error during ${actionType} operation: ` + error.message);
-            toast.error(`Lỗi! ${actionType === 'unload' ? 'tạm ngưng' : actionType === 'reload' ? 'tải lại' : 'xóa'} nguồn truyện ${currentSource.name} không thành công!`);
+            toast.error(`Lỗi! ${actionType === 'unload' ? 'tạm ngưng' : actionType === 'reload' ? 'tải lại' : 'xóa'} exporter ${currentExporter.name} không thành công!`);
         } finally {
-            setCurrentSource(null);
+            setCurrentExporter(null);
             setShowModal(false);
         }
     };
 
-    const handleAction = (source, action) => {
-        setCurrentSource(source);
+    const handleAction = (exporter, action) => {
+        setCurrentExporter(exporter);
         setActionType(action);
 
         let content = '';
         if (action === 'unload') {
-            content = `Bạn có chắc chắn muốn tạm ngưng nguồn "${source.name}"?`;
+            content = `Bạn có chắc chắn muốn tạm ngưng nguồn xuất bản"${exporter.name}"?`;
         } else if (action === 'reload') {
-            content = `Bạn có chắc chắn muốn tải lại nguồn "${source.name}"?`;
+            content = `Bạn có chắc chắn muốn tải lại nguồn xuất bản "${exporter.name}"?`;
         } else if (action === 'delete') {
-            content = `Bạn có chắc chắn muốn xóa nguồn "${source.name}"? Việc này sẽ xóa toàn bộ dữ liệu truyện liên quan đến nguồn này!`;
+            content = `Bạn có chắc chắn muốn xóa nguồn xuất bản "${exporter.name}"? Người dùng không thể tiếp tục lưu tiểu thuyết theo định dạng này!`;
         }
 
         setModalContent(content);
@@ -136,10 +137,11 @@ const SourceManagementPage = () => {
     };
 
     const handleCancelAction = () => {
-        setCurrentSource(null);
+        setCurrentExporter(null);
         setShowModal(false);
     };
-    const handleAddNewSource = async () => {
+
+    const handleAddNewExporter = async () => {
         if (!selectedFile) {
             toast.error("Vui lòng chọn một tệp.");
             return;
@@ -154,24 +156,25 @@ const SourceManagementPage = () => {
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            const response = await PluginSourceService.uploadPluginSource(formData);
+            const response = await PluginExporterService.uploadPluginExporter(formData);
             if (response.statusCode === 200) {
-                toast.success(`Đã thêm nguồn truyện mới: ${response.meta.added}  thành công!`);
-                getAllSources();
+                toast.success(`Đã thêm nguồn xuất bản mới: ${response.meta.added} thành công!`);
+                getAllExporters();
                 setShowAddModal(false);
                 setSelectedFile(null);
             } else {
-                toast.error("Lỗi! Thêm nguồn truyện mới không thành công!");
-                console.log("Error uploading source: " + response.message);
+                toast.error("Lỗi! Thêm nguồn xuất bản mới không thành công!");
+                console.log("Error uploading exporter: " + response.message);
             }
         } catch (error) {
-            console.log("Error uploading source: " + error.message);
+            console.log("Error uploading exporter: " + error.message);
         }
     };
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
     };
+
     return (
         <CContainer className="px-3 py-3 text-center">
             <CCol className="align-self-end d-flex flex-column">
@@ -183,8 +186,9 @@ const SourceManagementPage = () => {
                     <CTableRow>
                         <CTableHeaderCell className="bg-body-tertiary">ID</CTableHeaderCell>
                         <CTableHeaderCell className="bg-body-tertiary">Logo</CTableHeaderCell>
-                        <CTableHeaderCell className="bg-body-tertiary text-center">Nguồn Truyện</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary text-center">Nguồn xuất bản</CTableHeaderCell>
                         <CTableHeaderCell className="bg-body-tertiary">Phiên bản</CTableHeaderCell>
+                        <CTableHeaderCell className="bg-body-tertiary">Phần mở rộng</CTableHeaderCell>
                         <CTableHeaderCell className="bg-body-tertiary">Tập tin cài đặt</CTableHeaderCell>
                         <CTableHeaderCell className="bg-body-tertiary text-center">Tác giả</CTableHeaderCell>
                         <CTableHeaderCell className="bg-body-tertiary">Trạng thái</CTableHeaderCell>
@@ -192,32 +196,34 @@ const SourceManagementPage = () => {
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {listSources.map((src, index) => (
+                    {listExporters.map((exp, index) => (
                         <CTableRow key={index}>
                             <CTableDataCell>
                                 <div>{index + 1}</div>
                             </CTableDataCell>
-                            <CTableDataCell className="text-center center-img">
-                                <CImage src={src.icon} width={30} />
-                                <p className='text-muted mb-0'><a href={src.url}>{src.url}</a></p>
+                            <CTableDataCell>
+                                <CImage src={exp.icon} width={30} />
                             </CTableDataCell>
                             <CTableDataCell>
-                                <div>{src.name}</div>
+                                <div>{exp.name}</div>
                                 <div className="small text-body-secondary text-nowrap">
-                                    <span>{src.description}</span>
+                                    <span>{exp.description}</span>
                                 </div>
                             </CTableDataCell>
                             <CTableDataCell>
-                                <div>{src.version}</div>
+                                <div>{exp.version}</div>
                             </CTableDataCell>
                             <CTableDataCell>
-                                <div>{src.assembly}</div>
+                                <div>{exp.extension}</div>
                             </CTableDataCell>
                             <CTableDataCell>
-                                <div>{src.author}</div>
+                                <div>{exp.assembly}</div>
                             </CTableDataCell>
                             <CTableDataCell>
-                                {src.isLoaded ? (
+                                <div>{exp.author}</div>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                {exp.isLoaded ? (
                                     <CBadge color="success">
                                         Đang hoạt động
                                     </CBadge>
@@ -233,10 +239,10 @@ const SourceManagementPage = () => {
                                         label=""
                                         id={`isLoadedChecked${index}`}
                                         className="ms-2"
-                                        defaultChecked={src.isLoaded}
-                                        onChange={() => handleAction(src, src.isLoaded ? 'unload' : 'reload')}
+                                        defaultChecked={exp.isLoaded}
+                                        onChange={() => handleAction(exp, exp.isLoaded ? 'unload' : 'reload')}
                                     />
-                                    <CButton className="remove-btn" onClick={() => handleAction(src, 'delete')}>
+                                    <CButton className="remove-btn" onClick={() => handleAction(exp, 'delete')}>
                                         <CIcon icon={cilTrash} className="remove-icon pb-1" size="lg" />
                                     </CButton>
                                 </div>
@@ -255,7 +261,7 @@ const SourceManagementPage = () => {
             />
             <CModal alignment="center" visible={showAddModal} onClose={() => setShowAddModal(false)}>
                 <CModalHeader>
-                    <CModalTitle>Thêm Nguồn Truyện Mới</CModalTitle>
+                    <CModalTitle>Thêm Nguồn xuất bản mới</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <CForm>
@@ -268,11 +274,11 @@ const SourceManagementPage = () => {
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setShowAddModal(false)}>Đóng</CButton>
-                    <CButton color="primary" onClick={handleAddNewSource}>Tải lên</CButton>
+                    <CButton color="primary" onClick={handleAddNewExporter}>Tải lên</CButton>
                 </CModalFooter>
             </CModal>
         </CContainer>
     );
 };
 
-export default SourceManagementPage
+export default ExporterManagementPage;

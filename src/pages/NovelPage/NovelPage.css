@@ -10,7 +10,7 @@
 .novel-img {
     border: solid 4px #000;
     border-radius: 6px;
-
+    margin-left: 15%;
     max-width: 320px;
     width: 90%;
 }
@@ -47,4 +47,13 @@
     max-height: 400px;
     overflow-y: auto;
     width: 70%;
+}
+
+.basic-info {
+    margin-right: 10%;
+}
+
+.novel-description {
+    display: block;
+    text-align: justify;
 }
