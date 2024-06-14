@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PluginExporterService from '../../../services/pluginExporter.s';
 import CustomModal from '../../../Components/Modal/CustomModal';
+import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import {
     CForm,
@@ -25,10 +26,28 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
-
+import { useNavigate } from 'react-router-dom';
 import './ExporterManagementPage.css';
 
+// Helper function to get user token from context
+const getUserToken = () => {
+    // get user token from local storage
+    return localStorage.getItem('token') ?? '';
+};
+
+const handleUnauthorized = () => {
+    if (getUserToken() === '') {
+        toast.error("Lỗi! Bạn chưa đăng nhập!");
+        alert("Lỗi! Bạn chưa đăng nhập! Vui lòng đăng nhập!");
+    }
+    else {
+        toast.error("Lỗi! Phiên đăng nhập hết hạn!");
+        alert("Lỗi! Phiên đăng nhập hết hạn! Vui lòng đăng nhập lại!");
+
+    }
+}
 const ExporterManagementPage = () => {
+
     const [listExporters, setListExporters] = useState([]);
     const [currentExporter, setCurrentExporter] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -37,14 +56,21 @@ const ExporterManagementPage = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
 
+    const navigate = useNavigate();
+
     const getAllExporters = async () => {
         try {
             const response = await PluginExporterService.fetchPluginExporters();
             if (response.statusCode === 200) {
                 setListExporters(response.data);
-            } else {
-                console.log("Error fetching plugin exporters: " + response.message);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
             }
+            else {
+                console.log("Error fetching plugin exporter: " + response.message);
+            }
+
         } catch (error) {
             console.log("Error fetching plugin exporters: " + error.message);
         }
@@ -62,8 +88,12 @@ const ExporterManagementPage = () => {
                     exp.name === exporter.name ? { ...exp, isLoaded: false } : exp
                 ));
                 toast.success(`Đã tạm ngưng nguồn xuất bản ${exporter.name} thành công!`);
-            } else {
-                console.log("Error unloading exporter: " + response.message);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+            }
+            else {
+                console.log("Error unload plugin exporter: " + response.message);
             }
         } catch (error) {
             console.log("Error unloading exporter: " + error.message);
@@ -78,8 +108,12 @@ const ExporterManagementPage = () => {
                     exp.name === exporter.name ? { ...exp, isLoaded: true } : exp
                 ));
                 toast.success(`Đã tải lại nguồn xuất bản ${exporter.name} thành công!`);
-            } else {
-                console.log("Error reloading exporter: " + response.message);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+            }
+            else {
+                console.log("Error reload plugin exporter: " + response.message);
             }
         } catch (error) {
             console.log("Error reloading exporter: " + error.message);
@@ -92,9 +126,12 @@ const ExporterManagementPage = () => {
             if (response.statusCode === 200) {
                 setListExporters(listExporters.filter(exp => exp.name !== exporter.name));
                 toast.success(`Đã xóa nguồn xuất bản ${exporter.name} thành công!`);
-            } else {
-                toast.error(`Lỗi! Xóa nguồn xuất bản ${exporter.name} không thành công!`);
-                console.log("Error deleting exporter: " + response.message);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+            }
+            else {
+                console.log("Error delete plugin exporter: " + response.message);
             }
         } catch (error) {
             console.log("Error deleting exporter: " + error.message);
@@ -162,7 +199,12 @@ const ExporterManagementPage = () => {
                 getAllExporters();
                 setShowAddModal(false);
                 setSelectedFile(null);
-            } else {
+            }
+            else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+            }
+            else {
                 toast.error("Lỗi! Thêm nguồn xuất bản mới không thành công!");
                 console.log("Error uploading exporter: " + response.message);
             }
@@ -277,6 +319,18 @@ const ExporterManagementPage = () => {
                     <CButton color="primary" onClick={handleAddNewExporter}>Tải lên</CButton>
                 </CModalFooter>
             </CModal>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </CContainer>
     );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PluginSourceService from '../../../services/pluginSource.s';
 import CustomModal from '../../../Components/Modal/CustomModal';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import {
     CForm,
     CFormInput,
@@ -26,8 +27,25 @@ import {
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
 
+import { useNavigate } from 'react-router-dom';
+
 import './SourceManagementPage.css';
 
+const getUserToken = () => {
+    return localStorage.getItem('token') ?? '';
+};
+
+const handleUnauthorized = () => {
+    if (getUserToken() === '') {
+        toast.error("Lỗi! Bạn chưa đăng nhập!");
+        alert("Lỗi! Bạn chưa đăng nhập! Vui lòng đăng nhập!");
+    }
+    else {
+        toast.error("Lỗi! Phiên đăng nhập hết hạn!");
+        alert("Lỗi! Phiên đăng nhập hết hạn! Vui lòng đăng nhập lại!");
+
+    }
+}
 const SourceManagementPage = () => {
     const [listSources, setListSources] = useState([]);
     const [currentSource, setCurrentSource] = useState(null);
@@ -36,12 +54,20 @@ const SourceManagementPage = () => {
     const [actionType, setActionType] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+
+    const navigate = useNavigate();
+
     const getAllSources = async () => {
         try {
             const response = await PluginSourceService.fetchPluginSources();
             if (response.statusCode === 200) {
                 setListSources(response.data);
-            } else {
+
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+            }
+            else {
                 console.log("Error fetching plugin sources: " + response.message);
             }
         } catch (error) {
@@ -56,13 +82,19 @@ const SourceManagementPage = () => {
     const unloadNovelSource = async (source) => {
         try {
             const response = await PluginSourceService.unloadPluginSource(source.name);
+            console.log("Response: " + response.message);
             if (response.statusCode === 200) {
                 setListSources(listSources.map(src =>
                     src.name === source.name ? { ...src, isLoaded: false } : src
                 ));
                 toast.success(`Đã tạm ngưng nguồn truyện ${source.name} thành công!`);
-            } else {
-                console.log("Error unloading source: " + response.message);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+
+            }
+            else {
+                console.log("Error unload plugin sources: " + response.message);
             }
         } catch (error) {
             console.log("Error unloading source: " + error.message);
@@ -77,8 +109,13 @@ const SourceManagementPage = () => {
                     src.name === source.name ? { ...src, isLoaded: true } : src
                 ));
                 toast.success(`Đã tải lại nguồn truyện ${source.name} thành công!`);
-            } else {
-                console.log("Error reloading source: " + response.message);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+
+            }
+            else {
+                console.log("Error reload plugin sources: " + response.message);
             }
         } catch (error) {
             console.log("Error reloading source: " + error.message);
@@ -91,15 +128,54 @@ const SourceManagementPage = () => {
             if (response.statusCode === 200) {
                 setListSources(listSources.filter(src => src.name !== source.name));
                 toast.success(`Đã xóa nguồn truyện ${source.name} thành công!`);
-            } else {
-                toast.error(`Lỗi! Xóa nguồn truyện ${source.name} không thành công!`);
-                console.log("Error deleting source: " + response.message);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+
+            }
+            else {
+                console.log("Error delete plugin sources: " + response.message);
             }
         } catch (error) {
             console.log("Error deleting source: " + error.message);
         }
     };
+    const handleAddNewSource = async () => {
+        if (!selectedFile) {
+            toast.error("Vui lòng chọn một tệp.");
+            return;
+        }
 
+        if (selectedFile.size > 150 * 1024 * 1024) {
+            toast.error("Tệp phải có kích thước nhỏ hơn 150MB.");
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const response = await PluginSourceService.uploadPluginSource(formData);
+            if (response.statusCode === 200) {
+                toast.success(`Đã thêm nguồn truyện mới: ${response.meta.added}  thành công!`);
+                getAllSources();
+                setShowAddModal(false);
+                setSelectedFile(null);
+            } else if (response.statusCode === 401) {
+                handleUnauthorized();
+                navigate('/login');
+            }
+            else {
+                console.log("Error upload plugin sources: " + response.message);
+            }
+        } catch (error) {
+            console.log("Error uploading source: " + error.message);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
     const handleConfirmAction = async () => {
         try {
             if (actionType === 'unload') {
@@ -139,39 +215,7 @@ const SourceManagementPage = () => {
         setCurrentSource(null);
         setShowModal(false);
     };
-    const handleAddNewSource = async () => {
-        if (!selectedFile) {
-            toast.error("Vui lòng chọn một tệp.");
-            return;
-        }
 
-        if (selectedFile.size > 150 * 1024 * 1024) {
-            toast.error("Tệp phải có kích thước nhỏ hơn 150MB.");
-            return;
-        }
-
-        try {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-
-            const response = await PluginSourceService.uploadPluginSource(formData);
-            if (response.statusCode === 200) {
-                toast.success(`Đã thêm nguồn truyện mới: ${response.meta.added}  thành công!`);
-                getAllSources();
-                setShowAddModal(false);
-                setSelectedFile(null);
-            } else {
-                toast.error("Lỗi! Thêm nguồn truyện mới không thành công!");
-                console.log("Error uploading source: " + response.message);
-            }
-        } catch (error) {
-            console.log("Error uploading source: " + error.message);
-        }
-    };
-
-    const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]);
-    };
     return (
         <CContainer className="px-3 py-3 text-center">
             <CCol className="align-self-end d-flex flex-column">
@@ -271,6 +315,18 @@ const SourceManagementPage = () => {
                     <CButton color="primary" onClick={handleAddNewSource}>Tải lên</CButton>
                 </CModalFooter>
             </CModal>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </CContainer>
     );
 };

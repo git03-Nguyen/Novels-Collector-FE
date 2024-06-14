@@ -1,29 +1,55 @@
 
 import axios from '../configs/axios'
 
+// Helper function to get user token from context
+const getUserToken = () => {
+    // get user token from local storage
+    return localStorage.getItem('token') ?? '';
+};
+
 const fetchPluginSources = async () => {
     try {
-        const response = await axios.get('/api/v1/source');
-        if (response) {
+        const token = getUserToken();
+        const response = await axios.get('/api/v1/source', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response.statusCode === 200) {
             return {
                 statusCode: response.statusCode ?? 200,
                 message: response.message,
                 data: response?.data ?? {},
             }
         }
+        else if (response.statusCode === 401) {
+            return {
+                statusCode: 401,
+                data: null,
+                message: "Unauthorized!"
+            }
+        }
     } catch (error) {
-        console.log("Error fetching plugin sources: " + error.message);
+        console.log("Error fetching plugin sources: " + error?.message ?? {});
         return {
-            statusCode: 500,
+            statusCode: 401,
             data: null,
-            message: "Cannot connect to server!"
+            message: "Unauthorized!"
         }
     }
 }
 
 const unloadPluginSource = async (sourceName) => {
     try {
-        const response = await axios.get(`/api/v1/source/unload/${sourceName}`);
+        const token = getUserToken();
+        const response = await axios.get(`/api/v1/source/unload/${sourceName}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
         console.log("Response: " + response.message);
         if (response) {
             return {
@@ -36,16 +62,22 @@ const unloadPluginSource = async (sourceName) => {
     } catch (error) {
         console.log("Error while unloading source: " + error.message);
         return {
-            statusCode: 500,
+            statusCode: 401,
             data: null,
-            message: "Cannot connect to server!"
+            message: "Unauthorized!"
         }
     }
 }
 
 const reloadPluginSource = async (sourceName) => {
     try {
-        const response = await axios.get(`/api/v1/source/load/${sourceName}`);
+        const token = getUserToken();
+        const response = await axios.get(`/api/v1/source/load/${sourceName}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,
@@ -56,35 +88,22 @@ const reloadPluginSource = async (sourceName) => {
     } catch (error) {
         console.log("Error while reloading source: " + error.message);
         return {
-            statusCode: 500,
+            statusCode: 401,
             data: null,
-            message: "Cannot connect to server!"
-        }
-    }
-}
-const reloadAllSources = async () => {
-    try {
-        const response = await axios.get('/api/v1/source/reload');
-        if (response) {
-            return {
-                statusCode: response.statusCode ?? 200,
-                message: response.message,
-                data: response?.data ?? {},
-            }
-        }
-    } catch (error) {
-        console.log("Error reloading all plugin sources: " + error.message);
-        return {
-            statusCode: 500,
-            data: null,
-            message: "Cannot connect to server!"
+            message: "Unauthorized!"
         }
     }
 }
 
 const deletePluginSource = async (sourceName) => {
     try {
-        const response = await axios.delete(`/api/v1/source/delete/${sourceName}`);
+        const token = getUserToken();
+        const response = await axios.delete(`/api/v1/source/delete/${sourceName}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,
@@ -95,24 +114,26 @@ const deletePluginSource = async (sourceName) => {
     } catch (error) {
         console.log("Error while removing source: " + error.message);
         return {
-            statusCode: 500,
+            statusCode: 401,
             data: null,
-            message: "Cannot connect to server!"
+            message: "Unauthorized!"
         }
     }
 }
 
 const uploadPluginSource = async (formData) => {
     try {
+        const token = getUserToken();
         const response = await axios.post('/api/v1/source/add', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
             }
         });
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,
-                message: response.message,
+                message: response?.message ?? {},
                 data: response?.data ?? {},
                 meta: response?.meta ?? {}
             }
@@ -120,9 +141,9 @@ const uploadPluginSource = async (formData) => {
     } catch (error) {
         console.log("Error while uploading source: " + error.message);
         return {
-            statusCode: 500,
+            statusCode: 401,
             data: null,
-            message: "Cannot connect to server!"
+            message: "Unauthorized!"
         }
     }
 };
@@ -130,7 +151,6 @@ const PluginSourceService = {
     fetchPluginSources,
     unloadPluginSource,
     reloadPluginSource,
-    reloadAllSources,
     deletePluginSource,
     uploadPluginSource
 }

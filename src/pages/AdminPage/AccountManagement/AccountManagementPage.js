@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import UserServices from '../../../services/user.s';
 import CustomModal from '../../../Components/Modal/CustomModal';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
 import {
     CFormInput,
     CFormSelect,
@@ -184,6 +186,18 @@ const AccountManagementPage = () => {
                     <CButton color="primary" onClick={handleAddNewAccount}>Tạo mới</CButton>
                 </CModalFooter>
             </CModal>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </CContainer>
     );
 };
