@@ -67,7 +67,7 @@ function LoginPage(props) {
 
 
         try {
-            const response = await UserServices.fetchAPILogin(email, password);
+            const response = await UserServices.fetchToLogin(email, password);
 
             if (response.statusCode === 200) {
                 console.log('Login success:', response);

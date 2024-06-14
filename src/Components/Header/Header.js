@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
 import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 import UserServices from '../../services/user.s';
+
 function Header({ setdarkMode, darkMode }) {
     const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
     const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
@@ -80,11 +81,10 @@ function Header({ setdarkMode, darkMode }) {
         setSelectedSource(pluginSources[0].name);
     }, [pluginSources])
 
-    const fetchListUsers = UserServices.useFetchListUsers();
 
     const handleGoToAdminPage = async () => {
         try {
-            const response = await fetchListUsers();
+            const response = await UserServices.fetchListUsers();
             if (response.statusCode === 200) {
                 console.log('List users:', response.data);
                 navigate('/admin/dashboard');

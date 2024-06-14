@@ -1,5 +1,4 @@
 import axios from '../configs/axios';
-import { UserContext } from '../context/UserContext';
 
 // Helper function to get user token from context
 const getUserToken = () => {
@@ -19,7 +18,7 @@ const fetchListUsers = async () => {
         });
         if (response) {
             return {
-                statusCode: response.status ?? 200,
+                statusCode: response.statusCode ?? 200,
                 message: response.message ?? "",
                 data: response.data ?? [],
             };
@@ -27,14 +26,15 @@ const fetchListUsers = async () => {
     } catch (error) {
         console.log("Error fetching list users: " + error.message);
         return {
-            statusCode: 500,
+            statusCode: 401,
             data: null,
-            message: "Cannot connect to server!"
+            message: "Lỗi chưa đăng nhập!"
         };
     }
 };
 
-const fetchAPILogin = async (email, password) => {
+
+const fetchToLogin = async (email, password) => {
     try {
         const response = await axios.post(`/api/v1/auth/login`, { email, password });
         console.log('Response:', response)
@@ -56,10 +56,11 @@ const fetchAPILogin = async (email, password) => {
         return {
             statusCode: 500,
             data: null,
-            message: "Cannot connect to server!"
+            message: "Email hoặc mật khẩu không đúng!"
         }
     }
 }
+
 
 const fetchAddUser = async (email, password, role) => {
     const token = getUserToken();
@@ -133,9 +134,9 @@ const fetchDeleteUser = async (id) => {
 
 const UserServices = {
     fetchListUsers,
-    fetchToLogin,
     fetchAddUser,
-    fetchDeleteUser
+    fetchDeleteUser,
+    fetchToLogin
 }
 
 export default UserServices;
