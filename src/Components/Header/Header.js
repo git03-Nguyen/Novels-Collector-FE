@@ -93,6 +93,9 @@ function Header({ setdarkMode, darkMode }) {
                 toast.error(response.message);
                 navigate('/login');
             }
+            else {
+                toast.error(response.message);
+            }
         }
         catch (error) {
             console.log('Error:', error);
