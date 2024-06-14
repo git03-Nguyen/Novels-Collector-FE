@@ -4,11 +4,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import './Header.css'
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
 import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
-import { UserContext } from '../../context/UserContext';
-
-import user_avatar from '../../assets/images/avatars/user_avatar.png';
+import UserServices from '../../services/user.s';
 function Header({ setdarkMode, darkMode }) {
     const { searchValue, setSearchValue, pluginSources, setPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
     const [selectedSource, setSelectedSource] = useState(pluginSources[0].name);
@@ -16,13 +15,7 @@ function Header({ setdarkMode, darkMode }) {
     const [isShowModal, setIsShowModal] = useState(false);
 
     const navigate = useNavigate();
-    const { logoutContext, user } = useContext(UserContext);
 
-    const handleLogout = () => {
-        logoutContext();
-        navigate('/');
-        toast.success('Đăng xuất thành công !');
-    }
     const handleChangeSearchKeyword = (value) => {
         setSearchValue(value);
     }
@@ -87,6 +80,26 @@ function Header({ setdarkMode, darkMode }) {
         setSelectedSource(pluginSources[0].name);
     }, [pluginSources])
 
+    const fetchListUsers = UserServices.useFetchListUsers();
+
+    const handleGoToAdminPage = async () => {
+        try {
+            const response = await fetchListUsers();
+            if (response.statusCode === 200) {
+                console.log('List users:', response.data);
+                navigate('/admin/dashboard');
+            }
+            else if (response.statusCode === 401) {
+                toast.error(response.message);
+                navigate('/login');
+            }
+        }
+        catch (error) {
+            console.log('Error:', error);
+            toast.error(error);
+            navigate('/login');
+        }
+    }
     return (
         <header className='app-header dark:bg-black dark:text-white border-b-2'>
             <Link to='/'>
@@ -139,23 +152,13 @@ function Header({ setdarkMode, darkMode }) {
             </div>
 
             <div className='settings-bar'>
-                {user && user.auth ? (
-                    <>
-                        <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src={user_avatar} width={42} alt='avatar' />
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li><Link className='dropdown-item' to='/'>Đăng xuất</Link></li>
-                        </ul>
-                    </>
-                ) : (
-                    <button className='btn btn-primary' ><Link to='/login'>Đăng nhập</Link></button>
-                )}
                 <button className='btn btn-primary dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">
                     <i className='fa-solid fa-gear'></i>
+                    <span className='ps-2'>Cài đặt</span>
                 </button>
                 <ul className="dropdown-menu">
-                    <li><Link className='dropdown-item' to='/admin'>Admin</Link></li>
+                    <li><Link className='dropdown-item' onClick={() => handleGoToAdminPage()}>Trang Quản trị</Link></li>
+
                 </ul>
                 <button onClick={() => { setdarkMode(!darkMode) }} className='btn btn-secondary'>
                     {!darkMode ?
@@ -170,9 +173,21 @@ function Header({ setdarkMode, darkMode }) {
                 </button>
 
             </div>
-
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
         </header>
+
     );
 }
 

@@ -8,6 +8,9 @@ import { UserContext } from '../../context/UserContext';
 import UserServices from '../../services/user.s';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
+
 const css = {
     '--login-bg': '#f3f2f2',
     '--login-color': '#333',
@@ -31,11 +34,13 @@ function LoginPage(props) {
     const { loginContext } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const { user } = useContext(UserContext);
     const fetchListhUsers = async () => {
         try {
             const response = await axios.get(`/api/v1/user/`, {
                 headers: {
-                    'Authorization': `Bearer ${UserContext.data.token}`,
+                    'Authorization': `Bearer ..`,
                     'Content-Type': 'application/json',
                 }
             });
@@ -62,17 +67,18 @@ function LoginPage(props) {
 
 
         try {
-            const response = await UserServices.fetchToLogin(email, password);
+            const response = await UserServices.fetchAPILogin(email, password);
 
             if (response.statusCode === 200) {
                 console.log('Login success:', response);
                 toast.success('Đăng nhập thành công !');
                 console.log('Login success:', response.data);
                 loginContext(response.data);
-                navigate('/');
+                navigate('/admin/dashboard');
             }
-            else {
-                console.log('Login failed:', response);
+            else if (response.statusCode === 500) {
+                toast.error(response.message);
+                console.log('Login failed:', response.message);
             }
 
         }
@@ -80,9 +86,6 @@ function LoginPage(props) {
             console.log('Error:', error);
         }
     };
-
-
-
 
     return (
         <Login style={{ height: "100vh", ...css }}>
@@ -96,6 +99,19 @@ function LoginPage(props) {
             <Footer>
                 <a href="/">Về trang chủ</a>
             </Footer>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+
         </Login>
     );
 };

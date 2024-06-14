@@ -27,7 +27,7 @@ function UserProvider(props) {
             uid: userData.uid,
             auth: true
         }
-        localStorage.setItem('token', newData.token);
+        localStorage.setItem('user', JSON.stringify(newData));
         setUser(newData);
     }
 
@@ -36,13 +36,16 @@ function UserProvider(props) {
             ...defaultUser,
         }
         setUser(newData);
-        localStorage.removeItem('token');
+        localStorage.removeItem('user');
     }
 
 
-    const fetchUser = async () => {
-
-    }
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
 
     return (
         <div>
