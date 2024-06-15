@@ -1,6 +1,10 @@
 .novel-page-container {
     width: 90%;
     margin: 20px auto 0 auto;
+    &.dark-mode {
+		background-color: black;
+		color: white;
+	}  
 }
 
 .chapter-table {

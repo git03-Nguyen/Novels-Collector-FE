@@ -10,6 +10,12 @@
     align-items: center;
     justify-content: center;
     z-index: 9999;
+
+    &.dark-mode {
+      background-color: black;
+      color: white;
+    }
+     
   }
   
   .spinner-container {

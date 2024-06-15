@@ -11,7 +11,7 @@ import UserLatestNovelsManager from '../../utils/localStorage/userLatestNovelsMa
 import { LoadingContext } from '../../context/LoadingContext';
 import ExportNovelFileModal from '../../Components/ExportNovelFileModal/ExportNovelFileModal';
 
-function NovelPage(props) {
+function NovelPage({darkMode}) {
     const navigate = useNavigate();
 
     const { novelSlug, sourceSlug } = useParams();
@@ -207,7 +207,7 @@ function NovelPage(props) {
 
 
     return (
-        <div className='novel-page-container  dark:bg-black dark:text-white'>
+        <div className={`novel-page-container ${darkMode ? 'dark-mode' : ''} `}>
             {novel && novel?.slug && (
                 <>
                     <div className="row w-100">

@@ -9,6 +9,10 @@
     align-items: center; 
     color: #fff; 
     text-align: right; 
+    &.dark-mode {
+		background-color: black;
+		color: white;
+	}  
 }
 
 .error-content {

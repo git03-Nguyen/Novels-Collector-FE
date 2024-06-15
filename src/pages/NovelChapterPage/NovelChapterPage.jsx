@@ -14,7 +14,7 @@ import UserStyleSettingsManager from '../../utils/localStorage/userStyleSettings
 import ActionBar from '../../Components/ActionBar/ActionBar';
 import { LoadingContext } from '../../context/LoadingContext';
 
-function NovelChapterPage(props) {
+function NovelChapterPage({ darkMode }) {
     const navigate = useNavigate();
 
     const defaultStyleSettings = UserStyleSettingsManager.getUserStyleSettings() ?? {
@@ -310,9 +310,9 @@ function NovelChapterPage(props) {
     }, [currentPage, isChapterIDFetched])
 
     return (
-        <div className='novel-chapter-page-container'>
+        <div className={`novel-chapter-page-container' ${darkMode ? 'dark-mode' : ''}`}>
             <Fragment >
-                <h3 id='novel-chapter-container' className='dark:bg-black dark:text-white'>{novelContext?.title}</h3>
+                <h3 id='novel-chapter-container' className= ''>{novelContext?.title}</h3>
                 <h5 >
                     {`Chương ${novelChapter?.number ?? ''}: ${getChapterTitleBySourceSlug()}`}
                 </h5>

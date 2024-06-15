@@ -11,7 +11,7 @@ import CategoryService from '../../services/category.s';
 import { LoadingContext } from '../../context/LoadingContext';
 
 
-function ListNovelPage(props) {
+function ListNovelPage({darkMode}) {
     const { pluginSources, searchTarget, handleSetSearchTarget } = useContext(NovelContext);
     const { setIsLoadingContext } = useContext(LoadingContext);
 
@@ -168,8 +168,8 @@ function ListNovelPage(props) {
     }, [isHandlingSearchParams, curPage, curSearchValue, pluginSources[0]]);
 
     return (
-        <div className='list-novel-page-container'>
-            <div className='list-novel-page-content  dark:bg-black dark:text-white'>
+        <div className={`list-novel-page-container' ${darkMode ? 'dark-mode' : ''} `}>
+            <div className='list-novel-page-content'>
                 <div className="filter-engine d-flex justify-content-between align-items-center my-3">
                     <div className="btn-group filter-button-list">
                         <div className="form-floating me-3">

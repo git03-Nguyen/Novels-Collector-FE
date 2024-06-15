@@ -8,7 +8,7 @@
     grid-template-columns: 15% 30% 15% 15% auto;
     grid-template-rows: 25% 75%;
     justify-content: space-evenly;
-
+    border-top: 1px white solid;
     & > div {
         display: flex;
         flex-flow: column nowrap;
@@ -21,6 +21,10 @@
             margin-bottom: 4px;
         }
     }
+    &.dark-mode {
+        background-color: black;
+        color: white;
+    }    
 }
 
 .footer-contact,

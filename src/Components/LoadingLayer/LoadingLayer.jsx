@@ -4,7 +4,7 @@ import { LoadingContext } from '../../context/LoadingContext';
 
 import './LoadingLayer.scss';
 
-function LoadingLayer(props) {
+function LoadingLayer({ darkMode }) {
     const { isLoadingContext } = useContext(LoadingContext);
 
     const [curIsLoading, setCurIsLoading] = useState(isLoadingContext);
@@ -14,7 +14,7 @@ function LoadingLayer(props) {
     }, [isLoadingContext])
 
     return (
-        <div className="loading-overlay">
+        <div className={`loading-overlay ${darkMode ? 'dark-mode' : ''} `}>
             <div className="loading-message spinner-container">
                 <ScaleLoader size={40} color={"#ffa500"} loading={curIsLoading} />
                 <h6 className='py-3'>

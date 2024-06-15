@@ -104,7 +104,7 @@ function Header({ setdarkMode, darkMode }) {
         }
     }
     return (
-        <header className='app-header dark:bg-black dark:text-white border-b-2'>
+        <header className={`app-header ${darkMode ? 'dark-mode' : ''} `}>
             <Link to='/'>
                 <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
