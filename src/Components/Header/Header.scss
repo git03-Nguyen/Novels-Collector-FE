@@ -1,0 +1,49 @@
+.app-header {
+    width: 100%;
+    padding: 0 5%;
+    background-color: var(--dark-blue);
+    display: grid;
+    grid-template-columns: 10% auto 15%;
+}
+
+.app-logo {
+    max-height: calc(15vh - 8px) !important;
+}
+
+
+.settings-bar {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+
+    & > button {
+        margin: 4px 8px;
+        box-shadow: 1.5px 1px var(--light-blue);
+        background: linear-gradient(90deg, var(--dark-blue), black) !important;
+
+        &:hover {
+            background: linear-gradient(90deg, #3b66f5, #163bcd) !important;
+        }
+    }
+}
+
+.search-bar {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-around;
+
+    & > input {
+        max-width: 500px;
+    }
+
+    & a {
+        color: white;
+        text-decoration: none;
+    }
+}
+
+button {
+    margin: 0 2px;
+}

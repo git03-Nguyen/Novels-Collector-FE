@@ -1,0 +1,58 @@
+.novel-page-container {
+    width: 90%;
+    margin: 20px auto 0 auto;
+}
+
+.chapter-table {
+    width: 60%;
+}
+
+.novel-img {
+    border: solid 4px #000;
+    border-radius: 6px;
+    margin-left: 15%;
+    max-width: 320px;
+    width: 90%;
+}
+
+.chapter-accordion {
+    width: 60%;
+    margin-bottom: 1.4rem;
+    margin-left: 33%;
+    border: solid 6px #000;
+    border-radius: 10px;
+    background-color: var(--light-blue)
+}
+
+.title-and-export-row {
+    width: 80%;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.novel-description {
+    text-align: justify;
+    padding-right: 6rem;
+}
+
+#source-select-box {
+    width: 70%;
+}
+
+.scrollable-list-group {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 70%;
+}
+
+.basic-info {
+    margin-right: 10%;
+}
+
+.novel-description {
+    display: block;
+    text-align: justify;
+}

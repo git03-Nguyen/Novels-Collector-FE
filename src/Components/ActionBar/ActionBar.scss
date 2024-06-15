@@ -1,0 +1,32 @@
+.actionbar {
+    position: fixed;
+    bottom: 18rem; 
+    right: 0.75rem; 
+    width: 3.5rem; 
+    height: 8rem; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.actionbar-icon {
+    padding-top: 0.75rem;    
+    padding-bottom: 0.75rem; 
+    padding-left: 0.75rem;  
+    padding-right: 0.75rem; 
+    background-color: #1f2937; 
+    border: 1px solid #e5e7eb;
+    cursor: pointer;         
+    text-decoration: none;    
+    color: inherit;          
+
+    &:hover {
+        background-color: #d1d5db; 
+}
+}
+.svg-icon {
+    width: 1.4rem;
+    height: 1.4rem; 
+}
+  
+  

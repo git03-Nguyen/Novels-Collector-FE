@@ -1,0 +1,148 @@
+.novel-sidebar-container {
+    width: 80%;
+    display: flex;
+    flex-flow: column nowrap;
+
+    justify-content: start;
+    align-items: center;
+
+    & .section-title {
+        font-style: italic;
+        color: orange;
+    }
+
+    & a {
+        text-decoration: none;
+        color: white !important;
+
+        &:hover  {
+            color: greenyellow !important;
+            opacity: 0.7;
+        }
+    }
+}
+
+.sidebar-section {
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.novel-list {
+    display: flex;
+    flex-flow: column nowrap;
+
+    justify-content: start;
+    align-items: center;
+}
+
+.novel-card-mini {
+    width: 70%;
+    margin: 15px 0;
+    display: flex;
+    flex-flow: row wrap;
+    
+    justify-content: center;
+    align-items: center;
+
+    & img {
+        width: 60px;
+        margin-right: 4px;
+    }
+}
+
+.novel-brief-info {
+    width: calc(100% - 68px);
+    display: flex;
+    flex-flow: column nowrap;
+
+    justify-content: start;
+    align-items: start;
+
+    & strong {
+        text-align: start !important;
+    }
+}
+
+.offcanvas-novel-brief-info {
+    width: calc(100% - 68px);
+    margin: 0 4px;
+    display: flex;
+    flex-flow: column nowrap;
+
+    justify-content: start;
+    align-items: start;
+}
+
+.category-list {
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.category-tag {
+    font-size: 13px !important;
+    margin-bottom: 8px;
+
+    background: linear-gradient(90deg, var(--dark-blue), black) !important;
+    box-shadow: 1.5px 1px var(--light-blue);
+
+    &:hover {
+       background: linear-gradient(90deg, #3b66f5, #163bcd) !important;
+    }
+}
+
+
+.watch-full-user-list-btn {
+    font-size: 20px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.offcanvas-user-latest-novels {
+    max-width: 25vw !important;
+    background-color: var(--light-blue) !important;
+}
+
+.offcanvas-description-container {
+    padding: 12px 0;
+
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+
+    & .delete-user-novel-btn {
+        color: red !important;
+        background: linear-gradient(90deg, white, whitesmoke) !important;
+    }
+}
+
+.offcanvas-novel-card-mini {
+    width: 100%;
+    margin: 15px 0;
+
+    display: grid;
+    grid-template-columns: 64px auto 64px;
+
+    place-items: center;
+
+    & img {
+        width: 60px;
+        margin-right: 4px;
+    }
+
+    & a {
+        text-decoration: none;
+        color: white !important;
+
+        &:hover {
+            color: greenyellow !important;
+            opacity: 0.7;
+        }
+    }
+
+    & .delete-user-novel-btn {
+        color: red !important;
+        background: linear-gradient(90deg, white, whitesmoke) !important;
+    }
+}

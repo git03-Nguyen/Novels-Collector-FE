@@ -18,10 +18,10 @@ const removeUserSearchTarget = () => {
 }
 
 
-const UserStyleSettingsGetter = {
+const UserStyleSettingsManager = {
     getUserSearchTarget,
     saveSearchTarget,
     removeUserSearchTarget,
 }
 
-export default UserStyleSettingsGetter;
+export default UserStyleSettingsManager;
