@@ -4,7 +4,7 @@ import BreadCrumbGenerator from '../../utils/breadCrumbGenerator';
 import _ from 'lodash';
 import { NovelContext } from '../../context/NovelContext';
 
-import './BreadCrumb.css';
+import './BreadCrumb.scss';
 
 function BreadCrumb(props) {
     const location = useLocation();

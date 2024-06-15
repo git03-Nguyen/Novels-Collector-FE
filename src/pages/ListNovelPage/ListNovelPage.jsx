@@ -1,5 +1,5 @@
 
-import './ListNovelPage.css'
+import './ListNovelPage.scss'
 import React, { useState, useEffect, useContext } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link, useSearchParams } from 'react-router-dom';

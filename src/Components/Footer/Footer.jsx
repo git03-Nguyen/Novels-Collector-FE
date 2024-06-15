@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 
-import './Footer.css'
+import './Footer.scss'
 import { NovelContext } from '../../context/NovelContext';
 
 function Footer(props) {

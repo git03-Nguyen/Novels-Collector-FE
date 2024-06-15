@@ -1,11 +1,6 @@
 .novel-chapter-page-container {
     width: 80%;
     margin: 0 auto;
-/*     
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: start;
-    align-items: start; */
 }
 
 .novel-chapter-content-container {
@@ -22,12 +17,17 @@
 
     display: grid;
     grid-template-columns: 33.3% auto 33.3%;
-}
 
-.novel-chapter-footer-navigator > button {
-    background: linear-gradient(90deg,var(--dark-blue),black) !important;
-    box-shadow: 1.5px 1px var(--light-blue);
-    font-size: 20px;
+    & > button {
+        background: linear-gradient(90deg,var(--dark-blue),black) !important;
+        box-shadow: 1.5px 1px var(--light-blue);
+        font-size: 20px;
+
+        &:hover {
+            background: linear-gradient(90deg,#3b66f5,#163bcd) !important;
+            color: greenyellow;
+        };
+    }
 }
 
 .chapter-content-text {
@@ -43,11 +43,6 @@
 .next-chapter-btn {
     border-top-right-radius: 75% !important;
     border-bottom-right-radius: 75% !important;
-}
-
-.novel-chapter-footer-navigator > button:hover {
-    background: linear-gradient(90deg,#3b66f5,#163bcd) !important;
-    color: greenyellow;
 }
 
 .novel-chapter-comment-section {

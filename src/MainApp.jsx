@@ -1,6 +1,6 @@
 // src/MainApp.js
 import React, { useContext, useEffect, useState } from 'react';
-import './App.css';
+import './App.scss';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Components/Header/Header';

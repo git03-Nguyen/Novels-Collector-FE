@@ -69,7 +69,6 @@ export default function Action({ isDisabledSiblingChapter, handleSiblingChapterC
                 novelSlug={novelSlug}
                 curChapterSlug={curChapterSlug}
             />
-            {/* {showModalEdit && <ModalEdit closeModal={handleModalEdit} />} */}
             <ToolbarModal show={isShowToolbarModal} handleClose={handleCloseToolbarModal} onConfirm={handleOnChangeToolbarModal} />
 
         </div>

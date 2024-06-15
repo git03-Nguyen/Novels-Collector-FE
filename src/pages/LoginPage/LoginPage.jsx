@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import Login, { Email, Password, Title, Submit, Logo, Footer } from '@react-login-page/page4';
 
 import logo from '../../assets/images/logo.png';
-import './LoginPage.css'
+import './LoginPage.scss'
 import { UserContext } from '../../context/UserContext';
 import UserServices from '../../services/user.s';
 import { useNavigate } from 'react-router-dom';

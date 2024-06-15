@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { NovelContext } from '../../context/NovelContext';
 
-import './DnDSourceModal.css'
+import './DnDSourceModal.scss'
 import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 
 function DnDSourceModal(props) {

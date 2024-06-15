@@ -27,7 +27,7 @@ import {
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
-import './ExporterManagementPage.css';
+import './ExporterManagementPage.scss';
 
 // Helper function to get user token from context
 const getUserToken = () => {

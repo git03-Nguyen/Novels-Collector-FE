@@ -1,13 +1,12 @@
 import { React, useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
-import './Header.css'
+import './Header.scss'
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import DnDSourceModal from '../DnDSourceModal/DnDSourceModal';
 
-import UserPluginSourcesManager from '../../utils/localStorage/userPluginSourcesManager';
 import UserServices from '../../services/user.s';
 
 

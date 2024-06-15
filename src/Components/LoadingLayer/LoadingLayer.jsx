@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { LoadingContext } from '../../context/LoadingContext';
 
-import './LoadingLayer.css';
+import './LoadingLayer.scss';
 
 function LoadingLayer(props) {
     const { isLoadingContext } = useContext(LoadingContext);
