@@ -1,6 +1,10 @@
 .homepage-container {
     display: grid;
     grid-template-columns: 75% auto;
+    &.dark-mode {
+		background-color: black;
+		color: white;
+	}   
 }
 
 .homepage-content {

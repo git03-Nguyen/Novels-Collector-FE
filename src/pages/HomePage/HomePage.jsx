@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import NovelSidebar from '../../Components/NovelSidebar/NovelSidebar';
 import { LoadingContext } from '../../context/LoadingContext';
 
-function HomePage(props) {
+function HomePage({ darkMode }) {
     const { pluginSources, handleSetPluginSources } = useContext(NovelContext);
     const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
     const [isHomeContentFetched, setIsHomeContentFetched] = useState(false);
@@ -121,7 +121,7 @@ function HomePage(props) {
 
 
     return (
-        <div className='homepage-container dark:bg-black dark:text-white'>
+        <div className={`homepage-container ${darkMode ? 'dark-mode' : ''} `}>
             <div className='homepage-content'>
                 <div className='novel-sublists'>
                     <div className='outstanding-sublist'>

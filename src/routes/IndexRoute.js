@@ -7,19 +7,20 @@ import NovelPage from '../pages/NovelPage/NovelPage';
 import NovelChapterPage from '../pages/NovelChapterPage/NovelChapterPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import PrivateRoute from './PrivateRoute';
-function IndexRoute(props) {
+
+function IndexRoute({ darkMode }) {
     return (
         <Routes>
             {/* Public */}
-            <Route path='/' element={<HomePage />} />
+            <Route path='/' element={<HomePage darkMode={darkMode}/>} />
 
 
 
-            <Route path='/novel-list' element={<ListNovelPage />} />
+            <Route path='/novel-list' element={<ListNovelPage darkMode={darkMode}/>} />
 
-            <Route path='/source/:sourceSlug' element={<HomePage />} />
-            <Route path='/source/:sourceSlug/novel/:novelSlug' element={<NovelPage />} />
-            <Route path='/source/:sourceSlug/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage />} />
+            <Route path='/source/:sourceSlug' element={<HomePage darkMode={darkMode}/>} />
+            <Route path='/source/:sourceSlug/novel/:novelSlug' element={<NovelPage darkMode={darkMode}/>} />
+            <Route path='/source/:sourceSlug/novel/:novelSlug/chapter/:chapterSlug' element={<NovelChapterPage darkMode={darkMode}/>} />
 
             {/* Private */}
             {/* <Route path='/login/' element={<LoginPage />} /> */}
@@ -32,7 +33,7 @@ function IndexRoute(props) {
             /> */}
 
             {/* Not Found */}
-            <Route path='*' element={<PageNotFound />} />
+            <Route path='*' element={<PageNotFound darkMode={darkMode}/>} />
         </Routes>
     );
 }

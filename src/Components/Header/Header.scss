@@ -4,6 +4,34 @@
     background-color: var(--dark-blue);
     display: grid;
     grid-template-columns: 10% auto 15%;
+    border-bottom: 1px white solid;
+    &.dark-mode {
+        background-color: black;
+        color: white;
+        
+    // Additional dark mode styles
+    .border-b-2 {
+        border-bottom: 2px solid white;
+    }
+    
+    .btn-primary {
+        background-color: #1f2937;
+        border-color: #1f2937;
+        &:hover {
+        background-color: #374151;
+        border-color: #374151;
+        }
+    }
+
+    .btn-secondary {
+        background-color: #4b5563;
+        border-color: #4b5563;
+        &:hover {
+        background-color: #6b7280;
+        border-color: #6b7280;
+        }
+    }
+    }
 }
 
 .app-logo {
@@ -46,4 +74,8 @@
 
 button {
     margin: 0 2px;
+}
+.size-8 {
+    width: 1.6rem;
+    height: 1.6rem; 
 }

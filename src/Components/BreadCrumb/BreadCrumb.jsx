@@ -6,7 +6,7 @@ import { NovelContext } from '../../context/NovelContext';
 
 import './BreadCrumb.scss';
 
-function BreadCrumb(props) {
+function BreadCrumb({darkMode}) {
     const location = useLocation();
     const [urlPath, setUrlPath] = useState(location.pathname);
     const separator = '>';
@@ -48,7 +48,7 @@ function BreadCrumb(props) {
     }, [chapterContext])
 
     return (
-        <div className='app-breadcrumb dark:bg-black dark:text-white '>
+        <div className={`app-breadcrumb ${darkMode ? 'dark-mode' : ''} border-b-2`}>
             <Link to="/">
                 <span>Trang chủ</span>
             </Link>

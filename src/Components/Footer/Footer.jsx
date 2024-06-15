@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import './Footer.scss'
 import { NovelContext } from '../../context/NovelContext';
 
-function Footer(props) {
+function Footer({darkMode}) {
 
     const { pluginSources } = useContext(NovelContext);
     const [curPluginSources, setCurPluginSources] = useState(pluginSources);
@@ -16,7 +16,8 @@ function Footer(props) {
     }, [pluginSources])
 
     return (
-        <footer className='app-footer dark:bg-black dark:text-white border-t-2'>
+
+        <footer className={`app-footer ${darkMode ? 'dark-mode' : ''} `}>
             <Link to='/'>
                 <img src='/logo.png' className='app-logo' alt='logo' />
             </Link>
