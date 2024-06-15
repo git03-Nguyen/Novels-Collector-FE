@@ -41,6 +41,28 @@ function NovelSidebar(props) {
         setUserLatestNovels(novels);
     }
 
+    const handleDeleteUserNovel = (index) => {
+        if (index < -1 || index > userLatestNovels?.length) {
+            toast.error("Xóa truyện không hợp lệ !");
+            return;
+        }
+        if (index === -1) {
+            if (window.confirm("Bạn có chắc chắn muốn xóa hết danh sách truyện đã đọc hay không ?")) {
+                UserLatestNovelGetter.resetUserNovelStorage();
+                setUserLatestNovels([]);
+                return;
+            }
+        }
+
+        if (window.confirm(`Bạn có chắc chắn muốn xóa truyện ${userLatestNovels[index]?.title} không ?`)) {
+            const newUserLatestNovels = userLatestNovels?.map(novel => novel);
+            newUserLatestNovels?.splice(index, 1);
+            setUserLatestNovels(newUserLatestNovels);
+            UserLatestNovelGetter.resetUserNovelStorage(newUserLatestNovels);
+        }
+
+    }
+
     useEffect(() => {
         getUserLatestNovelsFromStorage();
     }, [])
@@ -63,7 +85,7 @@ function NovelSidebar(props) {
                         ? <> {userLatestNovels?.slice(0, 5).map((novel, index) => {
                             return <div key={`recent-novel-card-${index}`} className='novel-card-mini'>
                                 <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
-                                    <img src={novel?.cover} />
+                                    <img src={novel?.cover ?? '/novel_cover_placeholder.png'} />
                                 </Link>
                                 <div className='novel-brief-info'>
                                     <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
@@ -94,12 +116,21 @@ function NovelSidebar(props) {
                                     <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                 </div>
                                 <div className="offcanvas-body">
+                                    <div className='offcanvas-description-container'>
+                                        <i className='text-white'>Hệ thống chỉ tự động lưu trữ tối đa 10 truyện, truyện cũ nhất sẽ được thay thế khi vượt quá giới hạn này.</i>
+                                        <br />
+                                        <button className='btn btn-warning delete-user-novel-btn mt-3'
+                                            onClick={() => handleDeleteUserNovel(-1)}>
+                                            <strong>Xóa hết</strong>
+                                        </button>
+                                    </div>
+
                                     {userLatestNovels.map((novel, index) => {
                                         return <div key={`recent-novel-offcanva-card-${index}`} className='offcanvas-novel-card-mini'>
                                             <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
-                                                <img src={novel?.cover} />
+                                                <img src={novel?.cover ?? '/novel_cover_placeholder.png'} />
                                             </Link>
-                                            <div className='novel-brief-info'>
+                                            <div className='offcanvas-novel-brief-info'>
                                                 <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}`}>
                                                     {novel?.title?.length <= 30
                                                         ? <strong>{novel?.title}</strong>
@@ -107,12 +138,16 @@ function NovelSidebar(props) {
                                                     }
                                                 </Link>
                                                 <i>{novel?.source}</i>
-                                                {novel?.chapter &&
+                                                {novel?.chapter?.slug &&
                                                     <Link to={`/source/${novel?.source}/novel/${novel?.novelSlug}/chapter/${novel?.chapter?.slug}`}>
-                                                        <span>Chương {novel?.chapter?.number}</span>
+                                                        <span>Chương {novel?.chapter?.number ?? novel?.chapter?.id}</span>
                                                     </Link>
                                                 }
                                             </div>
+                                            <button className='btn btn-warning delete-user-novel-btn'
+                                                onClick={() => handleDeleteUserNovel(index)}>
+                                                <i className="fa-solid fa-trash"></i>
+                                            </button>
                                         </div>
                                     })}
                                 </div>
@@ -120,7 +155,9 @@ function NovelSidebar(props) {
                         </>
                         : <>
                             <span>Bạn chưa đọc truyện nào cả, hãy cùng bắt đầu với một bộ truyện nhé !</span>
-                            <Link className='text-white' to={`/novel-list`}>Xem ở đây</Link>
+                            <Link className='text-white mt-2' to={`/novel-list`}>
+                                <button className='btn btn-secondary'>Xem ở đây</button>
+                            </Link>
                         </>}
                 </div>
             </div>

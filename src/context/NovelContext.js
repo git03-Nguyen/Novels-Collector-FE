@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PluginSourceService from '../services/pluginSource.s';
 import _ from 'lodash';
 import UserPluginSourcesManager from '../utils/localStorage/userPluginSourcesManager';
+import UserSearchTargetManager from '../utils/localStorage/userSearchTargetManager';
 
 const NovelContext = React.createContext({
     searchValue: '',
@@ -12,14 +13,22 @@ const NovelContext = React.createContext({
 
 function NovelProvider(props) {
     const { children } = props;
+
     const [isLoadingNovel, setIsLoadingNovel] = useState(true);
     const [novelContext, setNovelContext] = useState({});
     const [chapterContext, setChapterContext] = useState({});
     const [pluginSources, setPluginSources] = useState(UserPluginSourcesManager.getUserPluginSources() ?? []);
 
     const [searchValue, setSearchValue] = useState('');
-    const [searchTarget, setSearchTarget] = useState('keyword');
+    const [searchTarget, setSearchTarget] = useState(UserSearchTargetManager?.getUserSearchTarget() ?? 'keyword');
 
+
+    // SEARCH
+
+    const handleSetSearchTarget = (newSearchTarget) => {
+        setSearchTarget(newSearchTarget);
+        UserSearchTargetManager?.saveSearchTarget(newSearchTarget);
+    }
 
     // PLUGIN
     const fetchPluginSources = async () => {
@@ -39,7 +48,7 @@ function NovelProvider(props) {
                 console.log("Plugin source after fetching API: ");
                 console.log(sourceList);
 
-                const isChangeSources = false;
+                let isChangeSources = false;
                 const curUserSources = UserPluginSourcesManager.getUserPluginSources();
 
                 if (curUserSources?.length !== sourceList?.length) {
@@ -48,13 +57,16 @@ function NovelProvider(props) {
                     for (let i = 0; i < curUserSources?.length; i++) {
                         const src = sourceList[i];
                         const newSrcIndex = sourceList?.findIndex(newSrc => newSrc?.name === src?.name);
-                        if (newSrcIndex === -1 || (src?.isLoaded !== sourceList[newSrcIndex].isLoaded)) {
+
+                        if (src === undefined) {
                             isChangeSources = true;
-                            return;
+                            sourceList?.splice(newSrcIndex, 1);
                         }
                     }
                 }
                 if (isChangeSources === true) {
+                    console.log("New plugin sources from novel context: ");
+                    console.log(sourceList);
                     handleSetPluginSources(sourceList);
                 }
 
@@ -81,7 +93,7 @@ function NovelProvider(props) {
     return (
         <NovelContext.Provider value={{
             searchValue, novelContext, chapterContext, pluginSources, isLoadingNovel, searchTarget,
-            setSearchValue, setNovelContext, setChapterContext, handleSetPluginSources, setIsLoadingNovel, setSearchTarget
+            setSearchValue, setNovelContext, setChapterContext, handleSetPluginSources, setIsLoadingNovel, handleSetSearchTarget
         }}>
             {children}
         </NovelContext.Provider>

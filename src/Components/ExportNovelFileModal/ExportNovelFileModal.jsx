@@ -122,7 +122,7 @@ function ExportNovelFileModal(props) {
                                     value={topExportedChapter} onChange={(e) => handleChangeTopExportedChapter(e)}>
                                     {curNovel && curNovel?.chapters && curNovel.chapters?.length > 0 &&
                                         curNovel?.chapters?.map((chap, index) => {
-                                            return <option name={chap?.slug} value={chap?.slug} key={chap?.slug}>
+                                            return <option name={chap?.slug} value={chap?.slug} key={`${chap?.slug}`}>
                                                 Chương {chap?.number}
                                             </option>
                                         })
@@ -135,7 +135,7 @@ function ExportNovelFileModal(props) {
                                     value={bottomExportedChapter} onChange={(e) => handleChangeBottomExportedChapter(e)}>
                                     {curNovel && curNovel?.chapters && curNovel.chapters?.length > 0 &&
                                         curNovel?.chapters?.map((chap, index) => {
-                                            return <option name={chap?.slug} value={chap?.slug} key={chap?.slug}>
+                                            return <option name={chap?.slug} value={chap?.slug} key={`${chap?.slug}`}>
                                                 Chương {chap?.number}
                                             </option>
                                         })
@@ -153,9 +153,11 @@ function ExportNovelFileModal(props) {
                                 value={selectedExporterPlugins} onChange={(e) => setSelectedExporterPlugins(e.target.value)}>
                                 {exporterPlugins && exporterPlugins?.length > 0 &&
                                     exporterPlugins?.map((plugin, index) => {
-                                        return <option name={plugin?.name} value={plugin?.name} key={plugin?.name}>
-                                            {`${plugin?.name}: <filename>.${plugin?.extension}`}
-                                        </option>
+                                        if (plugin && plugin?.name) {
+                                            return <option name={plugin?.name} value={plugin?.name} key={`${plugin?.name}`}>
+                                                {`${plugin?.name}: <filename>.${plugin?.extension}`}
+                                            </option>
+                                        }
                                     })
                                 }
                             </select>

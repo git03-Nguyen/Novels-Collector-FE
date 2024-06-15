@@ -10,7 +10,6 @@ import {
 } from '@coreui/react'
 import {
   cilAccountLogout,
-  cilSettings,
 
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'

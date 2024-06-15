@@ -9,7 +9,7 @@
 }
 
 .novel-chapter-content-container {
-    padding: 8px 0 16px 10vw;
+    padding: 8px 0 16px 0px;
     border-top: 1px solid var(--light-blue);    
 
     text-align: start;
@@ -28,6 +28,11 @@
     background: linear-gradient(90deg,var(--dark-blue),black) !important;
     box-shadow: 1.5px 1px var(--light-blue);
     font-size: 20px;
+}
+
+.chapter-content-text {
+    padding: 4px;
+    border-radius: 4px;
 }
 
 .previous-chapter-btn {
