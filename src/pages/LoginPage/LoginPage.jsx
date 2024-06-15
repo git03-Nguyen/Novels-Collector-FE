@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import Login, { Email, Password, Title, Submit, Logo, Footer } from '@react-login-page/page4';
+import Login, { Title, Logo, Submit, Email, Password } from '@react-login-page/page2';
 
 import logo from '../../assets/images/logo.png';
 import './LoginPage.scss'
@@ -9,24 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 
-
-const css = {
-    '--login-bg': '#f3f2f2',
-    '--login-color': '#333',
-    '--login-logo': '#fff',
-    '--login-inner-bg': '#fff',
-    '--login-banner-bg': '#fbfbfb',
-    '--login-input': '#333',
-    '--login-input-icon': '#dddddd',
-    '--login-input-bg': 'transparent',
-    '--login-input-border': 'rgba(0, 0, 0, 0.13)',
-    '--login-input-placeholder': '#999999',
-    '--login-btn': '#fff',
-    '--login-btn-bg': '#b08bf8',
-    '--login-btn-bg-focus': '#b08bf8',
-    '--login-btn-bg-hover': '#b08bf8',
-    '--login-btn-bg-active': '#b08bf8',
-};
 
 function LoginPage(props) {
     const navigate = useNavigate();
@@ -63,17 +45,17 @@ function LoginPage(props) {
     };
 
     return (
-        <Login style={{ height: "100vh", ...css }}>
-            <Logo>
-                <img src={logo} height={20} alt="Logo" />
-            </Logo>
-            <Title label="Đăng nhập">Đăng nhập</Title>
+        <Login style={{ height: "100vh" }}>
+            <Title label="Đăng nhập">Đăng nhập<br /><h5 className="login-subtitle">Với vai trò Quản trị viên</h5></Title>
+            <Login.Banner>
+                <h1 className="app-name">NOVEL COLLECTOR</h1>
+                <img className="logo-img" src={logo} />
+                <a href="/">Về trang chủ</a>
+            </Login.Banner>
             <Email name="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <Password label="Mật khẩu" name="userPassword" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <Submit onClick={handleLogin}>Đăng nhập</Submit>
-            <Footer>
-                <a href="/">Về trang chủ</a>
-            </Footer>
+            <Submit onClick={handleLogin} className="login-submit-btn">Đăng nhập</Submit>
+            <Logo>  </Logo>
             <ToastContainer
                 position="bottom-right"
                 autoClose={3000}
@@ -86,8 +68,7 @@ function LoginPage(props) {
                 pauseOnHover
                 theme="light"
             />
-
-        </Login>
+        </Login >
     );
 };
 
