@@ -12,7 +12,7 @@ import UserServices from '../../services/user.s';
 
 
 function Header({ setdarkMode, darkMode }) {
-    const { searchValue, setSearchValue, pluginSources, handleSetPluginSources, searchTarget, setSearchTarget } = useContext(NovelContext);
+    const { searchValue, setSearchValue, pluginSources, handleSetPluginSources, searchTarget, handleSetSearchTarget } = useContext(NovelContext);
     const [selectedSource, setSelectedSource] = useState(pluginSources[0]?.name);
 
     const [isShowModal, setIsShowModal] = useState(false);
@@ -30,7 +30,8 @@ function Header({ setdarkMode, darkMode }) {
     }
 
     const handleChangeSearchTarget = (e) => {
-        setSearchTarget(e.target.value);
+
+        handleSetSearchTarget(e.target.value);
 
         const selectedOption = e.target.options[e.target.selectedIndex];
         const selectedOptionName = selectedOption.getAttribute('name');

@@ -12,7 +12,7 @@ import { LoadingContext } from '../../context/LoadingContext';
 
 
 function ListNovelPage(props) {
-    const { pluginSources, searchTarget } = useContext(NovelContext);
+    const { pluginSources, searchTarget, handleSetSearchTarget } = useContext(NovelContext);
     const { setIsLoadingContext } = useContext(LoadingContext);
 
     const [totalPage, setTotalPage] = useState(1);
@@ -109,6 +109,16 @@ function ListNovelPage(props) {
     }
 
     useEffect(() => {
+        if (searchTarget !== curSearchTarget) {
+            if (curCategory) {
+                return;
+            }
+
+            window.location.replace(`/novel-list?${searchTarget}=${curSearchValue}`);
+        }
+    }, [searchTarget])
+
+    useEffect(() => {
         setIsLoadingContext(true);
         console.log("Search params: ");
         console.log(Object.entries(Object.fromEntries(searchParams)));
@@ -117,7 +127,7 @@ function ListNovelPage(props) {
 
 
 
-    }, [searchTarget, searchParams, pluginSources[0]])
+    }, [searchParams, pluginSources[0]])
 
 
     const handleUpdateCategory = async () => {
