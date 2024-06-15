@@ -38,6 +38,7 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
         const chapterNumber = chapterList?.find(chap => chap?.slug === curChapterSlug)?.number;
         console.log("Fetch for chapter number: " + chapterNumber);
         if (!chapterNumber || !newRawOtherSources || newRawOtherSources?.length <= 0) {
+
             return;
         }
 
@@ -73,6 +74,9 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
             console.log(`Change to: /source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`);
             // navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`)
             window.location.replace(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`);
+        } else {
+            toast.error('Nguồn đã chọn không có chương hiện tại, xin thông cảm !');
+            setSelectedSource(sourceSlug);
         }
     }
 

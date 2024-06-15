@@ -27,7 +27,7 @@ const saveNovelToUserStorage = (newNovel) => {
     let savedNovel = validateNovel(newNovel);
 
     const novels = getUserLatestNovels();
-    const novelIndex = novels.findIndex(n => n.novelSlug === savedNovel.novelSlug);
+    const novelIndex = novels.findIndex(n => (n.novelSlug === savedNovel.novelSlug && n.source === savedNovel.source));
 
     if (novelIndex === -1) {
         console.log('Add new novel into user latest novel');
@@ -69,11 +69,11 @@ const resetUserNovelStorage = () => {
     setItemWithExpiration(USER_LOCAL_STORAGE_KEY, [], CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS)
 }
 
-const UserLatestNovelGetter = {
+const UserLatestNovelsManager = {
     getUserLatestNovels,
     saveNovelToUserStorage,
     removeNovelFromUserStorage,
     resetUserNovelStorage
 }
 
-export default UserLatestNovelGetter;
+export default UserLatestNovelsManager;

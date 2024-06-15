@@ -7,7 +7,7 @@ import { NovelContext } from '../../context/NovelContext';
 import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import './NovelPage.scss';
-import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
+import UserLatestNovelsManager from '../../utils/localStorage/userLatestNovelsManager';
 import { LoadingContext } from '../../context/LoadingContext';
 import ExportNovelFileModal from '../../Components/ExportNovelFileModal/ExportNovelFileModal';
 
@@ -143,7 +143,7 @@ function NovelPage(props) {
     }
 
     const saveNovelToUserLatestNovels = (newNovel) => {
-        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage(newNovel);
+        const newUserLatestNovels = UserLatestNovelsManager.saveNovelToUserStorage(newNovel);
         setUserLatestNovels(newUserLatestNovels);
     }
 

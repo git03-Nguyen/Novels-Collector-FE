@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import './ToolBar.scss';
-import UserStyleSettingsGetter from '../../utils/localStorage/userStyleSettingsGetter';
+import UserStyleSettingsManager from '../../utils/localStorage/userStyleSettingsManager';
 
 function ToolBar(props) {
     const { onChange } = props;
@@ -14,8 +14,8 @@ function ToolBar(props) {
         fontStyle: 'normal',
     }
 
-    const [styleSettings, setStyleSettings] = useState(UserStyleSettingsGetter.getUserStyleSettings()?.fontSize
-        ? UserStyleSettingsGetter.getUserStyleSettings()
+    const [styleSettings, setStyleSettings] = useState(UserStyleSettingsManager.getUserStyleSettings()?.fontSize
+        ? UserStyleSettingsManager.getUserStyleSettings()
         : defaultSettings
     );
 

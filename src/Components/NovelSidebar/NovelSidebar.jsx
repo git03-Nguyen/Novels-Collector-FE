@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 
 import CategoryService from '../../services/category.s';
-import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
+import UserLatestNovelsManager from '../../utils/localStorage/userLatestNovelsManager';
 import { UserContext } from '../../context/UserContext';
 
 function NovelSidebar(props) {
@@ -35,7 +35,7 @@ function NovelSidebar(props) {
 
 
     const getUserLatestNovelsFromStorage = () => {
-        const novels = UserLatestNovelGetter.getUserLatestNovels();
+        const novels = UserLatestNovelsManager.getUserLatestNovels();
         console.log('user latest novels from storage: ');
         console.log(novels);
         setUserLatestNovels(novels);
@@ -48,7 +48,7 @@ function NovelSidebar(props) {
         }
         if (index === -1) {
             if (window.confirm("Bạn có chắc chắn muốn xóa hết danh sách truyện đã đọc hay không ?")) {
-                UserLatestNovelGetter.resetUserNovelStorage();
+                UserLatestNovelsManager.resetUserNovelStorage();
                 setUserLatestNovels([]);
                 return;
             }
@@ -58,7 +58,7 @@ function NovelSidebar(props) {
             const newUserLatestNovels = userLatestNovels?.map(novel => novel);
             newUserLatestNovels?.splice(index, 1);
             setUserLatestNovels(newUserLatestNovels);
-            UserLatestNovelGetter.resetUserNovelStorage(newUserLatestNovels);
+            UserLatestNovelsManager.resetUserNovelStorage(newUserLatestNovels);
         }
 
     }

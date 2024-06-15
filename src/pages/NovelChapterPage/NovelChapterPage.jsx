@@ -9,15 +9,15 @@ import ChapterStatusConverter from '../../utils/chapterStatusConverter';
 import DetailNovelService from '../../services/detailnovel.s';
 import PluginSourcePerpageGetter from '../../utils/pluginSourcePerpageGetter';
 import { UserContext } from '../../context/UserContext';
-import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
-import UserStyleSettingsGetter from '../../utils/localStorage/userStyleSettingsGetter';
+import UserLatestNovelsManager from '../../utils/localStorage/userLatestNovelsManager';
+import UserStyleSettingsManager from '../../utils/localStorage/userStyleSettingsManager';
 import ActionBar from '../../Components/ActionBar/ActionBar';
 import { LoadingContext } from '../../context/LoadingContext';
 
 function NovelChapterPage(props) {
     const navigate = useNavigate();
 
-    const defaultStyleSettings = UserStyleSettingsGetter.getUserStyleSettings() ?? {
+    const defaultStyleSettings = UserStyleSettingsManager.getUserStyleSettings() ?? {
         fontSize: '16px',
         fontColor: '#ffffff',
         backgroundColor: '#066886',
@@ -26,8 +26,8 @@ function NovelChapterPage(props) {
         fontStyle: 'normal',
     };
 
-    const [curStyleSettings, setCurStyleSettings] = useState(UserStyleSettingsGetter.getUserStyleSettings()?.fontSize
-        ? UserStyleSettingsGetter.getUserStyleSettings()
+    const [curStyleSettings, setCurStyleSettings] = useState(UserStyleSettingsManager.getUserStyleSettings()?.fontSize
+        ? UserStyleSettingsManager.getUserStyleSettings()
         : defaultStyleSettings
     );
 
@@ -106,7 +106,7 @@ function NovelChapterPage(props) {
         }
 
         let chapterNumber = newNovel?.chapters?.find(chapter => chapter.slug === curChapterSlug)?.number ?? chapterData?.number;
-        const newUserLatestNovels = UserLatestNovelGetter.saveNovelToUserStorage({
+        const newUserLatestNovels = UserLatestNovelsManager.saveNovelToUserStorage({
             ...newNovel,
             source: sourceSlug,
             chapterID: chapterID,
