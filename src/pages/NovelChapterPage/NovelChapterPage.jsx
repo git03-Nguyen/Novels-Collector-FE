@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import ChapterService from '../../services/chapter.s';
 
-import './NovelChapterPage.css'
+import './NovelChapterPage.scss'
 import { toast } from 'react-toastify';
 import { NovelContext } from '../../context/NovelContext';
 import { Link, useNavigate, useParams } from 'react-router-dom';

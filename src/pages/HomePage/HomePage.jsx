@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import './HomePage.css'
+import './HomePage.scss'
 import ListNovelService from '../../services/listnovel.s';
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';

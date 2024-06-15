@@ -6,7 +6,7 @@ import ReactPaginate from 'react-paginate';
 import { NovelContext } from '../../context/NovelContext';
 import { UserContext } from '../../context/UserContext';
 import ChapterStatusConverter from '../../utils/chapterStatusConverter';
-import './NovelPage.css';
+import './NovelPage.scss';
 import UserLatestNovelGetter from '../../utils/localStorage/userLatestNovelGetter';
 import { LoadingContext } from '../../context/LoadingContext';
 import ExportNovelFileModal from '../../Components/ExportNovelFileModal/ExportNovelFileModal';

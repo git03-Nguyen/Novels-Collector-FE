@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import './NovelSidebar.css';
+import './NovelSidebar.scss';
 import { NovelContext } from '../../context/NovelContext';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';

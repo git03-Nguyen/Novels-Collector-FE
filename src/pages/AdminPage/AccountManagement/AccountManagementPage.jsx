@@ -25,7 +25,7 @@ import {
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
 
-import './AccountManagementPage.css';
+import './AccountManagementPage.scss';
 
 const AccountManagementPage = () => {
     const [listAccounts, setListAccounts] = useState([]);

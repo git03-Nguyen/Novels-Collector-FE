@@ -12,7 +12,7 @@ import {
 } from '@coreui/react';
 import logo from '../../../assets/images/logo.png';
 import WidgetsDropdown from '../widgets/WidgetsDropdown';
-import './Dashboard.css';
+import './Dashboard.scss';
 const Dashboard = () => {
   return (
     <>
