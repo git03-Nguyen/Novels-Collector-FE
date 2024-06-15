@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import ToolBar from '../ToolBar/ToolBar';
-import UserStyleSettingsGetter from '../../utils/localStorage/userStyleSettingsGetter';
+import UserStyleSettingsManager from '../../utils/localStorage/userStyleSettingsManager';
 
 const ToolbarModal = ({ show, handleClose, onConfirm }) => {
     const defaultStyleSettings = {
@@ -15,8 +15,8 @@ const ToolbarModal = ({ show, handleClose, onConfirm }) => {
     };
 
     const [localStyles, setLocalStyles] = useState(
-        UserStyleSettingsGetter.getUserStyleSettings()?.fontSize
-            ? UserStyleSettingsGetter.getUserStyleSettings()
+        UserStyleSettingsManager.getUserStyleSettings()?.fontSize
+            ? UserStyleSettingsManager.getUserStyleSettings()
             : defaultStyleSettings
     );
 
@@ -27,7 +27,7 @@ const ToolbarModal = ({ show, handleClose, onConfirm }) => {
     const handleConfirm = () => {
         onConfirm(localStyles);
 
-        UserStyleSettingsGetter.saveStyleSettings(localStyles);
+        UserStyleSettingsManager.saveStyleSettings(localStyles);
         handleClose();
     };
 

@@ -18,10 +18,10 @@ const removeUserStyleSettings = () => {
 }
 
 
-const UserStyleSettingsGetter = {
+const UserStyleSettingsManager = {
     getUserStyleSettings,
     saveStyleSettings,
     removeUserStyleSettings,
 }
 
-export default UserStyleSettingsGetter;
+export default UserStyleSettingsManager;
