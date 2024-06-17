@@ -80,15 +80,21 @@ const fetchAddUser = async (email, password, role) => {
                 'Content-Type': 'application/json',
             }
         });
-
-        return response;
+        if (response) {
+            return {
+                statusCode: response.statusCode ?? 200,
+                message: response?.message ?? {},
+                data: response?.data ?? {},
+                meta: response?.meta ?? {}
+            };
+        }
 
     } catch (error) {
         console.log("Error adding user: " + error.message);
         return {
-            statusCode: 500,
+            statusCode: 401,
             data: null,
-            message: "Cannot connect to server!"
+            message: "Unauthorized!"
         };
     }
 };

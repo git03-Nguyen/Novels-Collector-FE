@@ -38,11 +38,11 @@ const Dashboard = () => {
                 <CCol>
                   <h5 className="text-center" >Thành viên nhóm</h5>
                   <CListGroup className="list-member w-50">
-                    <CListGroupItem><strong>Nguyễn Tuấn Đạt</strong> - Lập trình Backend</CListGroupItem>
-                    <CListGroupItem><strong>Nguyễn Đình Ánh</strong> - Lập trình Backend</CListGroupItem>
-                    <CListGroupItem><strong>Triệu Hoàng Thiên Ân</strong> - Thiết kế UI/UX</CListGroupItem>
-                    <CListGroupItem><strong>Lê Minh Huy</strong> - Thiết kế UI/UX</CListGroupItem>
-                    <CListGroupItem><strong>Trương Thành Nhân</strong> - Thiết kế UI/UX + Kiểm thử</CListGroupItem>
+                    <CListGroupItem><strong>Nguyễn Tuấn Đạt</strong> - Lập trình Backend + Thiết kế kiến trúc</CListGroupItem>
+                    <CListGroupItem><strong>Nguyễn Đình Ánh</strong> - Lập trình Backend + Thiết kế kiến trúc</CListGroupItem>
+                    <CListGroupItem><strong>Triệu Hoàng Thiên Ân</strong> - Lập trình Frontend + Thiết kế UI/UX</CListGroupItem>
+                    <CListGroupItem><strong>Lê Minh Huy</strong> - Lập trình Frontend + Thiết kế UI/UX</CListGroupItem>
+                    <CListGroupItem><strong>Lập trình Frontend</strong> - Thiết kế UI/UX + Kiểm thử</CListGroupItem>
                   </CListGroup>
                 </CCol>
               </CRow>
