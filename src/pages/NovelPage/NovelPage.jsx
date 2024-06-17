@@ -11,7 +11,7 @@ import UserLatestNovelsManager from '../../utils/localStorage/userLatestNovelsMa
 import { LoadingContext } from '../../context/LoadingContext';
 import ExportNovelFileModal from '../../Components/ExportNovelFileModal/ExportNovelFileModal';
 
-function NovelPage({darkMode}) {
+function NovelPage({ darkMode }) {
     const navigate = useNavigate();
 
     const { novelSlug, sourceSlug } = useParams();
@@ -152,6 +152,8 @@ function NovelPage({darkMode}) {
         await fetchNovelInfo(sourceSlug, novelSlug);
         getInnerTextOfDescription();
         setIsLoadingContext(false);
+        console.log("NOVELPAGE: Change loading context to FALSE");
+
     }
 
     const fetchOtherSources = async () => {
@@ -189,6 +191,8 @@ function NovelPage({darkMode}) {
 
     useEffect(() => {
         setIsLoadingContext(false);
+        console.log("NOVELPAGE: Change loading context to FALSE");
+
         if (isNovelInfoFetched === true) {
             fetchOtherSources();
         }

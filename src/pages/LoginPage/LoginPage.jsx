@@ -16,6 +16,11 @@ function LoginPage(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const handlePressEnter = (e) => {
+        if (e.code === "Enter" || e.code === "NumpadEnter") {
+            handleLogin(e);
+        }
+    }
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -50,12 +55,13 @@ function LoginPage(props) {
             <Login.Banner>
                 <h1 className="app-name">NOVEL COLLECTOR</h1>
                 <img className="logo-img" src={logo} />
-                {/* <a href="/" className="return-home">Về trang chủ</a> */}
             </Login.Banner>
             <Email name="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Password label="Mật khẩu" name="userPassword" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Password label="Mật khẩu" name="userPassword"
+                value={password} onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => handlePressEnter(e)} />
             <Submit onClick={handleLogin} className="login-submit-btn">Đăng nhập</Submit>
-            <Logo>  </Logo>
+            <Logo />
 
             <ToastContainer
                 position="bottom-right"

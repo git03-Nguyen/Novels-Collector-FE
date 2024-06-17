@@ -130,6 +130,7 @@ function NovelChapterPage({ darkMode }) {
             setCurrentPage(newNovelInfo?.page);
         }
         setIsLoadingContext(false);
+        console.log("NOVELCHAPTERPAGE: Change loading context to FALSE");
         saveNovelToUserLatestNovels(newNovelInfo);
 
 
@@ -191,6 +192,8 @@ function NovelChapterPage({ darkMode }) {
                 setChapterContext(newChapterData);
 
                 setIsLoadingContext(false);
+                console.log("NOVELCHAPTERPAGE: Change loading context to FALSE");
+
                 saveNovelToUserLatestNovels(novelContext, newChapterData);
                 setDisabledStatusForSiblingChapters(newChapterID, novelContext, newPage);
             } else {
@@ -289,10 +292,10 @@ function NovelChapterPage({ darkMode }) {
 
     const handleChangeNovelPageList = async () => {
         scrollToFrontList();
-        if (isChapterIDFetched === true) {
-            await fetchNovelInfo(sourceSlug, novelSlug);
-        }
+        await fetchNovelInfo(sourceSlug, novelSlug);
         setIsLoadingContext(false);
+        console.log("NOVELCHAPTERPAGE: Change loading context to FALSE");
+
     }
 
     useEffect(() => {
@@ -301,18 +304,21 @@ function NovelChapterPage({ darkMode }) {
 
     useEffect(() => {
         setIsLoadingContext(true);
-        handleUpdateChapterContent(chapterSlug);
+        console.log("Have set loading context to TRUE !");
+        handleUpdateChapterContent(curChapterSlug);
     }, [chapterID, curChapterSlug])
 
     useEffect(() => {
         setIsLoadingContext(true);
-        handleChangeNovelPageList();
+        if (isChapterIDFetched === true) {
+            handleChangeNovelPageList();
+        }
     }, [currentPage, isChapterIDFetched])
 
     return (
-        <div className={`novel-chapter-page-container' ${darkMode ? 'dark-mode' : ''}`}>
+        <div className={`novel-chapter-page-container ${darkMode ? 'dark-mode' : ''}`}>
             <Fragment >
-                <h3 id='novel-chapter-container' className= ''>{novelContext?.title}</h3>
+                <h3 id='novel-chapter-container' className=''>{novelContext?.title}</h3>
                 <h5 >
                     {`Chương ${novelChapter?.number ?? ''}: ${getChapterTitleBySourceSlug()}`}
                 </h5>
