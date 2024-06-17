@@ -50,12 +50,13 @@ function LoginPage(props) {
             <Login.Banner>
                 <h1 className="app-name">NOVEL COLLECTOR</h1>
                 <img className="logo-img" src={logo} />
-                <a href="/">Về trang chủ</a>
+                {/* <a href="/" className="return-home">Về trang chủ</a> */}
             </Login.Banner>
             <Email name="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <Password label="Mật khẩu" name="userPassword" value={password} onChange={(e) => setPassword(e.target.value)} />
             <Submit onClick={handleLogin} className="login-submit-btn">Đăng nhập</Submit>
             <Logo>  </Logo>
+
             <ToastContainer
                 position="bottom-right"
                 autoClose={3000}

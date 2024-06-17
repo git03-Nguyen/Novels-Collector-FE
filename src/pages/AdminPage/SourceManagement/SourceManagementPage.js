@@ -241,9 +241,9 @@ const SourceManagementPage = () => {
                             <CTableDataCell>
                                 <div>{index + 1}</div>
                             </CTableDataCell>
-                            <CTableDataCell className="text-center center-img">
+                            <CTableDataCell className="">
                                 <CImage src={src.icon} width={30} />
-                                <p className='text-muted mb-0'><a href={src.url}>{src.url}</a></p>
+                                {/* <p className='text-muted mb-0'><a href={src.url}>{src.url}</a></p> */}
                             </CTableDataCell>
                             <CTableDataCell>
                                 <div>{src.name}</div>
