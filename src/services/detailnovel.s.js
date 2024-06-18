@@ -12,20 +12,25 @@ const sortChapterListByCustomID = (chapterListResponse) => {
     return newChapterList;
 }
 
-const fetchDetailNovel = async (source, novelSlug, page) => {
+const fetchDetailNovel = async (source, novelSlug) => {
     try {
         const response = await axios.get(`/api/v1/novel/${source}/${novelSlug}`);
         if (response) {
-
+            const novelID = response?.data?.id ?? response?.data?.slug ?? '';
 
             let returnedData = {
                 statusCode: response.statusCode ?? 200,
                 message: "Fetch detail novel info successfully!",
-                data: response?.data ?? {},
+                data: response?.data
+                    ? {
+                        ...response.data,
+                        id: novelID,
+                    }
+                    : {},
                 meta: response?.meta ?? {}
             }
 
-            const chapterListResponse = await fetchChapterList(source, novelSlug, page);
+            const chapterListResponse = await fetchChapterList(source, novelSlug, novelID);
             if (chapterListResponse) {
                 returnedData.data.chapters = chapterListResponse.data;
                 returnedData.data.totalPage = chapterListResponse.meta?.totalPage;
@@ -43,9 +48,9 @@ const fetchDetailNovel = async (source, novelSlug, page) => {
     }
 }
 
-const fetchChapterList = async (source, novelSlug, page) => {
+const fetchChapterList = async (source, novelSlug, novelID) => {
     try {
-        const response = await axios.get(`/api/v1/novel/${source}/${novelSlug}/chapters?page=${page}`);
+        const response = await axios.get(`/api/v1/novel/${source}/${novelSlug}/${novelID}/chapters`);
         if (response) {
             return {
                 statusCode: response.statusCode ?? 200,

@@ -94,7 +94,7 @@ function HomePage({ darkMode }) {
         await fetchCompletedNovels();
 
         setIsLoadingContext(false);
-        console.log("Change loading context to false !!!");
+        console.log("HOMEPAGE: Change loading context to false !!!");
     }
 
 

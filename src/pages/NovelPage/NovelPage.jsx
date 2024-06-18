@@ -11,16 +11,19 @@ import UserLatestNovelsManager from '../../utils/localStorage/userLatestNovelsMa
 import { LoadingContext } from '../../context/LoadingContext';
 import ExportNovelFileModal from '../../Components/ExportNovelFileModal/ExportNovelFileModal';
 
-function NovelPage({darkMode}) {
+function NovelPage({ darkMode }) {
     const navigate = useNavigate();
 
     const { novelSlug, sourceSlug } = useParams();
+    const perpage = 30;
 
     const { setNovelContext } = useContext(NovelContext);
     const { setUserLatestNovels } = useContext(UserContext);
     const { isLoadingContext, setIsLoadingContext } = useContext(LoadingContext);
 
+    const [novelID, setNovelID] = useState(-1);
     const [novel, setNovel] = useState({});
+    const [novelChapters, setNovelChapters] = useState([]);
     const [totalPage, setTotalPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [reviewStars, setReviewStars] = useState([]);
@@ -97,17 +100,19 @@ function NovelPage({darkMode}) {
 
     const fetchNovelInfo = async (source, slug) => {
         try {
-            const response = await DetailNovelService.fetchDetailNovel(source, slug, currentPage);
+            const response = await DetailNovelService.fetchDetailNovel(source, slug);
             if (response && response.data && parseInt(response.statusCode) === 200) {
                 response.data.source = response.meta.source;
                 const newNovelInfo = handleConvertNovelStatusCode(response.data);
                 setNovel(newNovelInfo);
-
+                setNovelChapters(newNovelInfo?.chapters);
                 console.log("novel: ");
                 console.log(newNovelInfo);
-                setTotalPage(parseInt(newNovelInfo.totalPage));
+                const chapterLength = parseInt(newNovelInfo?.chapters?.length) ?? 0;
+                setTotalPage(Math.ceil(chapterLength / perpage));
                 setIsNovelInfoFetched(true);
 
+                setNovelID(newNovelInfo?.id);
                 handleSetRawNovelDescription(newNovelInfo.description);
 
                 handleSetReviewStars(newNovelInfo.rating, newNovelInfo.maxRating);
@@ -152,6 +157,8 @@ function NovelPage({darkMode}) {
         await fetchNovelInfo(sourceSlug, novelSlug);
         getInnerTextOfDescription();
         setIsLoadingContext(false);
+        console.log("NOVELPAGE: Change loading context to FALSE");
+
     }
 
     const fetchOtherSources = async () => {
@@ -189,6 +196,8 @@ function NovelPage({darkMode}) {
 
     useEffect(() => {
         setIsLoadingContext(false);
+        console.log("NOVELPAGE: Change loading context to FALSE");
+
         if (isNovelInfoFetched === true) {
             fetchOtherSources();
         }
@@ -293,16 +302,17 @@ function NovelPage({darkMode}) {
                             </div>
                             <h5 className="text-white fw-bold mt-3 mb-2">Danh sách chương</h5>
                             <div className="list-group scrollable-list-group mt-3 border border-dark border-4 mb-4 round-pill">
-                                {novel.chapters && novel.chapters.length > 0
-                                    ? novel.chapters.map((chapter, index) => (
-                                        <Link
-                                            to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
-                                            className="list-group-item list-group-item-action border border-double"
-                                            key={`novel-chapter-${index}`}
-                                        >
-                                            <strong>{chapter.title}</strong>
-                                        </Link>
-                                    ))
+                                {novelChapters && novelChapters?.length > 0
+                                    ? novelChapters?.slice((currentPage - 1) * perpage, currentPage * perpage)
+                                        ?.map((chapter, index) => (
+                                            <Link
+                                                to={`/source/${sourceSlug}/novel/${novelSlug}/chapter/${chapter.slug}`}
+                                                className="list-group-item list-group-item-action border border-double"
+                                                key={`novel-chapter-${index}`}
+                                            >
+                                                <strong>{chapter.title}</strong>
+                                            </Link>
+                                        ))
                                     : <h5 className='text-white text-center'>Có lỗi xảy ra khi tải danh sách chương, xin vui lòng thử lại !</h5>}
                             </div>
                         </div>

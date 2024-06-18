@@ -11,7 +11,7 @@ import CategoryService from '../../services/category.s';
 import { LoadingContext } from '../../context/LoadingContext';
 
 
-function ListNovelPage({darkMode}) {
+function ListNovelPage({ darkMode }) {
     const { pluginSources, searchTarget, handleSetSearchTarget } = useContext(NovelContext);
     const { setIsLoadingContext } = useContext(LoadingContext);
 
@@ -78,6 +78,7 @@ function ListNovelPage({darkMode}) {
         }
 
         setIsLoadingContext(false);
+        console.log("LISTNOVELPAGE: Change loading context to FALSE");
     }
 
     const scrollToFrontList = () => {
@@ -135,6 +136,8 @@ function ListNovelPage({darkMode}) {
         await fetchNovelListByCategory();
         scrollToFrontList();
         setIsLoadingContext(false);
+        console.log("LISTNOVELPAGE: Change loading context to FALSE");
+
     }
 
     const handleUpdateSearchTargetAndValue = async () => {
@@ -146,6 +149,8 @@ function ListNovelPage({darkMode}) {
         scrollToFrontList();
 
         setIsLoadingContext(false);
+        console.log("LISTNOVELPAGE: Change loading context to FALSE");
+
     }
 
     useEffect(() => {
@@ -164,6 +169,8 @@ function ListNovelPage({darkMode}) {
             handleUpdateSearchTargetAndValue();
         } else {
             setIsLoadingContext(false);
+            console.log("LISTNOVELPAGE: Change loading context to FALSE");
+
         }
     }, [isHandlingSearchParams, curPage, curSearchValue, pluginSources[0]]);
 

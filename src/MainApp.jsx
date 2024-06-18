@@ -11,9 +11,9 @@ import { NovelContext } from './context/NovelContext';
 import LoadingLayer from './Components/LoadingLayer/LoadingLayer';
 import { LoadingContext } from './context/LoadingContext';
 
-function MainApp({isDarkMode, setIsDarkMode}) {
+function MainApp({ isDarkMode, setIsDarkMode }) {
     const { isLoadingContext } = useContext(LoadingContext);
-    
+
 
     const [isLoadingApp, setIsLoadingApp] = useState(isLoadingContext);
 
@@ -21,25 +21,25 @@ function MainApp({isDarkMode, setIsDarkMode}) {
     useEffect(() => {
         if (isLoadingContext === true) {
             console.log("loading ... ");
-        } else {
+        } else if (isLoadingContext === false) {
             console.log('Loaded !');
         }
         setIsLoadingApp(isLoadingContext);
     }, [isLoadingContext])
 
-    
+
     return (
         <div className={`App ${isDarkMode ? 'dark-mode' : ''} `}>
             <Header
                 darkMode={isDarkMode}
                 setdarkMode={setIsDarkMode}
             />
-            <BreadCrumb darkMode={isDarkMode}/>
+            <BreadCrumb darkMode={isDarkMode} />
             <div className="app-container">
                 {isLoadingApp === true && <LoadingLayer darkMode={isDarkMode} />}
-                <IndexRoute darkMode={isDarkMode}/>
+                <IndexRoute darkMode={isDarkMode} />
             </div>
-            <Footer darkMode={isDarkMode}/>
+            <Footer darkMode={isDarkMode} />
             <ToastContainer
                 position="bottom-right"
                 autoClose={3000}
