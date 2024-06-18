@@ -38,7 +38,7 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
         const chapterNumber = chapterList?.find(chap => chap?.slug === curChapterSlug)?.number;
         console.log("Fetch for chapter number: " + chapterNumber);
         if (!chapterNumber || !newRawOtherSources || newRawOtherSources?.length <= 0) {
-
+            setIsAllSourcesFetched(true);
             return;
         }
 
@@ -72,8 +72,7 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
         const newChapterSlug = otherChapterSources?.find(chap => chap?.source === newSelectedSource && chap?.novelSlug === newNovelSlug)?.slug;
         if (newChapterSlug && newChapterSlug?.length > 0) {
             console.log(`Change to: /source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`);
-            // navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`)
-            window.location.replace(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`);
+            navigate(`/source/${newSelectedSource}/novel/${newNovelSlug}/chapter/${newChapterSlug}`)
         } else {
             toast.error('Nguồn đã chọn không có chương hiện tại, xin thông cảm !');
             setSelectedSource(sourceSlug);
@@ -108,9 +107,6 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
             console.log("Error fetching other sources: " + error.message);
         }
     }
-
-
-
 
     const getCurChapterIDFromList = () => {
         console.log("Cur chapter slug: " + curChapterSlug);
@@ -157,7 +153,7 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
         console.log("SOURCE SLUG: " + sourceSlug);
         setIsAllSourcesFetched(false);
         fetchOtherSources();
-    }, [sourceSlug])
+    }, [sourceSlug, novelContext])
 
     useEffect(() => {
         if (isAllSourcesFetched === true) {
@@ -222,10 +218,10 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
                         <option value={sourceSlug} name={sourceSlug}>{sourceSlug}</option>
                         <option disabled>──────────</option>
 
-                        {otherSources && otherSources?.length > 0 && otherSources.map((src, index) => {
+                        {otherChapterSources && otherChapterSources?.length > 0 && otherChapterSources?.map((src, index) => {
 
-                            return <option key={`other-source-${src?.name}`} value={src?.name} name={src?.name}>
-                                {src?.name}
+                            return <option key={`other-source-${src?.source}`} value={src?.source} name={src?.source}>
+                                {src?.source}
                             </option>
                         })}
                     </select>

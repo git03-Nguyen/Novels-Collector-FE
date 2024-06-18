@@ -297,20 +297,19 @@ function NovelChapterPage({ darkMode }) {
                 </div>
             </Fragment>
 
-            {isLoadingContext === false &&
-                <ActionBar
-                    isDisabledSiblingChapter={isDisabledSiblingChapter}
-                    handleSiblingChapterClick={handleSiblingChapterClick}
-                    novelName={novelContext?.title ? novelContext.title : ''}
-                    novelPoster={novelContext?.cover ?? ''}
-                    novelAuthor={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
-                    chapterList={novelContext?.chapters || []}
-                    sourceSlug={sourceSlug}
-                    novelSlug={novelSlug}
-                    curChapterSlug={curChapterSlug}
-                    onConfirmToolbarModal={handleConfirmToolbarModal}
-                />
-            }
+            <ActionBar
+                isDisabledSiblingChapter={isDisabledSiblingChapter}
+                handleSiblingChapterClick={handleSiblingChapterClick}
+                novelName={novelContext?.title ? novelContext.title : ''}
+                novelPoster={novelContext?.cover ?? ''}
+                novelAuthor={(novelContext?.authors && novelContext?.authors?.length > 0) ? novelContext?.authors[0]?.name : ''}
+                chapterList={novelContext?.chapters || []}
+                sourceSlug={sourceSlug}
+                novelSlug={novelSlug}
+                curChapterSlug={curChapterSlug}
+                onConfirmToolbarModal={handleConfirmToolbarModal}
+            />
+
 
         </div >
     );
