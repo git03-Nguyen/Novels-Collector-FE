@@ -141,11 +141,15 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
 
     const handleClickChapter = async (destChapterSlug) => {
         const newCurChapterID = getCurChapterIDFromList();
+        console.log("New Cur chapter id: " + newCurChapterID);
         const destChapterID = chapterList.findIndex(chapter => chapter.slug === destChapterSlug);
+        console.log("New dest chapter id: " + destChapterID);
         if (destChapterID === -1) {
             toast.error("Error changing chapter: Cannot find destined chapter");
             return;
         }
+
+        console.log(`Distance between pages: ${parseInt(destChapterID) - parseInt(newCurChapterID)}`);
         handleSiblingChapterClick(parseInt(destChapterID) - parseInt(newCurChapterID));
     }
 
@@ -166,7 +170,8 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
         if (isAllSourcesFetched === false) {
             return;
         }
-        console.log("Call by cur chapter slug chapterList");
+        console.log("Call by cur chapter slug or chapterList");
+
         const newChapterID = getCurChapterIDFromList();
 
         const topListIndex = parseInt(newChapterID / 10) * 10;
