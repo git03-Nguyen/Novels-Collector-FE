@@ -1,27 +1,29 @@
-import { CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS, setItemWithExpiration, getItemWithExpiration, deleteStorage } from './config';
-
+import LocalStorageConfig from './config';
 
 const USER_SEARCH_TARGET_KEY = process.env.REACT_APP_USER_SEARCH_TARGET_OPTIONS_KEY;
 
-const getUserSearchTarget = () => {
-    const searchTarget = getItemWithExpiration(USER_SEARCH_TARGET_KEY);
-    return searchTarget ? searchTarget : [];
+class UserSearchTargetManager extends LocalStorageConfig {
+    constructor() {
+        super(USER_SEARCH_TARGET_KEY, Number.MAX_SAFE_INTEGER);
+    }
+
+    getUserSearchTarget = () => {
+        const searchTarget = this.getItemWithExpiration(USER_SEARCH_TARGET_KEY);
+        return searchTarget ? searchTarget : [];
+    }
+
+    saveSearchTarget = (newSearchTarget) => {
+        this.setItemWithExpiration(USER_SEARCH_TARGET_KEY, newSearchTarget);
+        return newSearchTarget;
+    }
+
+    removeUserSearchTarget = () => {
+        this.deleteStorage(USER_SEARCH_TARGET_KEY)
+    }
+
+
 }
 
-const saveSearchTarget = (newSearchTarget) => {
-    setItemWithExpiration(USER_SEARCH_TARGET_KEY, newSearchTarget, CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS);
-    return newSearchTarget;
-}
+const UserSearchTargetManagerInstance = new UserSearchTargetManager();
 
-const removeUserSearchTarget = () => {
-    deleteStorage(USER_SEARCH_TARGET_KEY)
-}
-
-
-const UserStyleSettingsManager = {
-    getUserSearchTarget,
-    saveSearchTarget,
-    removeUserSearchTarget,
-}
-
-export default UserStyleSettingsManager;
+export default UserSearchTargetManagerInstance;

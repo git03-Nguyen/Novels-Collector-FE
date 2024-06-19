@@ -47,16 +47,17 @@ function ExportNovelFileModal(props) {
         }
 
         try {
+            toast.info("Quá trình xuất file đang diễn ra, xin hãy chờ ...");
             const response = await DetailNovelService.exportChapters(curNovel?.source, curNovel?.slug, selectedExporterPlugins, dataForRequesting);
             if (response && response?.data && parseInt(response?.statusCode) === 200) {
                 window.open(response?.data?.path, '_blank', 'noopener,noreferrer');
                 onConfirm();
 
             } else {
-                toast.error('Error exporting chapters from try: ' + response?.message);
+                toast.error('Error exporting chapters: ' + response?.message);
             }
         } catch (error) {
-            console.log("Error exporting chapters from catch: " + error.message);
+            console.log("Error exporting chapters: " + error.message);
         }
     }
 

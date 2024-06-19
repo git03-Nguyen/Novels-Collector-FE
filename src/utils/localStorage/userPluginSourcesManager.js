@@ -1,27 +1,27 @@
-import { CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS, setItemWithExpiration, getItemWithExpiration, deleteStorage } from './config';
-
+import LocalStorageConfig from './config';
 
 const USER_PLUGIN_SOURCES_KEY = process.env.REACT_APP_USER_PLUGIN_SOURCES_KEY;
 
-const getUserPluginSources = () => {
-    const sources = getItemWithExpiration(USER_PLUGIN_SOURCES_KEY);
-    return sources ? sources : [];
+class UserPluginSourcesManager extends LocalStorageConfig {
+    constructor() {
+        super(USER_PLUGIN_SOURCES_KEY, Number.MAX_SAFE_INTEGER);
+    }
+
+    getUserPluginSources = () => {
+        const sources = this.getItemWithExpiration(USER_PLUGIN_SOURCES_KEY);
+        return sources ? sources : [];
+    }
+
+    savePluginSources = (sources) => {
+        this.setItemWithExpiration(USER_PLUGIN_SOURCES_KEY, sources);
+        return sources;
+    }
+
+    removeUserPluginSources = () => {
+        this.deleteStorage(USER_PLUGIN_SOURCES_KEY)
+    }
 }
 
-const savePluginSources = (sources) => {
-    setItemWithExpiration(USER_PLUGIN_SOURCES_KEY, sources, CUSTOM_USER_STORAGE_EXPIRE_TIME_IN_DAYS);
-    return sources;
-}
+const UserPluginSourcesManagerInstance = new UserPluginSourcesManager();
 
-const removeUserPluginSources = () => {
-    deleteStorage(USER_PLUGIN_SOURCES_KEY)
-}
-
-
-const UserPluginSourcesManager = {
-    getUserPluginSources,
-    savePluginSources,
-    removeUserPluginSources,
-}
-
-export default UserPluginSourcesManager;
+export default UserPluginSourcesManagerInstance;
