@@ -9,6 +9,7 @@
     "@coreui/react": "^5.0.0",
     "@coreui/react-chartjs": "^3.0.0",
     "@coreui/utils": "^2.0.2",
+    "@hello-pangea/dnd": "^16.6.0",
     "@popperjs/core": "^2.11.8",
     "@react-login-page/page2": "^1.0.4",
     "@react-login-page/page4": "^1.0.4",

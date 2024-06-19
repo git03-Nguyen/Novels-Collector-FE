@@ -64,6 +64,12 @@ function Header({ setdarkMode, darkMode }) {
         })
 
         newPluginSources.sort((a, b) => b.prior - a.prior);
+        newPluginSources = newPluginSources?.map((src, index) => {
+            return {
+                ...src,
+                prior: newPluginSources?.length - index,
+            }
+        })
         handleSetPluginSources(newPluginSources);
         toast.success(`Chuyển sang nguồn truyện ${e.target.value} thành công !`)
     }
@@ -177,18 +183,6 @@ function Header({ setdarkMode, darkMode }) {
                 </button>
 
             </div>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
 
         </header>
 

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { NovelContext } from '../../context/NovelContext';
 
 import './DnDSourceModal.scss'
@@ -37,7 +38,10 @@ function DnDSourceModal(props) {
     }
 
     useEffect(() => {
-        setUserPluginSources(pluginSources);
+        const newUserSrc = UserPluginSourcesManager.getUserPluginSources();
+        console.log("New userPluginSources for DnDModal: ");
+        console.log(newUserSrc);
+        setUserPluginSources(newUserSrc);
     }, [pluginSources])
 
     return (
@@ -54,7 +58,7 @@ function DnDSourceModal(props) {
                                     {userPluginSources && userPluginSources?.length > 0 &&
                                         userPluginSources.sort((a, b) => b.prior - a.prior)
                                             .map((source, index) => (
-                                                <Draggable key={source?.slug} draggableId={`source-${index}`} index={index}>
+                                                <Draggable key={`unique-key-for-${source?.slug}-${index}`} draggableId={`source-${index}`} index={index}>
                                                     {(provided) => (
                                                         <li
                                                             className='draggable-plugin-source-item'

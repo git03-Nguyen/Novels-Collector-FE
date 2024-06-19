@@ -29,7 +29,7 @@ import { cilTrash } from '@coreui/icons';
 
 import { useNavigate } from 'react-router-dom';
 
-import './SourceManagementPage.css';
+import './SourceManagementPage.scss';
 
 const getUserToken = () => {
     return localStorage.getItem('token') ?? '';
@@ -315,18 +315,6 @@ const SourceManagementPage = () => {
                     <CButton color="primary" onClick={handleAddNewSource}>Tải lên</CButton>
                 </CModalFooter>
             </CModal>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
         </CContainer>
     );
 };

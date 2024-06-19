@@ -319,18 +319,6 @@ const ExporterManagementPage = () => {
                     <CButton color="primary" onClick={handleAddNewExporter}>Tải lên</CButton>
                 </CModalFooter>
             </CModal>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
         </CContainer>
     );
 };

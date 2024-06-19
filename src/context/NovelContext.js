@@ -31,44 +31,57 @@ function NovelProvider(props) {
     }
 
     // PLUGIN
+    const refreshPluginSources = (sourceList) => {
+        const curUserSources = UserPluginSourcesManager.getUserPluginSources();
+        if (sourceList?.length > (curUserSources?.length ?? 0)) {
+            sourceList?.forEach((source) => {
+                const position = curUserSources?.findIndex(src => src?.name === source?.name);
+                if (position === -1) {
+                    curUserSources?.push(source);
+                }
+            })
+        }
+
+        curUserSources.sort((a, b) => b.prior - a.prior);
+        const newSourceList = curUserSources?.length > 0
+            ? curUserSources?.map((curSrc) => {
+                const newSrcFromAPI = sourceList?.find(newSrc => newSrc?.name === curSrc?.name);
+                if (newSrcFromAPI) {
+                    return newSrcFromAPI;
+                } else {
+                    return;
+                }
+            })
+            : sourceList;
+
+        newSourceList?.forEach((src, index) => {
+            if (!src || !src?.name) {
+                newSourceList.splice(index, 1);
+            }
+            return;
+        });
+
+        return newSourceList;
+    }
+
     const fetchPluginSources = async () => {
         try {
             let response = await PluginSourceService.fetchPluginSources();
             if (response && response.data && parseInt(response.statusCode) === 200) {
-                let sourceList = response.data?.map((source) => {
+                let sourceList = response.data?.map((source, index) => {
                     return source?.isLoaded === true
                         ? {
                             ...source,
-                            prior: 1,
+                            prior: response.data?.length - index,
                         }
                         : undefined;
                 });
                 sourceList.sort((a, b) => b.prior - a.prior)
 
-                console.log("Plugin source after fetching API: ");
-                console.log(sourceList);
-
-                let isChangeSources = false;
-                const curUserSources = UserPluginSourcesManager.getUserPluginSources();
-
-                if (curUserSources?.length !== sourceList?.length) {
-                    isChangeSources = true;
-                } else {
-                    for (let i = 0; i < curUserSources?.length; i++) {
-                        const src = sourceList[i];
-                        const newSrcIndex = sourceList?.findIndex(newSrc => newSrc?.name === src?.name);
-
-                        if (src === undefined) {
-                            isChangeSources = true;
-                            sourceList?.splice(newSrcIndex, 1);
-                        }
-                    }
-                }
-                if (isChangeSources === true) {
-                    console.log("New plugin sources from novel context: ");
-                    console.log(sourceList);
-                    handleSetPluginSources(sourceList);
-                }
+                const newSourceList = refreshPluginSources(sourceList);
+                console.log("New plugin sources from novel context: ");
+                console.log(newSourceList);
+                handleSetPluginSources(newSourceList);
 
                 setIsLoadingNovel(false);
             } else {
@@ -80,8 +93,6 @@ function NovelProvider(props) {
     }
 
     const handleSetPluginSources = (newPluginSources) => {
-
-
         setPluginSources(newPluginSources);
         UserPluginSourcesManager.savePluginSources(newPluginSources);
     }

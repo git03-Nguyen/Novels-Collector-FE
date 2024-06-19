@@ -1,5 +1,5 @@
 import React from 'react';
-import '../SourceManagement/SourceManagementPage.css';
+import '../SourceManagement/SourceManagementPage.scss';
 import {
   CCard,
   CCardBody,
