@@ -175,7 +175,7 @@ function ListNovelPage({ darkMode }) {
     }, [isHandlingSearchParams, curPage, curSearchValue, pluginSources[0]]);
 
     return (
-        <div className={`list-novel-page-container' ${darkMode ? 'dark-mode' : ''} `}>
+        <div className={`list-novel-page-container ${darkMode ? 'dark-mode' : ''} `}>
             <div className='list-novel-page-content'>
                 <div className="filter-engine d-flex justify-content-between align-items-center my-3">
                     <div className="btn-group filter-button-list">

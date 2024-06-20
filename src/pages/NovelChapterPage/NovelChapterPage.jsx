@@ -307,6 +307,7 @@ function NovelChapterPage({ darkMode }) {
                 sourceSlug={sourceSlug}
                 novelSlug={novelSlug}
                 curChapterSlug={curChapterSlug}
+                curChapterNumber={novelChapter?.number}
                 onConfirmToolbarModal={handleConfirmToolbarModal}
             />
 

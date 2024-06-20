@@ -7,7 +7,7 @@ import { NovelContext } from "../../context/NovelContext";
 import DetailNovelService from "../../services/detailnovel.s";
 import ChapterService from "../../services/chapter.s";
 
-export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor, chapterList, sourceSlug, novelSlug, curChapterSlug, handleSiblingChapterClick }) {
+export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor, chapterList, sourceSlug, novelSlug, curChapterSlug, curChapterNumber, handleSiblingChapterClick }) {
 
     const { novelContext } = useContext(NovelContext);
     const navigate = useNavigate();
@@ -31,19 +31,33 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
         return bodyRequest;
     }
 
+    const generateChapterTitleBySource = (chapter) => {
+        const displayedChapterTitle = chapter.title?.length <= 40
+            ? chapter.title
+            : chapter.title.slice(0, 41) + ' ...';
+
+        switch (sourceSlug) {
+            case 'TruyenTangThuVienVn': return `${displayedChapterTitle}`;
+
+            default: return `${displayedChapterTitle}`;
+        }
+    }
+
+
     const handleFetchChapterInOtherSource = async (newRawOtherSources = rawOtherSources) => {
         console.log("Chapter List: ");
         console.log(chapterList);
         console.log("cur chapter slug: " + curChapterSlug);
-        const chapterNumber = chapterList?.find(chap => chap?.slug === curChapterSlug)?.number;
-        console.log("Fetch for chapter number: " + chapterNumber);
-        if (!chapterNumber || !newRawOtherSources || newRawOtherSources?.length <= 0) {
+        console.log("Fetch for chapter number: " + curChapterNumber);
+        // const chapterNumber = chapterList?.find(chap => chap?.slug === curChapterSlug)?.number;
+        // console.log("Fetch for chapter number: " + chapterNumber);
+        if (!curChapterNumber || !newRawOtherSources || newRawOtherSources?.length <= 0) {
             setIsAllSourcesFetched(true);
             return;
         }
 
         try {
-            const response = await ChapterService.fetchChapterInOtherSource(sourceSlug, novelSlug, chapterNumber, newRawOtherSources);
+            const response = await ChapterService.fetchChapterInOtherSource(sourceSlug, novelSlug, curChapterNumber, newRawOtherSources);
             if (response && response?.data && parseInt(response?.statusCode) === 200) {
                 const otherChapterSourceData = Object.keys(response?.data)?.map(src => response?.data[src]);
 
@@ -83,6 +97,10 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
         const requestingData = buildPersistDataForOtherSources();
         console.log("Requesting data: ");
         console.log(requestingData);
+
+        if (!requestingData || !requestingData?.title) {
+            return;
+        }
         try {
             const response = await DetailNovelService.fetchOtherSources(sourceSlug, novelSlug, requestingData);
             if (response && response?.data && parseInt(response?.statusCode) === 200) {
@@ -233,13 +251,7 @@ export default function ChapterPageSideBar({ novelName, novelPoster, novelAuthor
                             className="btn btn-secondary offcanvas-novel-card-mini"
                             onClick={() => handleClickChapter(chapter.slug)}>
                             <span>
-                                {sourceSlug !== 'DTruyenCom' && <span>Chương {chapter?.number} - </span>}
-
-                                {chapter.title?.length <= 40
-                                    ? chapter.title
-                                    : chapter.title.slice(0, 41) + ' ...'
-                                }
-
+                                {generateChapterTitleBySource(chapter)}
                             </span>
 
 

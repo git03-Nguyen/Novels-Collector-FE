@@ -4,7 +4,7 @@ import ChapterPageSideBar from '../ChapterPageSideBar/ChapterPageSideBar'
 import ToolbarModal from '../ToolbarModal/ToolbarModal';
 import './ActionBar.scss'
 
-export default function Action({ isDisabledSiblingChapter, handleSiblingChapterClick, novelName, novelPoster, novelAuthor, chapterList, sourceSlug, novelSlug, curChapterSlug, onConfirmToolbarModal }) {
+export default function Action({ isDisabledSiblingChapter, handleSiblingChapterClick, novelName, novelPoster, novelAuthor, chapterList, sourceSlug, novelSlug, curChapterSlug, curChapterNumber, onConfirmToolbarModal }) {
 
     const [showSideBar, setShowSideBar] = useState(false);
     const handleViewInformation = () => {
@@ -60,6 +60,7 @@ export default function Action({ isDisabledSiblingChapter, handleSiblingChapterC
                 chapterList={chapterList}
                 sourceSlug={sourceSlug}
                 novelSlug={novelSlug}
+                curChapterNumber={curChapterNumber}
                 curChapterSlug={curChapterSlug}
             />
             <ToolbarModal show={isShowToolbarModal} handleClose={handleCloseToolbarModal} onConfirm={handleOnChangeToolbarModal} />
